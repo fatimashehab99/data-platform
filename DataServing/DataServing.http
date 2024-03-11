@@ -1,0 +1,6 @@
+@DataServing_HostAddress = http://localhost:5115
+
+GET {{DataServing_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

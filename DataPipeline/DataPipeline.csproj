@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="LinqKit" Version="1.2.5" />
+		<PackageReference Include="MaxMind.GeoIP2" Version="5.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+		<PackageReference Include="MongoDB.Driver" Version="2.24.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Wangkanai.Detection" Version="8.11.0" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="DataAnalysis\countries.json" />
+    <None Remove="Helpers\LocationService\GeoLite2-Country.mmdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="DataAnalysis\Services\countries.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Helpers\LocationService\GeoLite2-Country.mmdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

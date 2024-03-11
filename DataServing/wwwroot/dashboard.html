@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+    </style>
+
+    <!--Script Demo To Send PAge Views to data collection-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        var mydata =
+        {
+            ip: "102.129.65.0",
+            postid: '129t214h38q2a34',
+            postcategory: 'News',
+            author: 'Fatima',
+            posttitle: 'Mango Analytics Impact',
+            subscriptionName: 'MangoAnalytics',
+            subscriptionId: '219ee194-0866-43cd-8318-18c514bfec0f',
+            userId: '313aa122-0666-46cd-8468-68e514beecvt'
+        };
+
+
+        var url = '/api/collect';
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(mydata),
+            contentType: 'application/json',
+            success: function () { console.log('Tracking') },
+            error: function (error) { console.log(error); }
+        });
+    </script>
+
+
+</head>
+<body>
+
+
+    <!--Visuliaztion Demo that call api/Analyse-->
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+        //call /api/analyse?params
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
+
+    <!--Reccomnedation demo that show Reccomendaed for Your articles and call  api/reccomend https://mdn.tv/7fwF اخترنا لك
+    -->
+    <ul>
+        <li>Post1</li>
+        <li>Post2</li>
+        <li>Post3</li>
+        <li>Post4</li>
+    </ul>
+
+
+</body>
+</html>

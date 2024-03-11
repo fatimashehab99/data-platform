@@ -1,0 +1,25 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+
+*.dll
+.vs/
+bin/
+obj
+bin
+.cache
+.csproj
+/Analytics.Services/obj/Debug/net6.0/Analytics.Services.csproj.AssemblyReference.cache
+/AnalyticsTesting/obj/Debug/net6.0/AnalyticsTesting.csproj.AssemblyReference.cache
+/Reportings/obj/Debug/net6.0/project.razor.vs.json
+/Reportings/obj/Debug/net6.0/Reportings.csproj.AssemblyReference.cache
+/Tracking.Integration.Test/Tracking.Integration.Test.csproj
+/Tracking.Integration.Test/UnitTest1.cs
+/Tracking.Integration.Test/Usings.cs
+/Traking/obj/Debug/net6.0/project.razor.vs.json
+/Traking/obj/Debug/net6.0/Traking.csproj.AssemblyReference.cache
+/TrackTesting/obj/Debug/net6.0/TrackTesting.csproj.AssemblyReference.cache
+/Visualization/Properties/PublishProfiles/FolderProfile.pubxml.user
+/Reportings/logs/log-20221223.txt
+/logs/
