@@ -34,6 +34,7 @@ namespace DataPipeline
         public static string POST_AUTHOR = "PostAuthor";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
+        public static string Category = "PostCategory";
 
 
 

@@ -4,3 +4,6 @@ GET {{DataServing_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{DataServing_HostAddress}}/api/Analyze/categories?domain=x.com
+Accept:application/json

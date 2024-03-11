@@ -1,4 +1,5 @@
 using DataPipeline;
+using DataPipeline.DataAnalysis.Services;
 using DataPipeline.DataCollection.Services;
 using DataPipeline.Helpers.LocationService;
 
@@ -17,6 +18,7 @@ builder.Services.AddControllers();
 builder.Services.Configure<DatabaseConnecting>(builder.Configuration.GetSection("PageViewsDatabase"));
 builder.Services.AddScoped<IDataCollectionService, DataCollectionService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IDataAnalyticsService, DataAnalyticsService>();
 
 
 

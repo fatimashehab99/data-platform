@@ -55,7 +55,7 @@ namespace DataPipeline.DataAnalysis.Services
         public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
-            //first we need to filter data by subscription id
+            //first we need to filter data by domain
             var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
             //now we need to get the count of page views for each day
             var groupStage = new BsonDocument("$group", new BsonDocument
@@ -82,6 +82,39 @@ namespace DataPipeline.DataAnalysis.Services
             return results;
 
         }
+
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria)
+        {
+            //Define the aggregation pipeline stages
+            //first we need to filter data by domain
+            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            //now we need to get the count of pageviews for each category 
+            var groupStage = new BsonDocument("$group", new BsonDocument
+            {
+                {"_id","$" + Constants.Category },//group by date
+                {"pageviews",new BsonDocument("$sum",1) }//count the pageviews
+
+            });
+            var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
+            var limitStage = new BsonDocument("$limit", 10);
+            //initialize the pipeline
+            var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
+            //execute the pipeline then store the results in list 
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            var results = new List<CategoryPageView>();
+            //loop over the results to store them in DatePageView List
+            foreach (BsonDocument pipelineResult in pipelineResults)
+            {
+                results.Add(new CategoryPageView
+                {
+                    Category = pipelineResult["_id"].AsString,
+                    PageViews = pipelineResult["pageviews"].AsInt32
+
+                });
+            }
+            return results;
+        }
+
 
 
 

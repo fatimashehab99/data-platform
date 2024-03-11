@@ -66,48 +66,68 @@
         </div>
     </div>
     <script>
-        ///get pageviews by category
+        var domain = 'x.com';
+        ///fetch top categories api
+        fetch('http://localhost:5115/api/Analyze/categories?domain=' + domain)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonResponse => {
+                // Process the JSON data
+                const categories = [];
+                const pageviews = [];
 
+                jsonResponse.forEach(item => {
+                    categories.push(item.category);
+                    pageviews.push(item.pageViews);
+                });
 
-        ///Category pageview dashboard design
-        const ctx1 = document.getElementById('categoryChart').getContext('2d');
-        const myChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ["title1", "title2", "title3", "title4", "title5", "title6", "title7", "title8", "title9", "title10"],
-                datasets: [{
-                    label: "PageViews",
-                    data: [10, 20, 30, 40, 50, 10, 20, 30, 40, 50],
-                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                    borderColor: 'rgba(255, 0, 0, 0.5)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Top Categories',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
+                ///Category pageview dashboard design
+                const ctx1 = document.getElementById('categoryChart').getContext('2d');
+                const myChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            label: "PageViews",
+                            data: pageviews,
+                            backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                            borderColor: 'rgba(255, 0, 0, 0.5)',
+                            borderWidth: 1
+                        }]
                     },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'PageViews',
-                            font: {
-                                weight: 'bold'
+                    options: {
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Top Categories',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'PageViews',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        });
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
     </script>
 
 
