@@ -15,14 +15,17 @@ namespace DataPipeline.DataAnalysis.Services
     public class DataAnalyticsService : IDataAnalyticsService
     {
         private readonly IMongoCollection<MongoDbPageView> _collection;
+        private readonly IDashboardStatisticsService _dashboardStatisticsService;
 
-        public DataAnalyticsService(IOptions<DatabaseConnecting> DatabaseSettings)
+
+        public DataAnalyticsService(IOptions<DatabaseConnecting> DatabaseSettings, IDashboardStatisticsService dashboardStatisticsService)
         {
             //mongo DB connection 
             var mongoClient = new MongoClient(DatabaseSettings.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(DatabaseSettings.Value.DatabaseName);
             ///get pageView collection 
             _collection = mongoDatabase.GetCollection<MongoDbPageView>(DatabaseSettings.Value.CollectionName);
+            _dashboardStatisticsService = dashboardStatisticsService;
         }
 
         public List<AuthorPageView> AnalyseByAuthor(SearchCriteria criteria)
@@ -113,6 +116,22 @@ namespace DataPipeline.DataAnalysis.Services
                 });
             }
             return results;
+        }
+        public DashboardStatistics getDashboardStatisticsData(SearchCriteria criteria)
+        {
+            int authors = _dashboardStatisticsService.getTotalAuthors(criteria);
+            int pageViews = _dashboardStatisticsService.getTotalPageViews(criteria);
+            int articles = _dashboardStatisticsService.getTotalArticles(criteria);
+            int users = _dashboardStatisticsService.getTotalUsers(criteria);
+            DashboardStatistics data = new DashboardStatistics()
+            {
+                authors = authors,
+                pageViews = pageViews,
+                articles = articles,
+                users = users
+            };
+            return data;
+
         }
 
 

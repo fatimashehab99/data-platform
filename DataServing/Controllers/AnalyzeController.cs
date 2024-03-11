@@ -29,5 +29,22 @@ namespace DataServing.Controllers
             var results = _dataAnalyticsService.AnalyzePageViewsByCategory(search);
             return Ok(results);
         }
+        /// <summary>
+        /// This api is used to get the dashboard data
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        [HttpGet("dashboard")]
+
+        public IActionResult GetDashboardData([FromQuery(Name = "domain")] string domain)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain
+            };
+            var results = _dataAnalyticsService.getDashboardStatisticsData(search);
+            return Ok(results);
+
+        }
     }
 }

@@ -19,6 +19,8 @@ builder.Services.Configure<DatabaseConnecting>(builder.Configuration.GetSection(
 builder.Services.AddScoped<IDataCollectionService, DataCollectionService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IDataAnalyticsService, DataAnalyticsService>();
+builder.Services.AddScoped<IDashboardStatisticsService, DashboardStatisticsService>();
+
 
 
 
