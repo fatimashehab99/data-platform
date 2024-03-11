@@ -50,7 +50,11 @@ namespace DataPipeline.DataAnalysis.Services
             return totalPageViews;
 
         }
-
+        /// <summary>
+        /// get totalauthors
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
         public int getTotalAuthors(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
@@ -75,4 +79,6 @@ namespace DataPipeline.DataAnalysis.Services
 
         }
     }
+
+
 }

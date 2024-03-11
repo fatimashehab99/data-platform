@@ -47,7 +47,7 @@ namespace DataPipelineTest
             {
                 con.ConnectionString = "mongodb://localhost:27017";
                 con.DatabaseName = "mangopulse-analytics";
-                con.CollectionName = "MongoAnalyticsDB";
+                con.CollectionName = "MangoAnalyticsDB";
             }
             );
             services.AddHttpContextAccessor();

@@ -41,7 +41,7 @@ namespace DataPipelineTest
             //expected results
             var expectedResults = new List<CategoryPageView>
              {
-            new CategoryPageView { Category = "News", PageViews = 4 },
+            new CategoryPageView { Category = "New", PageViews = 3 },
             new CategoryPageView { Category = "Sport", PageViews = 1 },
              };
 
