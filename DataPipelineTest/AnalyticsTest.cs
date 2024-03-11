@@ -201,6 +201,78 @@ namespace DataPipelineTest
             Assert.That(totalAuthors== 3, Is.True);
 
         }
+        /// <summary>
+        /// This function is used to return the total pageviews
+        /// </summary>
+        [Test]
+        public void getTotalPageViews()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+
+       
+            //update domain
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+
+
+            //Save data to mongodb
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain
+            };
+            int totalPageViews = _dashboardStatisticsService.getTotalPageViews(criteria);
+            Assert.That(totalPageViews == 4, Is.True);
+
+        }
+        /// <summary>
+        /// This function is used to return the total users
+        /// </summary>
+        [Test]
+        public void getTotalUsers()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+
+
+            //update domain
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+
+            //update userid
+            pageView1.UserId = "123";
+            pageView2.UserId="1234";
+            pageView3.UserId = pageView4.UserId= "12345";
+
+
+
+            //Save data to mongodb
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain
+            };
+            int totalPageViews = _dashboardStatisticsService.getTotalUsers(criteria);
+            Assert.That(totalPageViews == 3, Is.True);
+
+        }
 
 
     }

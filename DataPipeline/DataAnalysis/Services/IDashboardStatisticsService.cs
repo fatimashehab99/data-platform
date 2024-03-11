@@ -9,8 +9,9 @@ namespace DataPipeline.DataAnalysis.Services
 {
     public interface IDashboardStatisticsService
     {
-        public int getTotalViews(SearchCriteria criteria);
+        public int getTotalPageViews(SearchCriteria criteria);
         public int getTotalAuthors(SearchCriteria criteria);
         public int getTotalArticles(SearchCriteria criteria);
+        public int getTotalUsers(SearchCriteria criteria);
     }
 }
