@@ -163,7 +163,42 @@ namespace DataPipelineTest
             int totalArticles=_dashboardStatisticsService.getTotalArticles(criteria);
             Assert.That(totalArticles==3, Is.True);
 
+        }
+        /// <summary>
+        /// This function is used to return the total authors
+        /// </summary>
+        [Test]
+        public void getTotalAuthors()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
 
+            //update post_title
+            pageView1.PostAuthor = pageView2.PostAuthor = "mark";
+            pageView3.PostAuthor = "john";
+            pageView4.PostAuthor = "sara";
+
+            //update domain
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+
+
+            //Save data to mongodb
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain
+            };
+            int totalAuthors = _dashboardStatisticsService.getTotalAuthors(criteria);
+            Assert.That(totalAuthors== 3, Is.True);
 
         }
 

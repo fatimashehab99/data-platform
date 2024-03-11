@@ -64,7 +64,7 @@ namespace DataPipeline.DataAnalysis.Services
             var groupStage = new BsonDocument("$group", new BsonDocument
             {
                 {"_id",BsonNull.Value},
-                {"authors",new BsonDocument("$addToSet",Constants.POST_AUTHOR)}
+                {"authors",new BsonDocument("$addToSet","$"+Constants.POST_AUTHOR)}
             });
             //now get the count of the authors
             var projectStage = new BsonDocument("$project",
