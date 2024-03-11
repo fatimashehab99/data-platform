@@ -127,6 +127,45 @@ namespace DataPipelineTest
 
             Assert.That(authors.First().PageViews == 2, Is.True);
         }
+        /// <summary>
+        /// This function is used to return the total articles
+        /// </summary>
+        [Test]
+        public void getTotalArticles()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+
+            //update post_title
+            pageView1.PostTitle = pageView2.PostTitle = "article1";
+            pageView3.PostTitle = "article2";
+            pageView4.PostTitle = "article3";
+
+            //update domain
+            pageView1.Domain = pageView2.Domain= pageView3.Domain= pageView4.Domain=domain;
+
+
+            //Save data to mongodb
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain
+            };
+            int totalArticles=_dashboardStatisticsService.getTotalArticles(criteria);
+            Assert.That(totalArticles==3, Is.True);
+
+
+
+        }
 
 
     }

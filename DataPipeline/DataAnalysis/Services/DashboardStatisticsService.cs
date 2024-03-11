@@ -15,7 +15,7 @@ namespace DataPipeline.DataAnalysis.Services
     /// <summary>
     /// This class is use to get the data of the dashboard statistics 
     /// </summary>
-    public class DashboardStatisticsService
+    public class DashboardStatisticsService :IDashboardStatisticsService
     {
         private readonly IMongoCollection<MongoDbPageView> _collection;
 
@@ -76,6 +76,34 @@ namespace DataPipeline.DataAnalysis.Services
             var result = pipelineResults.FirstOrDefault();
             int totalAuthors = result != null ? result["TotalAuthors"].AsInt32 : 0;
             return totalAuthors;
+
+        }
+        /// <summary>
+        /// This function is used to get total articles
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public int getTotalArticles(SearchCriteria criteria)
+        {
+            //Define the aggregation pipeline stages
+            //first we need to filter data by domain
+            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            //now we need to group by post title
+            var groupStage = new BsonDocument("$group", new BsonDocument
+            {
+                {"_id",BsonNull.Value},
+                {"articles",new BsonDocument("$addToSet","$"+Constants.POST_TITLE)}
+            });
+            //now get the count of the authors
+            var projectStage = new BsonDocument("$project",
+                new BsonDocument("TotalArticles",
+                new BsonDocument("$size", "$articles")));
+            //initialize the pipeline
+            var pipeline = new[] { matchStage, groupStage, projectStage };
+            var pipelineResults = _collection.Aggregate<BsonDocument>(pipeline);
+            var result = pipelineResults.FirstOrDefault();
+            int totalArticles = result != null ? result["TotalArticles"].AsInt32 : 0;
+            return totalArticles;
 
         }
     }
