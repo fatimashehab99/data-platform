@@ -14,7 +14,6 @@ namespace DataPipelineTest
         [Test]
         public void AnalyzePageViewsByCategory()
         {
-            //generate pageviews
             var domain = "test.com" + Guid.NewGuid().ToString();
 
             //generate pageviews
@@ -70,19 +69,60 @@ namespace DataPipelineTest
         [Test]
         public void AnalyzePageViewsByDateTest()
         {
-            var domain = "example.com";
-            //write logs to mongo db
-            //_trackService.LogPageview(pageView1);
+            string date = "2024-03-05";
+            var domain = "test.com" + Guid.NewGuid().ToString();
+
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+            var pageView5 = GeneratePageView();
+            var pageView6 = GeneratePageView();
+
+            //update domain
+            pageView1.Domain = pageView2.Domain =
+                pageView3.Domain = pageView4.Domain =
+                pageView5.Domain = pageView6.Domain = domain;
+
+            //update date
+            pageView1.Formatted_Date = pageView2.Formatted_Date = pageView3.Formatted_Date = "2024-03-09";
+            pageView4.Formatted_Date = pageView5.Formatted_Date = "2024-03-07";
+            pageView6.Formatted_Date = "2024-03-06";
+
+            //Save data to mongodb
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+            _trackService.LogPageview(pageView5);
+            _trackService.LogPageview(pageView6);
+
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
             };
-            var pageviews = _analyticsService.AnalyzePageViewsByDate(criteria);
+            //expected results
+            var expectedResults = new List<DatePageView>
+             {
+            new DatePageView { Date = "2024-03-09", PageViews = 3 },
+            new DatePageView { Date = "2024-03-07", PageViews = 2 },
+            new DatePageView { Date = "2024-03-06", PageViews = 1 },
+             };
+
+            var pageviews = _analyticsService.AnalyzePageViewsByDate(criteria, date);
 
             Assert.That(pageviews != null, Is.True);
-            Assert.That(pageviews.First().PageViews == 2, Is.True);
+
+            //check results
+            foreach (var expected in expectedResults)
+            {
+                var actual = pageviews.Find(c => c.Date == expected.Date);
+                Assert.That(actual, Is.Not.Null);
+                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
+            }
 
 
         }
