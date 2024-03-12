@@ -41,7 +41,7 @@ namespace DataPipelineTest
             //expected results
             var expectedResults = new List<CategoryPageView>
              {
-            new CategoryPageView { Category = "New", PageViews = 3 },
+            new CategoryPageView { Category = "News", PageViews = 3 },
             new CategoryPageView { Category = "Sport", PageViews = 1 },
              };
 
@@ -89,43 +89,60 @@ namespace DataPipelineTest
         [Test]
         public void AnalyticsPostByAuthor()
         {
-            var domain = "example.com" + Guid.NewGuid().ToString();
+            var domain = "test.com" + Guid.NewGuid().ToString();
 
 
             var author1 = "fatima";
+            var author2 = "sara";
+            var author3 = "john";
 
             //generate pageview
             var pageView1 = GeneratePageView();
             var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+            var pageView5 = GeneratePageView();
 
-            pageView1.PostAuthor = author1;
-            pageView1.Domain = domain;
+            //update domain
+            pageView1.Domain = pageView2.Domain =
+                pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
 
-
-            pageView2.PostAuthor = author1;
-            pageView2.Domain = domain;
-
+            //update authors
+            pageView1.PostAuthor = pageView2.PostAuthor = author1;
+            pageView3.PostAuthor = author2;
+            pageView4.PostAuthor = pageView5.PostAuthor = author3;
 
             //Save data to mongodb
             _trackService.LogPageview(pageView1);
             _trackService.LogPageview(pageView2);
-
-
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+            _trackService.LogPageview(pageView5);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
-                Author = author1,
-                From = DateTime.UtcNow.AddDays(-10),
-                To = DateTime.UtcNow
             };
+            //expected results
+            var expectedResults = new List<AuthorPageView>
+             {
+            new AuthorPageView { Author = "fatima", PageViews = 2 },
+            new AuthorPageView { Author = "sara", PageViews = 1 },
+            new AuthorPageView { Author = "john", PageViews = 2 },
+             };
 
             var authors = _analyticsService.AnalyseByAuthor(criteria);
 
             Assert.That(authors != null, Is.True);
 
-            Assert.That(authors.First().PageViews == 2, Is.True);
+            //check results
+            foreach (var expected in expectedResults)
+            {
+                var actual = authors.Find(c => c.Author == expected.Author);
+                Assert.That(actual, Is.Not.Null);
+                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
+            }
         }
         /// <summary>
         /// This function is used to return the total articles
@@ -146,7 +163,7 @@ namespace DataPipelineTest
             pageView4.PostTitle = "article3";
 
             //update domain
-            pageView1.Domain = pageView2.Domain= pageView3.Domain= pageView4.Domain=domain;
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
 
 
             //Save data to mongodb
@@ -160,8 +177,8 @@ namespace DataPipelineTest
             {
                 Domain = domain
             };
-            int totalArticles=_dashboardStatisticsService.getTotalArticles(criteria);
-            Assert.That(totalArticles==3, Is.True);
+            int totalArticles = _dashboardStatisticsService.getTotalArticles(criteria);
+            Assert.That(totalArticles == 3, Is.True);
 
         }
         /// <summary>
@@ -198,7 +215,7 @@ namespace DataPipelineTest
                 Domain = domain
             };
             int totalAuthors = _dashboardStatisticsService.getTotalAuthors(criteria);
-            Assert.That(totalAuthors== 3, Is.True);
+            Assert.That(totalAuthors == 3, Is.True);
 
         }
         /// <summary>
@@ -214,7 +231,7 @@ namespace DataPipelineTest
             var pageView3 = GeneratePageView();
             var pageView4 = GeneratePageView();
 
-       
+
             //update domain
             pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
 
@@ -253,8 +270,8 @@ namespace DataPipelineTest
 
             //update userid
             pageView1.UserId = "123";
-            pageView2.UserId="1234";
-            pageView3.UserId = pageView4.UserId= "12345";
+            pageView2.UserId = "1234";
+            pageView3.UserId = pageView4.UserId = "12345";
 
 
 
