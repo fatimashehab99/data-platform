@@ -37,6 +37,7 @@ namespace DataPipeline
         public static string Category = "PostCategory";
         public static string USERID = "UserId";
         public static string POST_TITLE = "PostTitle";
+        public static string FORMATTED_DATE = "Formatted_Date";
 
     }
 }

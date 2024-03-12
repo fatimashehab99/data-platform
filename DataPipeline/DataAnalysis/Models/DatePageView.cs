@@ -8,7 +8,7 @@ namespace DataPipeline.DataAnalysis.Models
 {
     public class DatePageView
     {
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public int PageViews { get; set; }
     }
 }

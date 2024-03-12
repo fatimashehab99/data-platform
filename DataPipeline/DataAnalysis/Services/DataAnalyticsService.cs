@@ -45,7 +45,7 @@ namespace DataPipeline.DataAnalysis.Services
             var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
             var limitStage = new BsonDocument("$limit", 10);
 
-            var pipeline = new[] { matchStage, groupStage,orderByStage,limitStage };
+            var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
 
             List<BsonDocument> pResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
 
@@ -66,16 +66,22 @@ namespace DataPipeline.DataAnalysis.Services
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument("$match", new BsonDocument
+                {
+                  { Constants.DOMAIN, criteria.Domain },
+                  { Constants.FORMATTED_DATE, new BsonDocument("$gt", "2024-03-02") }
+                   });
             //now we need to get the count of page views for each day
             var groupStage = new BsonDocument("$group", new BsonDocument
             {
-                {"_id","$" + Constants.DATE },//group by date
+                {"_id","$"+Constants.FORMATTED_DATE},//group by date
                 {"pageviews",new BsonDocument("$sum",1) }//count the pageviews
 
             });
+            ///now we need to order the results by date
+            var orderByStage = new BsonDocument("$sort", new BsonDocument("_id", -1));
             //initialize the pipeline
-            var pipeline = new[] { matchStage, groupStage };
+            var pipeline = new[] { matchStage, groupStage, orderByStage };
             //execute the pipeline then store the results in list 
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
             var results = new List<DatePageView>();
@@ -84,7 +90,7 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new DatePageView
                 {
-                    Date = pipelineResult["_id"].AsDateTime,
+                    Date = pipelineResult["_id"].AsString,
                     PageViews = pipelineResult["pageviews"].AsInt32
 
                 });

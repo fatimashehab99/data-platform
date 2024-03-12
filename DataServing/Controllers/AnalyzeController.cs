@@ -57,7 +57,22 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results=_dataAnalyticsService.AnalyseByAuthor(search);
+            var results = _dataAnalyticsService.AnalyseByAuthor(search);
+            return Ok(results);
+        }
+        /// <summary>
+        /// This function is used to get pageviews by date
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        [HttpGet("date")]
+        public IActionResult AnalyzePageViewsByDate([FromQuery(Name = "domain")] string domain)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain
+            };
+            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search);
             return Ok(results);
         }
     }

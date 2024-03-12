@@ -23,6 +23,7 @@ namespace DataPipeline.DataCollection.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
+        public string Formatted_Date { get; set; }
 
         [Required]
         public string Ip { get; set; } = null!;
