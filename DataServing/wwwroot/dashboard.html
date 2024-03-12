@@ -2,17 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Data PlatForm Dashboard</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Data Platform Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="public/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-
     <div class="container">
         <div class="text-center d-flex justify-content-between align-items-center mt-5">
             <div>
@@ -37,34 +34,34 @@
             <div class="col-md-3">
                 <div class="analytics-section">
                     <h5>Authors</h5>
-                    <h5 id="authors" class=analytics-data></h5>
+                    <h5 id="authors" class="analytics-data"></h5>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="analytics-section">
                     <h5>Articles</h5>
-                    <h5 id="articles" class=analytics-data></h5>
+                    <h5 id="articles" class="analytics-data"></h5>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="analytics-section">
                     <h5>Users</h5>
-                    <h5 id="users" class=analytics-data></h5>
+                    <h5 id="users" class="analytics-data"></h5>
                 </div>
             </div>
         </div>
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
                 <div class="analytics-section">
-                    <canvas id="titleChart"></canvas>
+                    <canvas id="dateChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="analytics-section">
-                    <canvas id="dateChart"></canvas>
+                    <canvas id="titleChart"></canvas>
                 </div>
             </div>
-            <div class="col-md-6 mt-5 ">
+            <div class="col-md-6 mt-5">
                 <div class="analytics-section">
                     <canvas id="authorChart"></canvas>
                 </div>
@@ -76,9 +73,9 @@
             </div>
         </div>
     </div>
-
     <script>
-        //get dashborad results
+
+        //Section one => Dashboard Statistics results
         var domain = 'x.com'; //to change later
         //get elements
         pageviewElement = document.getElementById("pageviews");
@@ -86,8 +83,7 @@
         articleElement = document.getElementById("articles");
         authorElement = document.getElementById("authors");
 
-
-        ///fetch top dashboard results api
+        ///fetching data
         fetch('http://localhost:5115/api/Analyze/dashboard?domain=' + domain) //to change later
             .then(response => {
                 if (!response.ok) {
@@ -107,8 +103,77 @@
                 console.error('There was a problem with the fetch operation:', error);
             });
 
-        ///page views with respect to authors
-        const ctx3 = document.getElementById('authorChart').getContext('2d')
+        //Section2 =>Date Pageviews line chart
+        const ctx2 = document.getElementById('dateChart').getContext('2d');
+        //get date from 10 days
+        var date = getTenDaysAgoDate()
+        //fetching data
+        fetch('http://localhost:5115/api/Analyze/date?domain=' + domain + "&date=" + date) //to change later
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonResponse => {
+                // Process the JSON data
+                const date = [];
+                const pageviews = [];
+
+                jsonResponse.forEach(item => {
+                    date.push(item.date);
+                    pageviews.push(item.pageViews);
+                });
+                //create the chart
+                const myChart2 = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: date,
+                        datasets: [{
+                            label: 'PageViews',
+                            data: pageviews,
+                            borderColor: 'red',
+                            borderWidth: 1,
+                            backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                            pointStyle: 'circle',
+                            pointRadius: 5,
+                            pointHoverRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Date',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'PageViews',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+        //Section4 =>Author Pageviews Pie chart
+        const ctx3 = document.getElementById('authorChart').getContext('2d');
+        //fetching data
         fetch('http://localhost:5115/api/Analyze/authors?domain=' + domain) //to change later
             .then(response => {
                 if (!response.ok) {
@@ -126,17 +191,16 @@
                     pageviews.push(item.pageViews);
                 });
 
+                //create the chart
                 const myChart3 = new Chart(ctx3, {
                     type: 'pie',
                     data: {
                         labels: authors,
-                        datasets: [
-                            {
-                                label: 'pageviews',
-                                data: pageviews,
-                                backgroundColor:pieChartColors
-                            }
-                        ]
+                        datasets: [{
+                            label: 'pageviews',
+                            data: pageviews,
+                            backgroundColor: pieChartColors
+                        }]
                     },
                     options: {
                         plugins: {
@@ -152,14 +216,12 @@
                         aspectRatio: 1, // Aspect ratio of the chart (width/height)
                         maintainAspectRatio: false // Whether to maintain aspect ratio when resizing
                     }
-                })////
+                });
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
-
-
-
     </script>
+
 </body>
 </html>

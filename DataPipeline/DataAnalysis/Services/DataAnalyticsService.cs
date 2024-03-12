@@ -62,14 +62,14 @@ namespace DataPipeline.DataAnalysis.Services
 
             return results;
         }
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria)
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria,string date)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
             var matchStage = new BsonDocument("$match", new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  { Constants.FORMATTED_DATE, new BsonDocument("$gt", "2024-03-02") }
+                  { Constants.FORMATTED_DATE, new BsonDocument("$gt", date) }
                    });
             //now we need to get the count of page views for each day
             var groupStage = new BsonDocument("$group", new BsonDocument

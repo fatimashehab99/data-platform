@@ -17,3 +17,8 @@ Accept:application/json
 
 GET {{DataServing_HostAddress}}/api/Analyze/authors?domain=x.com
 Accept:application/json
+
+###
+
+GET {{DataServing_HostAddress}}/api/Analyze/date?domain=x.com&date=2024-03-02
+Accept:application/json

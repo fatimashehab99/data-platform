@@ -34,7 +34,7 @@ namespace DataPipeline.DataAnalysis.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data);
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data,string date);
 
         /// <summary>
         /// This function is used to get top category page views 

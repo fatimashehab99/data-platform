@@ -66,13 +66,14 @@ namespace DataServing.Controllers
         /// <param name="domain"></param>
         /// <returns></returns>
         [HttpGet("date")]
-        public IActionResult AnalyzePageViewsByDate([FromQuery(Name = "domain")] string domain)
+        public IActionResult AnalyzePageViewsByDate([FromQuery(Name = "domain")] string domain,
+                                                    [FromQuery(Name = "date")] string date)
         {
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search);
+            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search,date);
             return Ok(results);
         }
     }
