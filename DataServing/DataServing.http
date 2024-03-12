@@ -12,3 +12,8 @@ Accept:application/json
 
 GET {{DataServing_HostAddress}}/api/Analyze/dashboard?domain=x.com
 Accept:application/json
+
+###
+
+GET {{DataServing_HostAddress}}/api/Analyze/authors?domain=x.com
+Accept:application/json

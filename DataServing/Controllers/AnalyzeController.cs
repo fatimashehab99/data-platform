@@ -46,5 +46,19 @@ namespace DataServing.Controllers
             return Ok(results);
 
         }
+        /// <summary>
+        /// This api is used to get authors with pageviews
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("authors")]
+        public IActionResult getAnalyticsPostByAuthor([FromQuery(Name = "domain")] string domain)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain
+            };
+            var results=_dataAnalyticsService.AnalyseByAuthor(search);
+            return Ok(results);
+        }
     }
 }

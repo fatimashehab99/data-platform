@@ -31,14 +31,21 @@ namespace DataPipeline.DataAnalysis.Services
         public List<AuthorPageView> AnalyseByAuthor(SearchCriteria criteria)
         {
             // Define the aggregation pipeline stages
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument("$match", new BsonDocument
+             {
+               { Constants.DOMAIN, criteria.Domain },
+                { "PostAuthor", new BsonDocument("$ne", BsonNull.Value) }
+                     });
+
             var groupStage = new BsonDocument("$group", new BsonDocument
                         {
                             { "_id", "$" + Constants.POST_AUTHOR }, // Group by author
                             { "PageView", new BsonDocument("$sum", 1) } // Sum the PageView values for each author
                         });
+            var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
+            var limitStage = new BsonDocument("$limit", 10);
 
-            var pipeline = new[] { matchStage, groupStage };
+            var pipeline = new[] { matchStage, groupStage,orderByStage,limitStage };
 
             List<BsonDocument> pResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
 

@@ -124,6 +124,7 @@ namespace DataPipelineTest
             {
                 Domain = domain,
             };
+
             //expected results
             var expectedResults = new List<AuthorPageView>
              {
