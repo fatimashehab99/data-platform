@@ -333,8 +333,19 @@
                         }]
                     },
                     options: {
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'PageViews',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        },
                         plugins: {
-                            legend: { position: 'left' },
                             title: {
                                 display: true,
                                 text: "Top Countries",

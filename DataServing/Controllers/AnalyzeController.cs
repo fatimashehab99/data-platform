@@ -78,7 +78,7 @@ namespace DataServing.Controllers
             return Ok(results);
         }
         /// <summary>
-        /// This API is used to get pageviews by location
+        /// This API is used to get pageviews by countries
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>

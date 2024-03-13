@@ -7,6 +7,8 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using System.Data.Entity;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataPipeline.DataAnalysis.Services
 {
@@ -103,7 +105,11 @@ namespace DataPipeline.DataAnalysis.Services
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument("$match", new BsonDocument
+                {
+                  { Constants.DOMAIN, criteria.Domain },
+                  {Constants.Category,new BsonDocument("$ne", BsonNull.Value) }
+                   });
             //now we need to get the count of pageviews for each category 
             var groupStage = new BsonDocument("$group", new BsonDocument
             {
