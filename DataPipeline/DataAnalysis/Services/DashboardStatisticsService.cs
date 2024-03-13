@@ -39,14 +39,14 @@ namespace DataPipeline.DataAnalysis.Services
             var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
 
             //get the count of pageviews
-            var countStage = new BsonDocument("$count", "TotalPageviews");
+            var countStage = new BsonDocument("$count", Constants.TOTAL_PAGE_VIEWS);
             //initialize the pipeline
             var pipeline = new[] { matchStage, countStage };
             //execute the pipeline
             var pipelineResults = _collection.Aggregate<BsonDocument>(pipeline);
             var result = pipelineResults.FirstOrDefault();
             //get total page views
-            int totalPageViews = result != null ? result["TotalPageviews"].AsInt32 : 0;
+            int totalPageViews = result != null ? result[Constants.TOTAL_PAGE_VIEWS].AsInt32 : 0;
             return totalPageViews;
 
         }
