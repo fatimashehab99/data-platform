@@ -347,7 +347,7 @@ namespace DataPipelineTest
             var pageView5 = GeneratePageView();
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain=pageView5.Domain = domain;
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
 
             //update ips 
             pageView1.Ip = pageView2.Ip = "102.129.65.0";
@@ -372,7 +372,7 @@ namespace DataPipelineTest
             new CountryNamePageView { CountryName = "Lebanon", PageViews = 3 },
              };
 
-            var locations=_analyticsService.AnalyzePageViewsByCountryName(criteria);
+            var locations = _analyticsService.AnalyzePageViewsByCountryName(criteria);
 
             Assert.That(locations != null, Is.True);
 

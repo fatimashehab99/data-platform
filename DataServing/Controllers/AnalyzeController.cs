@@ -82,8 +82,8 @@ namespace DataServing.Controllers
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        [HttpGet("location")]
-        public IActionResult AnalyzePageViewsbyLocation([FromQuery(Name = "domain")] string domain)
+        [HttpGet("countries")]
+        public IActionResult AnalyzePageViewsbyCountryName([FromQuery(Name= "domain")] string domain)
         {
             SearchCriteria search = new SearchCriteria()
             {

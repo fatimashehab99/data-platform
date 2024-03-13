@@ -53,22 +53,22 @@
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
                 <div class="analytics-section">
-                    <canvas id="dateChart"></canvas>
+                    <canvas id="DateChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="analytics-section">
-                    <canvas id="categoryChart"></canvas>
+                    <canvas id="CategoryChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6 mt-5">
                 <div class="analytics-section">
-                    <canvas id="authorChart"></canvas>
+                    <canvas id="AuthorChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6 mt-5">
                 <div class="analytics-section">
-                    <canvas id="locationChart"></canvas>
+                    <canvas id="CountryNameChart"></canvas>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
         //constants
         //host address to be replaced by the host address used by the API
         const hostAddress = "http://localhost:5115"
-        //constants 
+        //constants
         const domain = 'x.com'; //to change later
         //get date from 10 days
         var tenDaysAgoDate = getTenDaysAgoDate()
@@ -113,7 +113,7 @@
         //Section2 =>Date Pageviews line chart
 
         //get element
-        const ctx2 = document.getElementById('dateChart').getContext('2d');
+        const ctx2 = document.getElementById('DateChart').getContext('2d');
 
         //fetching data
         fetch(hostAddress + '/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate) //to change later
@@ -201,7 +201,7 @@
                 });
 
                 ///Category pageview dashboard design
-                const ctx1 = document.getElementById('categoryChart').getContext('2d');
+                const ctx1 = document.getElementById('CategoryChart').getContext('2d');
                 const myChart = new Chart(ctx1, {
                     type: 'bar',
                     data: {
@@ -209,8 +209,8 @@
                         datasets: [{
                             label: "PageViews",
                             data: pageviews,
-                            backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                            borderColor: 'rgba(255, 0, 0, 0.5)',
+                            backgroundColor: backGoundColors,
+                            borderColor: backGoundColors,
                             borderWidth: 1
                         }]
                     },
@@ -247,7 +247,7 @@
         //Section4 =>Author Pageviews Pie chart
 
         //get element
-        const ctx3 = document.getElementById('authorChart').getContext('2d');
+        const ctx3 = document.getElementById('AuthorChart').getContext('2d');
         //fetching data
         fetch(hostAddress + '/api/Analyze/authors?domain=' + domain) //to change later
             .then(response => {
@@ -267,14 +267,14 @@
                 });
 
                 //create the chart
-                 new Chart(ctx3, {
+                new Chart(ctx3, {
                     type: 'pie',
                     data: {
                         labels: authors,
                         datasets: [{
                             label: 'pageviews',
                             data: pageviews,
-                            backgroundColor: pieChartColors
+                            backgroundColor: backGoundColors
                         }]
                     },
                     options: {
@@ -282,7 +282,7 @@
                             legend: { position: 'left' },
                             title: {
                                 display: true,
-                                text: "Top Authors'PageViews",
+                                text: "Top Authors",
                                 font: {
                                     weight: 'bold'
                                 }
@@ -296,6 +296,63 @@
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
+
+        //Section5=>Country Name page view chart
+        //get element
+        const ctx4 = document.getElementById('CountryNameChart');
+        //fetching data
+        fetch(hostAddress + '/api/Analyze/countries?domain=' + domain) //to change later
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonResponse => {
+                // Process the JSON data
+                const countries = [];
+                const pageviews = [];
+
+                jsonResponse.forEach(item => {
+                    countries.push(item.countryName);
+                    pageviews.push(item.pageViews);
+                });
+
+                new Chart(ctx4, {
+                    type: 'bar',
+                    data: {
+                        labels: countries,
+                        datasets: [{
+                            axis: 'y',
+                            label: 'PageViews',
+                            data: pageviews,
+                            fill: false,
+                            backgroundColor: backGoundColors,
+                            borderColor: backGoundColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: { position: 'left' },
+                            title: {
+                                display: true,
+                                text: "Top Countries",
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        indexAxis: 'y'
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+
+
 
     </script>
 
