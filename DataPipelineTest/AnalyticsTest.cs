@@ -331,6 +331,61 @@ namespace DataPipelineTest
             Assert.That(totalPageViews == 3, Is.True);
 
         }
+        /// <summary>
+        /// This function is used test AnalyzeLocationPageViews function
+        /// </summary>
+        [Test]
+        public void AnalyzeLocationPageViews()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+            var pageView5 = GeneratePageView();
+
+            //update domain
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain=pageView5.Domain = domain;
+
+            //update ips 
+            pageView1.Ip = pageView2.Ip = "102.129.65.0";
+            pageView3.Ip = pageView4.Ip = pageView5.Ip = "109.172.22.0";
+
+            //save data to mongo db
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+            _trackService.LogPageview(pageView5);
+
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain
+            };
+            //expected results
+            var expectedResults = new List<CountryNamePageView>
+             {
+            new CountryNamePageView { CountryName = "Congo Republic", PageViews = 2 },
+            new CountryNamePageView { CountryName = "Lebanon", PageViews = 3 },
+             };
+
+            var locations=_analyticsService.AnalyzePageViewsByCountryName(criteria);
+
+            Assert.That(locations != null, Is.True);
+
+            //check results
+            foreach (var expected in expectedResults)
+            {
+                var actual = locations.Find(c => c.CountryName == expected.CountryName);
+                Assert.That(actual, Is.Not.Null);
+                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
+            }
+
+
+        }
 
 
     }

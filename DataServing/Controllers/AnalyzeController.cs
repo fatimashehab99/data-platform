@@ -2,6 +2,7 @@
 using DataPipeline.DataAnalysis.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataServing.Controllers
 {
@@ -73,7 +74,22 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search,date);
+            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search, date);
+            return Ok(results);
+        }
+        /// <summary>
+        /// This API is used to get pageviews by location
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        [HttpGet("location")]
+        public IActionResult AnalyzePageViewsbyLocation([FromQuery(Name = "domain")] string domain)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain
+            };
+            var results = _dataAnalyticsService.AnalyzePageViewsByCountryName(search);
             return Ok(results);
         }
     }

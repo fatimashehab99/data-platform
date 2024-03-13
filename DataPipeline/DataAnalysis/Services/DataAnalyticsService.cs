@@ -34,7 +34,7 @@ namespace DataPipeline.DataAnalysis.Services
             var matchStage = new BsonDocument("$match", new BsonDocument
              {
                { Constants.DOMAIN, criteria.Domain },
-                { "PostAuthor", new BsonDocument("$ne", BsonNull.Value) }
+                { Constants.POST_AUTHOR, new BsonDocument("$ne", BsonNull.Value) }
                      });
 
             var groupStage = new BsonDocument("$group", new BsonDocument
@@ -62,7 +62,7 @@ namespace DataPipeline.DataAnalysis.Services
 
             return results;
         }
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria,string date)
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria, string date)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
@@ -130,6 +130,40 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
         }
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria)
+        {
+            // Define the aggregation pipeline stages
+            var matchStage = new BsonDocument("$match", new BsonDocument
+             {
+               { Constants.DOMAIN, criteria.Domain },
+                { Constants.COUNTRY_NAME, new BsonDocument("$ne", BsonNull.Value) }
+                     });
+            //now we need to get the count of pageviews for each country name
+            var groupStage = new BsonDocument("$group", new BsonDocument
+            {
+                {"_id","$" + Constants.COUNTRY_NAME },//group by date
+                {"pageviews",new BsonDocument("$sum",1) }//count the pageviews
+
+            });
+            var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
+            var limitStage = new BsonDocument("$limit", 10);
+            //initialize the pipeline
+            var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
+            //execute the pipeline then store the results in list 
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            var results = new List<CountryNamePageView>();
+            //loop over the results to store them in DatePageView List
+            foreach (BsonDocument pipelineResult in pipelineResults)
+            {
+                results.Add(new CountryNamePageView
+                {
+                    CountryName = pipelineResult["_id"].AsString,
+                    PageViews = pipelineResult["pageviews"].AsInt32
+
+                });
+            }
+            return results;
+        }
         public DashboardStatistics getDashboardStatisticsData(SearchCriteria criteria)
         {
             int authors = _dashboardStatisticsService.getTotalAuthors(criteria);
@@ -146,6 +180,7 @@ namespace DataPipeline.DataAnalysis.Services
             return data;
 
         }
+
 
 
 

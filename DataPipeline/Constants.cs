@@ -38,6 +38,7 @@ namespace DataPipeline
         public static string USERID = "UserId";
         public static string POST_TITLE = "PostTitle";
         public static string FORMATTED_DATE = "Formatted_Date";
+        public static string COUNTRY_NAME = "Country_Name";
 
     }
 }

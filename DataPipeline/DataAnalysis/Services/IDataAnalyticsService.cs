@@ -49,6 +49,13 @@ namespace DataPipeline.DataAnalysis.Services
         /// <returns></returns>
         public DashboardStatistics getDashboardStatisticsData(SearchCriteria data);
 
+        /// <summary>
+        /// This function is used to get top locations pageviews 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data);
+
 
 
     }
