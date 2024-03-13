@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-6">
                 <div class="analytics-section">
-                    <canvas id="titleChart"></canvas>
+                    <canvas id="categoryChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6 mt-5">
@@ -74,9 +74,16 @@
         </div>
     </div>
     <script>
+        //constants
+        //host address to be replaced by the host address used by the API
+        const hostAddress = "http://localhost:5115"
+        //constants 
+        const domain = 'x.com'; //to change later
+        //get date from 10 days
+        var tenDaysAgoDate = getTenDaysAgoDate()
 
         //Section one => Dashboard Statistics results
-        var domain = 'x.com'; //to change later
+
         //get elements
         pageviewElement = document.getElementById("pageviews");
         userElement = document.getElementById("users");
@@ -84,7 +91,7 @@
         authorElement = document.getElementById("authors");
 
         ///fetching data
-        fetch('http://localhost:5115/api/Analyze/dashboard?domain=' + domain) //to change later
+        fetch(hostAddress + '/api/Analyze/dashboard?domain=' + domain) //to change later
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -104,11 +111,12 @@
             });
 
         //Section2 =>Date Pageviews line chart
+
+        //get element
         const ctx2 = document.getElementById('dateChart').getContext('2d');
-        //get date from 10 days
-        var date = getTenDaysAgoDate()
+
         //fetching data
-        fetch('http://localhost:5115/api/Analyze/date?domain=' + domain + "&date=" + date) //to change later
+        fetch(hostAddress + '/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate) //to change later
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -171,10 +179,77 @@
                 console.error('There was a problem with the fetch operation:', error);
             });
 
+
+        //Section3=> Top Categories Pageviews bar chart
+
+        ///fetch top categories data api
+        fetch(hostAddress + '/api/Analyze/categories?domain=' + domain) //to change later
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonResponse => {
+                // Process the JSON data
+                const categories = [];
+                const pageviews = [];
+
+                jsonResponse.forEach(item => {
+                    categories.push(item.category);
+                    pageviews.push(item.pageViews);
+                });
+
+                ///Category pageview dashboard design
+                const ctx1 = document.getElementById('categoryChart').getContext('2d');
+                const myChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            label: "PageViews",
+                            data: pageviews,
+                            backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                            borderColor: 'rgba(255, 0, 0, 0.5)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Top Categories',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'PageViews',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
         //Section4 =>Author Pageviews Pie chart
+
+        //get element
         const ctx3 = document.getElementById('authorChart').getContext('2d');
         //fetching data
-        fetch('http://localhost:5115/api/Analyze/authors?domain=' + domain) //to change later
+        fetch(hostAddress + '/api/Analyze/authors?domain=' + domain) //to change later
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -192,7 +267,7 @@
                 });
 
                 //create the chart
-                const myChart3 = new Chart(ctx3, {
+                 new Chart(ctx3, {
                     type: 'pie',
                     data: {
                         labels: authors,

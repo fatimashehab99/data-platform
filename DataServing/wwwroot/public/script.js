@@ -11,6 +11,7 @@
     'rgba(192, 192, 192, 0.5)' // Gray
 ];
 
+
 function getTenDaysAgoDate() {
     // Get the current date
     var currentDate = new Date();
@@ -26,3 +27,5 @@ function getTenDaysAgoDate() {
     return tenDaysAgoFormatted;
 
 }
+
+

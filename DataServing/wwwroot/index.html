@@ -39,81 +39,8 @@
 
 </head>
 <body>
-
-
-    <!--Visuliaztion Demo that call api/Analyse-->
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6">
-                <div class="analytics-section">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
-        var domain = 'x.com'; //to change later
-        ///fetch top categories api
-        fetch('http://localhost:5115/api/Analyze/categories?domain=' + domain) //to change later
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(jsonResponse => {
-                // Process the JSON data
-                const categories = [];
-                const pageviews = [];
 
-                jsonResponse.forEach(item => {
-                    categories.push(item.category);
-                    pageviews.push(item.pageViews);
-                });
-
-                ///Category pageview dashboard design
-                const ctx1 = document.getElementById('categoryChart').getContext('2d');
-                const myChart = new Chart(ctx1, {
-                    type: 'bar',
-                    data: {
-                        labels: categories,
-                        datasets: [{
-                            label: "PageViews",
-                            data: pageviews,
-                            backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                            borderColor: 'rgba(255, 0, 0, 0.5)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Top Categories',
-                                    font: {
-                                        weight: 'bold'
-                                    }
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'PageViews',
-                                    font: {
-                                        weight: 'bold'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
     </script>
 
 
