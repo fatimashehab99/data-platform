@@ -1,6 +1,5 @@
 
 //constants
-const hostAddress = "http://localhost:5115" //host address to be replaced by the host address used by the API
 const domain = 'x.com'; //to change later
 
 //Dashboard Statistics 
@@ -12,7 +11,7 @@ function fetchDashboardStatisticsData() {
     authorElement = document.getElementById("authors");
 
     ///fetching data
-    fetch(hostAddress + '/api/Analyze/dashboard?domain=' + domain) //to change later
+    fetch( '/api/Analyze/dashboard?domain=' + domain) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -38,7 +37,7 @@ function fetchDatePageViewsData() {
     const dateElement = document.getElementById('DateChart').getContext('2d');
 
     //fetching data
-    fetch(hostAddress + '/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate) //to change later
+    fetch('/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -66,7 +65,7 @@ function fetchDatePageViewsData() {
 function fetchCategoryPageViewsData() {
     const categoryElement = document.getElementById('CategoryChart').getContext('2d');
 
-    fetch(hostAddress + '/api/Analyze/categories?domain=' + domain) //to change later
+    fetch('/api/Analyze/categories?domain=' + domain) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -96,7 +95,7 @@ function fetchAuthorPageViewsData() {
     //get element
     const authorElement = document.getElementById('AuthorChart').getContext('2d');
     //fetching data
-    fetch(hostAddress + '/api/Analyze/authors?domain=' + domain) //to change later
+    fetch('/api/Analyze/authors?domain=' + domain) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -124,7 +123,7 @@ function fetchCountryPageViewsData() {
     //get element
     const countryElement = document.getElementById('CountryNameChart');
     //fetching data
-    fetch(hostAddress + '/api/Analyze/countries?domain=' + domain) //to change later
+    fetch('/api/Analyze/countries?domain=' + domain) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
