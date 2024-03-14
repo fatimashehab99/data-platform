@@ -29,6 +29,7 @@ namespace DataPipelineTest
         public ILocationService _locationService;
         public IDataAnalyticsService _analyticsService;
         public IDashboardStatisticsService _dashboardStatisticsService;
+        public IArticlesService _articlesService;
 
 
         [OneTimeSetUp]
@@ -58,13 +59,15 @@ namespace DataPipelineTest
             services.AddTransient<IDataCollectionService, DataCollectionService>();
             services.AddTransient<IDataAnalyticsService, DataAnalyticsService>();
             services.AddTransient<IDashboardStatisticsService, DashboardStatisticsService>();
+            services.AddTransient<IArticlesService, ArticlesService>();
 
             _serviceProvider = services.BuildServiceProvider();
 
             _analyticsService = GetService<IDataAnalyticsService>();
             _trackService = GetService<IDataCollectionService>();
             _locationService = GetService<ILocationService>();
-            _dashboardStatisticsService=GetService<IDashboardStatisticsService>();
+            _dashboardStatisticsService = GetService<IDashboardStatisticsService>();
+            _articlesService = GetService<IArticlesService>();
         }
         /// <summary>
         /// This function is used  to test the database connection
