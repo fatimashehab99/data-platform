@@ -32,6 +32,11 @@ namespace DataPipelineTest
                 pageView6.Ip = "109.75.64.0";
             pageView7.Ip = pageView8.Ip = "102.129.65.0";
 
+            //update post id
+            pageView1.PostId = pageView2.PostId = "1";
+            pageView3.PostId = pageView4.PostId = pageView5.PostId = "2";
+            pageView6.PostId = pageView7.PostId = pageView8.PostId = "3";
+
             //update post title
             pageView1.PostTitle = pageView2.PostTitle = "article 1";
             pageView3.PostTitle = pageView4.PostTitle = pageView5.PostTitle = "article 2";
@@ -51,8 +56,8 @@ namespace DataPipelineTest
             //expected results
             var expectedResults = new List<ArticlePageView>
              {
-            new ArticlePageView { PostTitle = "article 2", PageViews = 3 },
             new ArticlePageView { PostTitle = "article 1", PageViews = 2 },
+            new ArticlePageView { PostTitle = "article 2", PageViews = 3 },
              };
 
             //Read data from mongodb

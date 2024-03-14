@@ -43,7 +43,8 @@ namespace DataPipeline.DataAnalysis.Services
 
             //grouping by stage (post title)
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
-                {"_id","$"+Constants.POST_TITLE },//group by post title 
+                {"_id","$"+Constants.POST_ID },//group by post title 
+                {Constants.POST_TITLE,new  BsonDocument("$first","$"+Constants.POST_TITLE)},
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
             });
 
@@ -63,7 +64,7 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new ArticlePageView
                 {
-                    PostTitle = pResult["_id"].AsString, // Get the article title from the _id field
+                    PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
                     PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32 // Get total page views
                 });
             }

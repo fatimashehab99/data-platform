@@ -41,6 +41,7 @@ namespace DataPipeline
         public static string COUNTRY_NAME = "Country_Name";
         public static string TOTAL_PAGE_VIEWS = "TotalPageviews";
         public static string ARTICLES = "articles";
+        public static string POST_ID = "PostId";
         public static string MATCH = "$match";
         public static string GROUP = "$group";
         public static string SUM = "$sum";
@@ -49,6 +50,7 @@ namespace DataPipeline
         public static string NULL = "$ne";
         public static string GREATER = "$gt";
         public static string ID = "_id";
+        public static string FIRST = "$first";
 
     }
 }
