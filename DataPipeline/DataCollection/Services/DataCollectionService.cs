@@ -74,8 +74,12 @@ namespace DataPipeline.DataCollection.Services
             views.Country_Name = _locationService.getCountryName(views.Ip);
 
             //--Set Date on Current Get-->
-            views.Date = DateTime.Now.ToLocalTime();
+            DateTime date = DateTime.Now.ToLocalTime();
+            views.Date = date;
 
+            //if the formatted date is null it will take the current date
+            if (string.IsNullOrEmpty(views.Formatted_Date))
+                views.Formatted_Date = date.ToString("yyyy-MM-dd");
             _collection.InsertOne(views);
 
 

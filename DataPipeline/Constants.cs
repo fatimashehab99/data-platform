@@ -34,8 +34,12 @@ namespace DataPipeline
         public static string POST_AUTHOR = "PostAuthor";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
-
-
+        public static string Category = "PostCategory";
+        public static string USERID = "UserId";
+        public static string POST_TITLE = "PostTitle";
+        public static string FORMATTED_DATE = "Formatted_Date";
+        public static string COUNTRY_NAME = "Country_Name";
+        public static string TOTAL_PAGE_VIEWS = "TotalPageviews";
 
     }
 }

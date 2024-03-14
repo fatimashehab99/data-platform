@@ -3,6 +3,7 @@ using DataPipeline.DataAnalysis.Services;
 using DataPipeline.DataCollection.Models;
 using DataPipeline.DataCollection.Services;
 using DataPipeline.Helpers.LocationService;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
@@ -27,6 +28,7 @@ namespace DataPipelineTest
         public IDataCollectionService _trackService;
         public ILocationService _locationService;
         public IDataAnalyticsService _analyticsService;
+        public IDashboardStatisticsService _dashboardStatisticsService;
 
 
         [OneTimeSetUp]
@@ -47,7 +49,7 @@ namespace DataPipelineTest
             {
                 con.ConnectionString = "mongodb://localhost:27017";
                 con.DatabaseName = "mangopulse-analytics";
-                con.CollectionName = "MongoAnalyticsDB";
+                con.CollectionName = "MangoAnalyticsDB";
             }
             );
             services.AddHttpContextAccessor();
@@ -55,12 +57,14 @@ namespace DataPipelineTest
             services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<IDataCollectionService, DataCollectionService>();
             services.AddTransient<IDataAnalyticsService, DataAnalyticsService>();
+            services.AddTransient<IDashboardStatisticsService, DashboardStatisticsService>();
 
             _serviceProvider = services.BuildServiceProvider();
 
             _analyticsService = GetService<IDataAnalyticsService>();
             _trackService = GetService<IDataCollectionService>();
             _locationService = GetService<ILocationService>();
+            _dashboardStatisticsService=GetService<IDashboardStatisticsService>();
         }
         /// <summary>
         /// This function is used  to test the database connection

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataPipeline.DataAnalysis.Models
 {
-    public class DatePageView
+    public class CategoryPageView
     {
-        public string Date { get; set; }
+        public string Category { get; set; }
         public int PageViews { get; set; }
     }
 }
