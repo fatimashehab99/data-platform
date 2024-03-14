@@ -21,6 +21,8 @@ namespace DataPipeline
         public const string ERROR_AUTHOR_IS_EMPTY = "Author is empty";
         public const string ERROR_OPERATING_IS_EMPTY = "Operating is empty";
         public const string ERROR_COLLECTION_IS_EMPTY = "Collection is empty";
+        public const string ERROR_POST_URL_IS_EMPTY = "Post url  is empty";
+
 
 
         public const string ERROR_INVALID_IP = "Invalid Ip";

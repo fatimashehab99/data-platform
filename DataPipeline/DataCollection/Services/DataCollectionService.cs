@@ -70,6 +70,11 @@ namespace DataPipeline.DataCollection.Services
             if (string.IsNullOrEmpty(views.Platform))
                 throw new Exception(Constants.ERROR_OPERATING_IS_EMPTY);
 
+            //incase operating is null
+            if (string.IsNullOrEmpty(views.PostUrl))
+                throw new Exception(Constants.ERROR_POST_URL_IS_EMPTY);
+
+
             ///get location by country name
             views.Country_Name = _locationService.getCountryName(views.Ip);
 
