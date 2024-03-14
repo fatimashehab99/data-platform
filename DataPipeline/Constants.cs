@@ -33,6 +33,7 @@ namespace DataPipeline
         //MongoDB constants
 
         public static string USER_ID = "UserId";
+        public static string POST_TAG = "PostTags";
         public static string POST_AUTHOR = "PostAuthor";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
@@ -53,6 +54,9 @@ namespace DataPipeline
         public static string GREATER = "$gt";
         public static string ID = "_id";
         public static string FIRST = "$first";
+        public static string UN_WIND = "$unwind";
+        public static string TAG_INDEX = "tag_index";
+        public static string TAGS_COUNT = "tags_count";
 
     }
 }

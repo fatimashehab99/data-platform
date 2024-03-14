@@ -24,6 +24,52 @@ namespace DataPipeline.DataAnalysis.Services
             _collection = mongoDatabase.GetCollection<MongoDbPageView>(DatabaseSettings.Value.CollectionName);
         }
         /// <summary>
+        /// This function is used to get top tags for specific user
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public Dictionary<string, int> getTopTagsForSpecificUser(SearchCriteria criteria, string UserId, int dataSize)
+        {
+            //data filtering 
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+        {
+            { Constants.DOMAIN, criteria.Domain },
+             {Constants.USERID,UserId },
+            {Constants.POST_TAG, new BsonDocument(Constants.NULL, BsonNull.Value) }
+        });
+
+            //split tags array 
+            var unwindStage = new BsonDocument(Constants.UN_WIND, new BsonDocument(){
+            { "path" , "$"+Constants.POST_TAG },
+            { "includeArrayIndex" , Constants.TAG_INDEX },
+            { "preserveNullAndEmptyArrays" , true }
+        });
+            //grouping by tags
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
+        {
+            { "_id", "$"+Constants.POST_TAG }, // Group by author
+            { Constants.TAGS_COUNT, new BsonDocument(Constants.SUM, 1) } // Sum the PageView values for each author
+        });
+
+            //sorting by tags count 
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TAGS_COUNT, -1));
+            //limit by 10
+            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+
+
+            var pipeline = new[] { matchStage, unwindStage, groupStage, orderByStage, limitStage };
+
+            //save the results in a dictionary
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            Dictionary<string, int> results = new Dictionary<string, int>();
+            foreach (BsonDocument pipelineResult in pipelineResults)
+            {
+                results.Add(pipelineResult["_id"].AsString, pipelineResult[Constants.TAGS_COUNT].AsInt32);
+            }
+            return results;
+        }
+        /// <summary>
         /// This function is used to get top categories interested by specific usr
         /// </summary>
         /// <param name="criteria"></param>
@@ -99,4 +145,5 @@ namespace DataPipeline.DataAnalysis.Services
             return results;
         }
     }
+
 }

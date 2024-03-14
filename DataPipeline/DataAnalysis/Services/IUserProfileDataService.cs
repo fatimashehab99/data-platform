@@ -13,5 +13,8 @@ namespace DataPipeline.DataAnalysis.Services
     {
         public Dictionary<string, int> getTopCategoriesForSpecificUser(SearchCriteria criteria, string UserId);
         public Dictionary<string, int> getTopAuthorsForSpecificUser(SearchCriteria criteria, string UserId);
+        public Dictionary<string, int> getTopTagsForSpecificUser(SearchCriteria criteria, string UserId, int dataSize);
+
+
     }
 }
