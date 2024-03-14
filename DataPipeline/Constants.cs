@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.EntitySql;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace DataPipeline
 
         //MongoDB constants
 
+        public static string USER_ID = "UserId";
         public static string POST_AUTHOR = "PostAuthor";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";

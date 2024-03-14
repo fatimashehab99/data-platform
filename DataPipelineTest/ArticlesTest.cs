@@ -13,7 +13,6 @@ namespace DataPipelineTest
             var domain = "test.com" + Guid.NewGuid().ToString();
 
             //generate pageviews
-            //generate pageviews
             var pageView1 = GeneratePageView();
             var pageView2 = GeneratePageView();
             var pageView3 = GeneratePageView();

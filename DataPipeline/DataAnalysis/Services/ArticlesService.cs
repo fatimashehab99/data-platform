@@ -73,6 +73,5 @@ namespace DataPipeline.DataAnalysis.Services
         }
 
 
-
     }
 }
