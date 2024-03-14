@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="public/ArticlesScript.js"></script>
 
 
     <!--Script Demo To Send Page Views to data collection-->
@@ -38,22 +39,15 @@
 
 
 </head>
+<!--Reccomnedation demo that show Reccomendaed for Your articles and call  api/reccomend https://mdn.tv/7fwF اخترنا لك
+-->
+
 <body>
-    <script>
-
-    </script>
-
-
-
-    <!--Reccomnedation demo that show Reccomendaed for Your articles and call  api/reccomend https://mdn.tv/7fwF اخترنا لك
-    -->
-    <ul>
-        <li>Post1</li>
-        <li>Post2</li>
-        <li>Post3</li>
-        <li>Post4</li>
+    <ul id="trendingList">
     </ul>
-
+    <script>
+        fetchTrendingArticlesData("109.75.64.0");
+    </script>
 
 </body>
 </html>

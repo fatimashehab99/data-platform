@@ -40,6 +40,15 @@ namespace DataPipeline
         public static string FORMATTED_DATE = "Formatted_Date";
         public static string COUNTRY_NAME = "Country_Name";
         public static string TOTAL_PAGE_VIEWS = "TotalPageviews";
+        public static string ARTICLES = "articles";
+        public static string MATCH = "$match";
+        public static string GROUP = "$group";
+        public static string SUM = "$sum";
+        public static string SORT = "$sort";
+        public static string LIMIT = "$limit";
+        public static string NULL = "$ne";
+        public static string GREATER = "$gt";
+        public static string ID = "_id";
 
     }
 }
