@@ -16,7 +16,7 @@ namespace DataServing.Controllers
             _dataAnalyticsService = dataAnalyticsService;
         }
         /// <summary>
-        /// get top categories pageviews api
+        ///This API is used to get top categories pageviews 
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
@@ -62,7 +62,7 @@ namespace DataServing.Controllers
             return Ok(results);
         }
         /// <summary>
-        /// This function is used to get pageviews by date
+        /// This API is used to get pageviews by date
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
@@ -83,7 +83,7 @@ namespace DataServing.Controllers
         /// <param name="domain"></param>
         /// <returns></returns>
         [HttpGet("countries")]
-        public IActionResult AnalyzePageViewsbyCountryName([FromQuery(Name= "domain")] string domain)
+        public IActionResult AnalyzePageViewsbyCountryName([FromQuery(Name = "domain")] string domain)
         {
             SearchCriteria search = new SearchCriteria()
             {

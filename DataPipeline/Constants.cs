@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.EntitySql;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace DataPipeline
 
         //MongoDB constants
 
+        public static string USER_ID = "UserId";
         public static string POST_AUTHOR = "PostAuthor";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
@@ -40,6 +42,17 @@ namespace DataPipeline
         public static string FORMATTED_DATE = "Formatted_Date";
         public static string COUNTRY_NAME = "Country_Name";
         public static string TOTAL_PAGE_VIEWS = "TotalPageviews";
+        public static string ARTICLES = "articles";
+        public static string POST_ID = "PostId";
+        public static string MATCH = "$match";
+        public static string GROUP = "$group";
+        public static string SUM = "$sum";
+        public static string SORT = "$sort";
+        public static string LIMIT = "$limit";
+        public static string NULL = "$ne";
+        public static string GREATER = "$gt";
+        public static string ID = "_id";
+        public static string FIRST = "$first";
 
     }
 }

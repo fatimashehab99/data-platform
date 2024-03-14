@@ -1,7 +1,4 @@
 using DataPipeline.DataAnalysis.Models;
-using DataPipeline.DataAnalysis.Services;
-using DataPipeline.DataCollection.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DataPipelineTest
 {
@@ -9,7 +6,7 @@ namespace DataPipelineTest
     public class AnalyticsTest : BaseTest
     {
         /// <summary>
-        /// This function is used 
+        /// This function is used to test category pageviews function
         /// </summary>
         [Test]
         public void AnalyzePageViewsByCategory()
