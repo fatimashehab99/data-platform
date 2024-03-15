@@ -33,5 +33,22 @@ namespace DataServing.Controllers
             return Ok(results);
 
         }
+        /// <summary>
+        /// This API is used to get recommended articles
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("recommended")]
+        public IActionResult getRecommendedArticles([FromQuery(Name = "domain")] string domain,
+                                                    [FromQuery(Name = "userId")] string userId)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain
+            };
+            var results = _articlesService.getRecommendedArticles(search, userId, 4);
+            return Ok(results);
+        }
     }
 }

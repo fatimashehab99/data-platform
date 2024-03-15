@@ -80,6 +80,7 @@ namespace DataPipeline.DataAnalysis.Services
 
         public List<ArticlePageView> getRecommendedArticles(SearchCriteria search, string userId, int dataSize)
         {
+
             //get user's data
 
             //toDO save the user profile(user id, location,categories,authors,tags) in memory cache 
@@ -113,6 +114,8 @@ namespace DataPipeline.DataAnalysis.Services
 
             //add limit stage
             var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+            
+            //toDo solve null issue
             //initialize the pipeline 
             var pipeline = new[] { domainMatchStage, matchStage, limitStage };
             //execute the pipeline
