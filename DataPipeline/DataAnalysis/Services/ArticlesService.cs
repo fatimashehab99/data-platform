@@ -46,6 +46,8 @@ namespace DataPipeline.DataAnalysis.Services
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
                 {"_id","$"+Constants.POST_ID },//group by post title 
                 {Constants.POST_TITLE,new  BsonDocument("$first","$"+Constants.POST_TITLE)},
+                {Constants.POST_URL,new  BsonDocument("$first","$"+Constants.POST_URL)},
+                {Constants.POST_IMAGE,new  BsonDocument("$first","$"+Constants.POST_IMAGE)},
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
             });
 
@@ -66,7 +68,10 @@ namespace DataPipeline.DataAnalysis.Services
                 results.Add(new ArticlePageView
                 {
                     PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
-                    PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32 // Get total page views
+                    PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
+                    PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
+                    PostImage = pResult[Constants.POST_IMAGE]
+                    .AsBsonArray.Select(bsonValue => bsonValue.ToString()).ToArray()//Get Image url
                 });
             }
 
@@ -86,7 +91,7 @@ namespace DataPipeline.DataAnalysis.Services
             var matchFilters = new List<BsonDocument>();
 
             //filter by domain
-            var domainMatchStage= new BsonDocument(new BsonDocument(Constants.MATCH, new BsonDocument(Constants.DOMAIN, search.Domain)));
+            var domainMatchStage = new BsonDocument(new BsonDocument(Constants.MATCH, new BsonDocument(Constants.DOMAIN, search.Domain)));
             //loop over categories
             foreach (var category in topCategories)
             {
@@ -109,7 +114,7 @@ namespace DataPipeline.DataAnalysis.Services
             //add limit stage
             var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
             //initialize the pipeline 
-            var pipeline = new[] { domainMatchStage,matchStage, limitStage };
+            var pipeline = new[] { domainMatchStage, matchStage, limitStage };
             //execute the pipeline
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
 
