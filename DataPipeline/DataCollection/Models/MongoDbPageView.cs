@@ -63,6 +63,7 @@ namespace DataPipeline.DataCollection.Models
 
         public string[]? PostTags { get; set; }
         public string[] PostImage { get; set; }
+        [BsonElement("PostUrl")]
         public string? PostUrl { get; set; }
 
 

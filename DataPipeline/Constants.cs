@@ -37,6 +37,8 @@ namespace DataPipeline
         public static string USER_ID = "UserId";
         public static string POST_TAG = "PostTags";
         public static string POST_AUTHOR = "PostAuthor";
+        public static string POST_URL = "PostUrl";
+        public static string POST_IMAGE = "PostImage";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
         public static string Category = "PostCategory";
@@ -59,6 +61,8 @@ namespace DataPipeline
         public static string UN_WIND = "$unwind";
         public static string TAG_INDEX = "tag_index";
         public static string TAGS_COUNT = "tags_count";
+        public static string OR = "$or";
+        public static string IN = "$in";
 
     }
 }

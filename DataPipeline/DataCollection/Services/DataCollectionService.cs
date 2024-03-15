@@ -85,6 +85,7 @@ namespace DataPipeline.DataCollection.Services
             //if the formatted date is null it will take the current date
             if (string.IsNullOrEmpty(views.Formatted_Date))
                 views.Formatted_Date = date.ToString("yyyy-MM-dd");
+
             _collection.InsertOne(views);
 
 

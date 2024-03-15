@@ -23,12 +23,7 @@ namespace DataPipeline.DataAnalysis.Services
             ///get pageView collection 
             _collection = mongoDatabase.GetCollection<MongoDbPageView>(DatabaseSettings.Value.CollectionName);
         }
-        /// <summary>
-        /// This function is used to get top tags for specific user
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
+
         public Dictionary<string, int> getTopTagsForSpecificUser(SearchCriteria criteria, string UserId, int dataSize)
         {
             //data filtering 
@@ -69,12 +64,7 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
         }
-        /// <summary>
-        /// This function is used to get top categories interested by specific usr
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
+    
         public Dictionary<string, int> getTopCategoriesForSpecificUser(SearchCriteria criteria, string UserId)
         {
             // filtering stage
@@ -106,12 +96,7 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
         }
-        /// <summary>
-        /// This function is used to get top authors interested by specific usr
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
+
         public Dictionary<string, int> getTopAuthorsForSpecificUser(SearchCriteria criteria, string UserId)
         {
             //data filtering 
