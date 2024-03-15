@@ -66,7 +66,7 @@ namespace DataPipelineTest
             };
 
             //get articles with page views
-            var results = _articlesService.getTrendingArticles(criteria, "109.75.64.0");
+            var results = _articlesService.getTrendingArticles(criteria, "109.75.64.0",4);
             Assert.That(results != null, Is.True);
             //check results
             foreach (var expected in expectedResults)

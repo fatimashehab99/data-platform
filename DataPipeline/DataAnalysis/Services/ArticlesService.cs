@@ -23,7 +23,7 @@ namespace DataPipeline.DataAnalysis.Services
             _userProfileDataService = userProfileDataService;
         }
 
-        public List<ArticlePageView> getTrendingArticles(SearchCriteria criteria, string Ip)
+        public List<ArticlePageView> getTrendingArticles(SearchCriteria criteria, string Ip, int dataSize)
         {
             //get 3 days ago date
 
@@ -55,7 +55,7 @@ namespace DataPipeline.DataAnalysis.Services
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
 
             //limit stage
-            var limitStage = new BsonDocument(Constants.LIMIT, 4);
+            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
             //initialize the pipeline 
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline
@@ -114,7 +114,7 @@ namespace DataPipeline.DataAnalysis.Services
 
             //add limit stage
             var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
-            
+
             //toDo solve null issue
             //initialize the pipeline 
             var pipeline = new[] { domainMatchStage, matchStage, limitStage };

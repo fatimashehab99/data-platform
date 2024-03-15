@@ -29,7 +29,7 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _articlesService.getTrendingArticles(search, ip);
+            var results = _articlesService.getTrendingArticles(search, ip,4);
             return Ok(results);
 
         }
