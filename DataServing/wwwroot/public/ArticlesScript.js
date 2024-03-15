@@ -16,10 +16,18 @@ function fetchTrendingArticlesData(ip) {
         .then(jsonResponse => {
             jsonResponse.forEach(item => {
                 //toDO add image
+
+                //add post title
                 var trendingItemElement = document.createElement("li");
                 trendingItemElement.textContent = item.postTitle;
-                trendingItemElement.innerHTML = '<a href="' + item.postUrl + '</a>';
                 trendingListElement.appendChild(trendingItemElement);
+
+                //add post url
+                var trendingLink = document.createElement("a");
+                trendingLink.href = item.postUrl;
+                trendingLink.textContent = "Read More";
+                trendingListElement.appendChild(trendingLink);
+
             });
         })
         .catch(error => {
@@ -31,7 +39,7 @@ function fetchTrendingArticlesData(ip) {
 function fetchRecommendedArticlesData(userId) {
 
     //get element
-    trendingListElement = document.getElementById("recommendedList")
+    recommendedListElement = document.getElementById("recommendedList")
     ///fetching data
     fetch('/api/Article/recommended?domain=' + domain + "&userId=" + userId) //to change later
         .then(response => {
@@ -45,10 +53,19 @@ function fetchRecommendedArticlesData(userId) {
             jsonResponse.forEach(item => {
 
                 //toDO add image
-                var trendingItemElement = document.createElement("li");
-                trendingItemElement.textContent = item.postTitle;
-                trendingItemElement.innerHTML = '<a href="' + item.postUrl + '</a>';
-                trendingListElement.appendChild(trendingItemElement);
+
+                //add post title
+                var recommendedItemElement = document.createElement("li");
+                recommendedItemElement.textContent = item.postTitle;
+                recommendedListElement.appendChild(recommendedItemElement);
+
+                //add post url
+                var recommendedLink = document.createElement("a");
+                recommendedLink.href = item.postUrl;
+                recommendedLink.textContent = "Read More";
+                recommendedListElement.appendChild(recommendedLink);
+
+                // Append li element to ul element
             });
         })
         .catch(error => {
