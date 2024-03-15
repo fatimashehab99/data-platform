@@ -64,7 +64,7 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
         }
-    
+
         public Dictionary<string, int> getTopCategoriesForSpecificUser(SearchCriteria criteria, string UserId)
         {
             // filtering stage
@@ -128,6 +128,21 @@ namespace DataPipeline.DataAnalysis.Services
                 results.Add(pipelineResult["_id"].AsString, pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32);
             }
             return results;
+        }
+
+        public bool checkUser(SearchCriteria criteria, string userId)
+        {
+            //data filtering 
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+        {
+            { Constants.DOMAIN, criteria.Domain },
+             {Constants.USERID,userId },
+        });
+            var pipeline = new[] { matchStage };
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            // Return true if any documents are found, indicating the user exists; otherwise, return false
+            return pipelineResults.Count > 0;
+
         }
     }
 

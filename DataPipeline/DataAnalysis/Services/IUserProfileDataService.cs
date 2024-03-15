@@ -32,6 +32,13 @@ namespace DataPipeline.DataAnalysis.Services
         /// <param name="UserId"></param>
         /// <returns></returns>
         public Dictionary<string, int> getTopTagsForSpecificUser(SearchCriteria criteria, string UserId, int dataSize);
+        /// <summary>
+        /// This function is used to check if user exists or not
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool checkUser(SearchCriteria criteria, string userId);
 
 
     }

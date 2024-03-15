@@ -11,6 +11,26 @@ namespace DataPipelineTest
     public class UserProfileTest : BaseTest
     {
         /// <summary>
+        /// This function is used to test if a specific user visted the domain before or not
+        /// </summary>
+        [Test]
+        public void checkUser()
+        {
+            //set user id
+            string userId = Guid.NewGuid().ToString();
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain,
+            };
+            //execute the function
+            var results = _userProfileDataService.checkUser(criteria, userId);
+            Assert.That(results, Is.False);
+
+        }
+
+        /// <summary>
         /// This function is used to test user's top categories function
         /// </summary>
         [Test]

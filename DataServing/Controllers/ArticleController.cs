@@ -10,9 +10,11 @@ namespace DataServing.Controllers
     public class ArticleController : ControllerBase
     {
         private readonly IArticlesService _articlesService;
-        public ArticleController(IArticlesService articlesService)
+        private readonly IUserProfileDataService _userProfileDataService;
+        public ArticleController(IArticlesService articlesService, IUserProfileDataService userProfileDataService)
         {
             _articlesService = articlesService;
+            _userProfileDataService = userProfileDataService;
         }
         /// <summary>
         /// This API is used to get trending articles
@@ -29,7 +31,7 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _articlesService.getTrendingArticles(search, ip,4);
+            var results = _articlesService.getTrendingArticles(search, ip, 4);
             return Ok(results);
 
         }
@@ -43,11 +45,23 @@ namespace DataServing.Controllers
         public IActionResult getRecommendedArticles([FromQuery(Name = "domain")] string domain,
                                                     [FromQuery(Name = "userId")] string userId)
         {
+            //toDo get ip
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain
             };
-            var results = _articlesService.getRecommendedArticles(search, userId, 4);
+            //check user if exists
+            bool userExist = _userProfileDataService.checkUser(search, userId);
+            List<ArticlePageView> results;
+            //incase user does not exists it will return trending articles 
+            if (!userExist)
+            {
+                results = _articlesService.getTrendingArticles(search, "109.75.64.0", 4);//toDo change ip 
+            }
+            else
+            {
+                results = _articlesService.getRecommendedArticles(search, userId, 4);
+            }
             return Ok(results);
         }
     }
