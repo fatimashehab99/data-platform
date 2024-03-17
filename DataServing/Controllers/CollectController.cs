@@ -1,7 +1,11 @@
-﻿using DataPipeline.DataCollection.Models;
+﻿using DataPipeline.DataAnalysis.Models;
+using DataPipeline.DataAnalysis.Services;
+using DataPipeline.DataCollection.Models;
 using DataPipeline.DataCollection.Services;
+using DataPipeline.Helpers.LocationService;
 using DataServing.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Wangkanai.Detection.Services;
 
 namespace DataServing.Controllers
@@ -12,11 +16,19 @@ namespace DataServing.Controllers
     {
         private readonly IDataCollectionService _service;
         public readonly IDetectionService detectionService;
+        public readonly IMemoryCache _cache;
+        public readonly IUserProfileDataService _userProfileDataService;
+        public readonly ILocationService _locationService;
 
-        public CollectController(IDataCollectionService service, IDetectionService _detectionService)
+
+        public CollectController(IDataCollectionService service, IDetectionService _detectionService, IMemoryCache cache,
+            IUserProfileDataService userProfileDataService, ILocationService locationService)
         {
             _service = service;
             detectionService = _detectionService;
+            _cache = cache;
+            _userProfileDataService = userProfileDataService;
+            _locationService = locationService;
         }
 
 
@@ -48,13 +60,37 @@ namespace DataServing.Controllers
                 PostCategory = data.PostCategory,
                 PostTags = data.PostTags,
                 PostPublishDate = data.PostPublishDate,
-                PostImage=data.PostImage,
-                PostUrl=data.PostUrl,
+                PostImage = data.PostImage,
+                PostUrl = data.PostUrl,
             };
 
             views.UserId = data.UserId;
 
             _service.LogPageview(views);
+
+            //cache user data 
+            //set unique cache key for specific user id and domain
+            var cacheKey = $"User_{data.UserId}_Domain_{data.Domain}";
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = data.Domain
+            };
+            //get top categories , author and tags for the user 
+            Dictionary<string, int> topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, data.UserId);
+            Dictionary<string, int> topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, data.UserId);
+            Dictionary<string, int> topTags = _userProfileDataService.getTopTagsForSpecificUser(search, data.UserId, 10);
+            //create user data
+            UserData userData = new UserData()
+            {
+                UserId = data.UserId,
+                Domain = data.Domain,
+                CountryName = _locationService.getCountryName(views.Ip),
+                TopCategories = topCategories,
+                TopAuthors = topAuthors,
+                TopTags = topTags
+            };
+            //add data to the cache
+            _cache.Set(cacheKey, userData, TimeSpan.FromDays(1));
 
             return views;
 

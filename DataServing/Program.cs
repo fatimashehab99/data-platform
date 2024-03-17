@@ -10,18 +10,23 @@ builder.Services.AddDetection();
 builder.Services.AddControllers();
 builder.Services.AddCors();
 
-builder.Services.AddControllers();
+//add in-memory cache service
+builder.Services.AddMemoryCache();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<DatabaseConnecting>(builder.Configuration.GetSection("PageViewsDatabase"));
+//services injection 
 builder.Services.AddScoped<IDataCollectionService, DataCollectionService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IDataAnalyticsService, DataAnalyticsService>();
 builder.Services.AddScoped<IDashboardStatisticsService, DashboardStatisticsService>();
 builder.Services.AddScoped<IArticlesService, ArticlesService>();
 builder.Services.AddScoped<IUserProfileDataService, UserProfileDataService>();
+
+
 
 
 

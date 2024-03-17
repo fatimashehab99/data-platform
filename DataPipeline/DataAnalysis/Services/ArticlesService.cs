@@ -1,9 +1,11 @@
 ﻿using DataPipeline.DataAnalysis.Models;
 using DataPipeline.DataCollection.Models;
 using DataPipeline.Helpers.LocationService;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataPipeline.DataAnalysis.Services
 {
@@ -12,7 +14,9 @@ namespace DataPipeline.DataAnalysis.Services
         private readonly IMongoCollection<MongoDbPageView> _collection;
         private readonly ILocationService _locationService;
         private readonly IUserProfileDataService _userProfileDataService;
-        public ArticlesService(IOptions<DatabaseConnecting> DatabaseSettings, ILocationService locationService, IUserProfileDataService userProfileDataService)
+        private readonly IMemoryCache _cache;
+        public ArticlesService(IOptions<DatabaseConnecting> DatabaseSettings, ILocationService locationService,
+            IUserProfileDataService userProfileDataService, IMemoryCache cache)
         {
             //mongo DB connection 
             var mongoClient = new MongoClient(DatabaseSettings.Value.ConnectionString);
@@ -21,6 +25,7 @@ namespace DataPipeline.DataAnalysis.Services
             _collection = mongoDatabase.GetCollection<MongoDbPageView>(DatabaseSettings.Value.CollectionName);
             _locationService = locationService;
             _userProfileDataService = userProfileDataService;
+            _cache = cache;
         }
 
         public List<ArticlePageView> getTrendingArticles(SearchCriteria criteria, string Ip, int dataSize)
@@ -82,6 +87,10 @@ namespace DataPipeline.DataAnalysis.Services
         {
 
             //get user's data
+       //     var cacheKey = $"User_{userId}_Domain_{search.Domain}";
+            //toDo still have an issue here 
+       //    UserData user = (UserData)_cache.Get("123");
+       //     string domain = user.Domain;
 
             //toDO save the user profile(user id, location,categories,authors,tags) in memory cache 
             Dictionary<string, int> topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, userId);

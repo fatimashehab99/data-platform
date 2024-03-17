@@ -32,3 +32,4 @@ Accept:application/json
 
 GET {{DataServing_HostAddress}}/api/Article/trending?domain=x.com&ip=109.75.64.0
 Accept:application/json
+
