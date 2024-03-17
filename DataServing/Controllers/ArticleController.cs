@@ -43,7 +43,7 @@ namespace DataServing.Controllers
         /// <returns></returns>
         [HttpGet("recommended")]
         public IActionResult getRecommendedArticles([FromQuery(Name = "domain")] string domain,
-                                                    [FromQuery(Name = "userId")] string userId)
+                                                    [FromQuery(Name = "userId")] string userId, [FromQuery(Name = "Ip")] string Ip)
         {
             //toDo get ip
             SearchCriteria search = new SearchCriteria()
@@ -54,14 +54,10 @@ namespace DataServing.Controllers
             bool userExist = _userProfileDataService.checkUser(search, userId);
             List<ArticlePageView> results;
             //incase user does not exists it will return trending articles 
-            if (!userExist)
-            {
-                results = _articlesService.getTrendingArticles(search, "109.75.64.0", 4);//toDo change ip 
-            }
-            else
-            {
-                results = _articlesService.getRecommendedArticles(search, userId, 4);
-            }
+            results = !userExist
+                //incase the user has no recommended articles it will get the trending articles
+             ? _articlesService.getTrendingArticles(search, Ip, 4) // ToDo: Change IP
+             : _articlesService.getRecommendedArticles(search, userId, 4);
             return Ok(results);
         }
     }

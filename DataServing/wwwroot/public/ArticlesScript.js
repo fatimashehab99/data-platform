@@ -6,7 +6,7 @@ function fetchTrendingArticlesData(ip) {
     //get element
     trendingListElement = document.getElementById("trendingList")
     ///fetching data
-    fetch('/api/Article/trending?domain=' + domain + "&ip=" + ip) //to change later
+    fetch(`/api/Article/trending?domain=${domain}&ip=${ip}`) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -41,7 +41,7 @@ function fetchRecommendedArticlesData(userId) {
     //get element
     recommendedListElement = document.getElementById("recommendedList")
     ///fetching data
-    fetch('/api/Article/recommended?domain=' + domain + "&userId=" + userId) //to change later
+    fetch(`/api/Article/recommended?domain=${domain}&userId=${userId}&Ip=109.75.64.0`) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

@@ -30,6 +30,11 @@ Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Article/trending?domain=x.com&ip=109.75.64.0
+GET {{DataServing_HostAddress}}/api/Article/trending?domain=example.com&ip=102.129.65.0
 Accept:application/json
 
+
+###
+
+GET {{DataServing_HostAddress}}/api/Article/recommended?domain=example.com&userId=3
+Accept:application/json

@@ -4,6 +4,7 @@ using DataPipeline.DataCollection.Models;
 using DataPipeline.DataCollection.Services;
 using DataPipeline.Helpers.LocationService;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
@@ -31,6 +32,7 @@ namespace DataPipelineTest
         public IDashboardStatisticsService _dashboardStatisticsService;
         public IArticlesService _articlesService;
         public IUserProfileDataService _userProfileDataService;
+        public IMemoryCache _cache;
 
 
         [OneTimeSetUp]
@@ -62,6 +64,8 @@ namespace DataPipelineTest
             services.AddTransient<IDashboardStatisticsService, DashboardStatisticsService>();
             services.AddTransient<IArticlesService, ArticlesService>();
             services.AddTransient<IUserProfileDataService, UserProfileDataService>();
+            services.AddTransient<IMemoryCache, MemoryCache>();
+
 
             _serviceProvider = services.BuildServiceProvider();
 
@@ -71,6 +75,7 @@ namespace DataPipelineTest
             _dashboardStatisticsService = GetService<IDashboardStatisticsService>();
             _articlesService = GetService<IArticlesService>();
             _userProfileDataService = GetService<IUserProfileDataService>();
+            _cache = GetService<IMemoryCache>();
         }
         /// <summary>
         /// This function is used  to test the database connection
@@ -138,6 +143,8 @@ namespace DataPipelineTest
         public void TearDown()
         {
             _serviceProvider.Dispose();
+            _cache.Dispose();
+
         }
 
     }

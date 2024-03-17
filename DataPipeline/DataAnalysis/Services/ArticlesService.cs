@@ -47,9 +47,9 @@ namespace DataPipeline.DataAnalysis.Services
                 { Constants.POST_TITLE, new BsonDocument(Constants.NULL, BsonNull.Value) }
             });
 
-            //grouping by stage (post title)
+            //grouping by stage (post id)
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
-                {"_id","$"+Constants.POST_ID },//group by post title 
+                {"_id","$"+Constants.POST_ID },//group by post id
                 {Constants.POST_TITLE,new  BsonDocument("$first","$"+Constants.POST_TITLE)},
                 {Constants.POST_URL,new  BsonDocument("$first","$"+Constants.POST_URL)},
                 {Constants.POST_IMAGE,new  BsonDocument("$first","$"+Constants.POST_IMAGE)},
@@ -87,10 +87,10 @@ namespace DataPipeline.DataAnalysis.Services
         {
 
             //get user's data
-       //     var cacheKey = $"User_{userId}_Domain_{search.Domain}";
+            //     var cacheKey = $"User_{userId}_Domain_{search.Domain}";
             //toDo still have an issue here 
-       //    UserData user = (UserData)_cache.Get("123");
-       //     string domain = user.Domain;
+            //    UserData user = (UserData)_cache.Get("123");
+            //     string domain = user.Domain;
 
             //toDO save the user profile(user id, location,categories,authors,tags) in memory cache 
             Dictionary<string, int> topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, userId);
@@ -118,15 +118,26 @@ namespace DataPipeline.DataAnalysis.Services
                 matchFilters.Add(new BsonDocument(Constants.POST_TAG, new BsonDocument(Constants.IN, new BsonArray(tag.Key))));
             }
 
+
             // Create $or expression for match filters
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument(Constants.OR, new BsonArray(matchFilters)));
+
+            //grouping by stage (post id)
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
+                {"_id","$"+Constants.POST_ID },//group by post id
+                {Constants.POST_TITLE,new  BsonDocument("$first","$"+Constants.POST_TITLE)},
+                {Constants.POST_URL,new  BsonDocument("$first","$"+Constants.POST_URL)},
+                {Constants.POST_IMAGE,new  BsonDocument("$first","$"+Constants.POST_IMAGE)},
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
+            });
+
 
             //add limit stage
             var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
 
             //toDo solve null issue
             //initialize the pipeline 
-            var pipeline = new[] { domainMatchStage, matchStage, limitStage };
+            var pipeline = new[] { domainMatchStage, matchStage,groupStage, limitStage };
             //execute the pipeline
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
 

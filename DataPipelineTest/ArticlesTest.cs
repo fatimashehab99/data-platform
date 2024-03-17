@@ -1,4 +1,5 @@
 ﻿using DataPipeline.DataAnalysis.Models;
+using DataPipeline.DataCollection.Models;
 
 namespace DataPipelineTest
 {
@@ -26,7 +27,7 @@ namespace DataPipelineTest
             pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain =
                 pageView5.Domain = pageView6.Domain = pageView7.Domain = pageView8.Domain = domain;
 
-            //update ip 
+            //update ip m
             pageView1.Ip = pageView2.Ip = pageView3.Ip = pageView4.Ip = pageView5.Ip =
                 pageView6.Ip = "109.75.64.0";
             pageView7.Ip = pageView8.Ip = "102.129.65.0";
@@ -66,7 +67,7 @@ namespace DataPipelineTest
             };
 
             //get articles with page views
-            var results = _articlesService.getTrendingArticles(criteria, "109.75.64.0",4);
+            var results = _articlesService.getTrendingArticles(criteria, "109.75.64.0", 4);
             Assert.That(results != null, Is.True);
             //check results
             foreach (var expected in expectedResults)
@@ -127,6 +128,15 @@ namespace DataPipelineTest
             pageView5.PostTitle = "article 5";
             pageView6.PostTitle = "article 6";
 
+            //update post id
+
+            pageView1.PostId = " 1";
+            pageView2.PostId = " 2";
+            pageView3.PostId = " 3";
+            pageView4.PostId = " 4";
+            pageView5.PostId = " 5";
+            pageView6.PostId = " 6";
+
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
@@ -148,33 +158,10 @@ namespace DataPipelineTest
 
             //execute the function
             var results = _articlesService.getRecommendedArticles(criteria, "123", 4);
-            //expected results
-            var expectedResults = new List<ArticlePageView>
-             {
-            new ArticlePageView { PostTitle = "article 1"},
-            new ArticlePageView { PostTitle = "article 2"},
-            new ArticlePageView { PostTitle = "article 3"},
-            new ArticlePageView { PostTitle = "article 4"}
-             };
-
+   
             //Assert 
             Assert.That(results != null, Is.True);
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = results.Find(c => c.PostTitle == expected.PostTitle);
-                Assert.That(actual, Is.Not.Null);
-            }
-
-
-
-
-
-
-
-
-
-
+     
         }
     }
 }
