@@ -27,17 +27,27 @@
             postimage: ["image"],
             posttags: ["tag1", "tag2", "tag3"]
         };
+        // Define a function to make the first API call
+        function dataCollectorApiCall() {
+            return new Promise((resolve, reject) => {
+                //execute the API
+                var url = '/api/collect';
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: JSON.stringify(mydata),
+                    contentType: 'application/json',
+                    success: function () { console.log('Tracking') },
+                    error: function (error) { console.log(error); }
+                });
+                setTimeout(() => {
+                    resolve();
+                }, 1000); // 1000ms delay
+            });
+        }
 
 
-        var url = '/api/collect';
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: JSON.stringify(mydata),
-            contentType: 'application/json',
-            success: function () { console.log('Tracking') },
-            error: function (error) { console.log(error); }
-        });
+
     </script>
 
 
@@ -54,8 +64,36 @@
     <ul id="recommendedList">
     </ul>
     <script>
-        fetchTrendingArticlesData("102.129.65.0");//toDo update ip
-        fetchRecommendedArticlesData("313aa122-0666-46cd-8468-68e514beecvt")//toDo update user id
+        function trendingApiCall() {
+            return new Promise((resolve, reject) => {
+                //execute trending API
+                fetchTrendingArticlesData("102.129.65.0");//toDo update ip
+                setTimeout(() => {
+                    resolve();
+                }, 500); // 500ms delay
+            });
+        }
+        // Define a function to make the third API call
+        function recommendedApiCall() {
+            return new Promise((resolve, reject) => {
+                //execute recommended API
+                fetchRecommendedArticlesData("313aa122-0666-46cd-8468-68e514beecvt")//toDo update user id
+                setTimeout(() => {
+                    resolve();
+                }, 500); // 500ms delay
+            });
+        }
+        // Execute the API calls sequentially
+        dataCollectorApiCall()
+            .then(() => {
+                return Promise.all([trendingApiCall(), recommendedApiCall()]);
+            })
+            .then(() => {
+                console.log("All API calls completed");
+            })
+            .catch((error) => {
+                console.error("An error occurred:", error);
+            });
     </script>
 
 

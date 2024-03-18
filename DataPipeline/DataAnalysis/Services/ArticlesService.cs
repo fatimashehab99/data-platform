@@ -1,6 +1,7 @@
 ﻿using DataPipeline.DataAnalysis.Models;
 using DataPipeline.DataCollection.Models;
 using DataPipeline.Helpers.LocationService;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -85,17 +86,44 @@ namespace DataPipeline.DataAnalysis.Services
 
         public List<ArticlePageView> getRecommendedArticles(SearchCriteria search, string userId, int dataSize)
         {
+            //variables initialization 
+            Dictionary<string, int>? topCategories = null;
+            Dictionary<string, int>? topAuthors = null;
+            Dictionary<string, int>? topTags = null;
 
-            //get user's data
-            //     var cacheKey = $"User_{userId}_Domain_{search.Domain}";
-            //toDo still have an issue here 
-            //    UserData user = (UserData)_cache.Get("123");
-            //     string domain = user.Domain;
+            //set unique cache key for specific user id and domain
+            var cacheKey = $"User_{userId}_Domain_{search.Domain}";
 
-            //toDO save the user profile(user id, location,categories,authors,tags) in memory cache 
-            Dictionary<string, int> topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, userId);
-            Dictionary<string, int> topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, userId);
-            Dictionary<string, int> topTags = _userProfileDataService.getTopTagsForSpecificUser(search, userId, 10);
+            bool isUserExist = _cache.TryGetValue(cacheKey, out isUserExist);
+
+            //if user's data doesn't exist it will be created and added to the memory
+            if (!isUserExist)
+            {
+                //get top categories , author and tags for the user 
+                topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, userId);
+                topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, userId);
+                topTags = _userProfileDataService.getTopTagsForSpecificUser(search, userId, 10);
+
+                //create user data
+                UserData user = new UserData()
+                {
+                    UserId = userId,
+                    Domain = search.Domain,
+                    //   CountryName = _locationService.getCountryName(views.Ip),
+                    TopCategories = topCategories,
+                    TopAuthors = topAuthors,
+                    TopTags = topTags
+                };
+
+                //add data to the cache
+                _cache.Set(cacheKey, user, TimeSpan.FromDays(1));
+            }
+            //get user data from the cache
+            UserData userData = (UserData)_cache.Get(cacheKey);
+            topCategories = userData.TopCategories;
+            topAuthors = userData.TopAuthors;
+            topTags = userData.TopTags;
+
 
             //match stage 
             var matchFilters = new List<BsonDocument>();
@@ -137,7 +165,7 @@ namespace DataPipeline.DataAnalysis.Services
 
             //toDo solve null issue
             //initialize the pipeline 
-            var pipeline = new[] { domainMatchStage, matchStage,groupStage, limitStage };
+            var pipeline = new[] { domainMatchStage, matchStage, groupStage, limitStage };
             //execute the pipeline
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
 
