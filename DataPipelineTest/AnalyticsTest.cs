@@ -48,7 +48,7 @@ namespace DataPipelineTest
             };
 
             //get categories with total pageviews
-            var results = _analyticsService.AnalyzePageViewsByCategory(criteria);
+            var results = _analyticsService.AnalyzePageViewsByCategory(criteria, 10);
             Assert.That(results != null, Is.True);
             //check results
             foreach (var expected in expectedResults)
@@ -109,7 +109,7 @@ namespace DataPipelineTest
             new DatePageView { Date = "2024-03-06", PageViews = 1 },
              };
 
-            var pageviews = _analyticsService.AnalyzePageViewsByDate(criteria, date);
+            var pageviews = _analyticsService.AnalyzePageViewsByDate(criteria, date, 10);
 
             Assert.That(pageviews != null, Is.True);
 
@@ -170,7 +170,7 @@ namespace DataPipelineTest
             new AuthorPageView { Author = "john", PageViews = 2 },
              };
 
-            var authors = _analyticsService.AnalyseByAuthor(criteria);
+            var authors = _analyticsService.AnalyseByAuthor(criteria, 10);
 
             Assert.That(authors != null, Is.True);
 
@@ -369,7 +369,7 @@ namespace DataPipelineTest
             new CountryNamePageView { CountryName = "Lebanon", PageViews = 3 },
              };
 
-            var locations = _analyticsService.AnalyzePageViewsByCountryName(criteria);
+            var locations = _analyticsService.AnalyzePageViewsByCountryName(criteria, 10);
 
             Assert.That(locations != null, Is.True);
 

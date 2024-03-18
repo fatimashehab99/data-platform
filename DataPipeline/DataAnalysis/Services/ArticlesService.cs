@@ -45,7 +45,7 @@ namespace DataPipeline.DataAnalysis.Services
                 {Constants.DOMAIN,criteria.Domain },
                 {Constants.COUNTRY_NAME,countryName},
                 { Constants.FORMATTED_DATE, new BsonDocument(Constants.GREATER, date) },
-                { Constants.POST_TITLE, new BsonDocument(Constants.NULL, BsonNull.Value) }
+                { Constants.POST_TITLE, new BsonDocument(Constants.NOT, BsonNull.Value) }
             });
 
             //grouping by stage (post id)

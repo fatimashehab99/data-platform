@@ -7,6 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using System.Data.Entity;
 using System.Linq.Expressions;
+using System.Numerics;
 using System.Reflection.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -30,22 +31,24 @@ namespace DataPipeline.DataAnalysis.Services
             _dashboardStatisticsService = dashboardStatisticsService;
         }
 
-        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria criteria)
+        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria criteria, int dataSize)
         {
             // Define the aggregation pipeline stages
-            var matchStage = new BsonDocument("$match", new BsonDocument
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
              {
                { Constants.DOMAIN, criteria.Domain },
-                { Constants.POST_AUTHOR, new BsonDocument("$ne", BsonNull.Value) }
+                { Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) }
                      });
 
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
                         {
-                            { "_id", "$" + Constants.POST_AUTHOR }, // Group by author
-                            { "PageView", new BsonDocument("$sum", 1) } // Sum the PageView values for each author
+                            { Constants.ID, "$" + Constants.POST_AUTHOR }, // Group by author
+                            { Constants.TOTAL_PAGE_VIEWS, new BsonDocument(Constants.SUM, 1) } // Sum the PageView values for each author
                         });
-            var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
-            var limitStage = new BsonDocument("$limit", 10);
+            //order by total pageviews
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+            //limit 10 records
+            var limitStage = new BsonDocument(Constants.LIMIT, 10);
 
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
 
@@ -57,33 +60,35 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new AuthorPageView
                 {
-                    Author = pResult["_id"].AsString, // Get the author from the _id field
-                    PageViews = pResult["PageView"].AsInt32 // Get the PageView value
+                    Author = pResult[Constants.ID].AsString, // Get the author from the _id field
+                    PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32 // Get the PageView value
                 });
             }
 
             return results;
         }
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria, string date)
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria, string date, int dataSize)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  { Constants.FORMATTED_DATE, new BsonDocument("$gt", date) }
+                  { Constants.FORMATTED_DATE, new BsonDocument(Constants.GREATER, date) }
                    });
             //now we need to get the count of page views for each day
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {"_id","$"+Constants.FORMATTED_DATE},//group by date
-                {"pageviews",new BsonDocument("$sum",1) }//count the pageviews
+                {Constants.ID,"$"+Constants.FORMATTED_DATE},//group by date
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }//count the pageviews
 
             });
             ///now we need to order the results by date
-            var orderByStage = new BsonDocument("$sort", new BsonDocument("_id", -1));
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+            //limit 10 records
+            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
             //initialize the pipeline
-            var pipeline = new[] { matchStage, groupStage, orderByStage };
+            var pipeline = new[] { matchStage, groupStage, limitStage, orderByStage };
             //execute the pipeline then store the results in list 
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
             var results = new List<DatePageView>();
@@ -92,8 +97,8 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new DatePageView
                 {
-                    Date = pipelineResult["_id"].AsString,
-                    PageViews = pipelineResult["pageviews"].AsInt32
+                    Date = pipelineResult[Constants.ID].AsString,
+                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32
 
                 });
             }
@@ -101,24 +106,24 @@ namespace DataPipeline.DataAnalysis.Services
 
         }
 
-        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria)
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria, int dataSize)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  {Constants.Category,new BsonDocument("$ne", BsonNull.Value) }
+                  {Constants.Category,new BsonDocument(Constants.NOT, BsonNull.Value) }
                    });
             //now we need to get the count of pageviews for each category 
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {"_id","$" + Constants.Category },//group by date
-                {"pageviews",new BsonDocument("$sum",1) }//count the pageviews
+                {Constants.ID,"$" + Constants.Category },//group by date
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }//count the pageviews
 
             });
-            var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
-            var limitStage = new BsonDocument("$limit", 10);
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline then store the results in list 
@@ -129,30 +134,30 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new CategoryPageView
                 {
-                    Category = pipelineResult["_id"].AsString,
-                    PageViews = pipelineResult["pageviews"].AsInt32
+                    Category = pipelineResult[Constants.ID].AsString,
+                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32
 
                 });
             }
             return results;
         }
-        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria)
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria, int dataSize)
         {
             // Define the aggregation pipeline stages
-            var matchStage = new BsonDocument("$match", new BsonDocument
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
              {
                { Constants.DOMAIN, criteria.Domain },
-                { Constants.COUNTRY_NAME, new BsonDocument("$ne", BsonNull.Value) }
+                { Constants.COUNTRY_NAME, new BsonDocument(Constants.NOT, BsonNull.Value) }
                      });
             //now we need to get the count of pageviews for each country name
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {"_id","$" + Constants.COUNTRY_NAME },//group by date
-                {"pageviews",new BsonDocument("$sum",1) }//count the pageviews
+                {Constants.ID,"$" + Constants.COUNTRY_NAME },//group by date
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }//count the pageviews
 
             });
-            var orderByStage = new BsonDocument("$sort", new BsonDocument("pageviews", -1));
-            var limitStage = new BsonDocument("$limit", 10);
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline then store the results in list 
@@ -163,8 +168,8 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new CountryNamePageView
                 {
-                    CountryName = pipelineResult["_id"].AsString,
-                    PageViews = pipelineResult["pageviews"].AsInt32
+                    CountryName = pipelineResult[Constants.ID].AsString,
+                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32
 
                 });
             }
