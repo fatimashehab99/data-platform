@@ -85,6 +85,7 @@ namespace DataServing.Controllers
                 UserId = data.UserId,
                 Domain = data.Domain,
                 TopCategories = topCategories,
+                CountryName = _locationService.getCountryName(views.Ip),
                 TopAuthors = topAuthors,
                 TopTags = topTags
             };

@@ -157,11 +157,11 @@ namespace DataPipelineTest
             Dictionary<string, int> topTags = _userProfileDataService.getTopTagsForSpecificUser(criteria, "123", 10);
 
             //execute the function
-            var results = _articlesService.getRecommendedArticles(criteria, "123", 4);
-   
+            var results = _articlesService.getRecommendedArticles(criteria, "123", "109.75.64.0", 4);
+
             //Assert 
             Assert.That(results != null, Is.True);
-     
+
         }
     }
 }

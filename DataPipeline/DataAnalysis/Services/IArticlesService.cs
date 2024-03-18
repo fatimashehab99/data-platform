@@ -13,7 +13,7 @@ namespace DataPipeline.DataAnalysis.Services
     /// </summary>
     public interface IArticlesService
     {
-        public List<ArticlePageView> getTrendingArticles(SearchCriteria criteria, string IP,int dataSize);
-        public List<ArticlePageView> getRecommendedArticles(SearchCriteria search, string userId, int dataSize);
+        public List<ArticlePageView> getTrendingArticles(SearchCriteria criteria, string IP, int dataSize);
+        public List<ArticlePageView> getRecommendedArticles(SearchCriteria search, string userId, string ip, int dataSize);
     }
 }

@@ -84,7 +84,7 @@ namespace DataPipeline.DataAnalysis.Services
             return results;
         }
 
-        public List<ArticlePageView> getRecommendedArticles(SearchCriteria search, string userId, int dataSize)
+        public List<ArticlePageView> getRecommendedArticles(SearchCriteria search, string userId, string Ip, int dataSize)
         {
             //variables initialization 
             Dictionary<string, int>? topCategories = null;
@@ -109,7 +109,7 @@ namespace DataPipeline.DataAnalysis.Services
                 {
                     UserId = userId,
                     Domain = search.Domain,
-                    //   CountryName = _locationService.getCountryName(views.Ip),
+                    CountryName = _locationService.getCountryName(Ip),
                     TopCategories = topCategories,
                     TopAuthors = topAuthors,
                     TopTags = topTags

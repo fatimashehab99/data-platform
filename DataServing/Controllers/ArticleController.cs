@@ -55,9 +55,9 @@ namespace DataServing.Controllers
             List<ArticlePageView> results;
             //incase user does not exists it will return trending articles 
             results = !userExist
-                //incase the user has no recommended articles it will get the trending articles
+             //incase the user has no recommended articles it will get the trending articles
              ? _articlesService.getTrendingArticles(search, Ip, 4) // ToDo: Change IP
-             : _articlesService.getRecommendedArticles(search, userId, 4);
+             : _articlesService.getRecommendedArticles(search, userId, Ip, 4);
             return Ok(results);
         }
     }
