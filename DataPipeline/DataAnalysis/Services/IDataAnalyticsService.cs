@@ -9,20 +9,6 @@ namespace DataPipeline.DataAnalysis.Services
     public interface IDataAnalyticsService
     {
         /// <summary>
-        /// get postview count filtered by publisher name during specific date
-        /// (group by date)
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="SubId"></param>
-        /// <param name="pid"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="error"></param>
-        /// <returns></returns>
-        public dynamic AnalyzePost(SearchCriteria data, string SubId, string pid, DateTime start, DateTime end, out AnalyticsErrorEnum error);
-
-
-        /// <summary>
         /// this function is used to get distinct authors with their page views  
         /// </summary>
         /// <param name="data"></param>

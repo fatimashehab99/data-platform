@@ -11,17 +11,14 @@ namespace DataPipeline.DataAnalysis.Models
     /// </summary>
     public class SearchCriteria
     {
-        public string? Sort { get; set; }
-        public string? Order { get; set; }
         public string? Author { get; set; }
         public string? Category { get; set; }
-        public string? Device { get; set; }
         public string? Domain { get; set; }
-        public int PageNumber { get; set; }
+        public string CountryName {  get; set; }
         public int Size { get; set; }
 
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public string DateFrom { get; set; }
+        public string DateTo { get; set; }
 
     }
 }
