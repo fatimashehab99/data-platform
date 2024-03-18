@@ -36,7 +36,7 @@ namespace DataPipeline.DataCollection.Models
         [Required]
         public string Browser { get; set; } = null!;
         [Required]
- 
+
         public string Platform { get; set; } = null!;
 
         [Required]
@@ -62,6 +62,9 @@ namespace DataPipeline.DataCollection.Models
 
 
         public string[]? PostTags { get; set; }
+        public string[] PostImage { get; set; }
+        [BsonElement("PostUrl")]
+        public string? PostUrl { get; set; }
 
 
         [Required]

@@ -70,6 +70,11 @@ namespace DataPipeline.DataCollection.Services
             if (string.IsNullOrEmpty(views.Platform))
                 throw new Exception(Constants.ERROR_OPERATING_IS_EMPTY);
 
+            //incase operating is null
+            if (string.IsNullOrEmpty(views.PostUrl))
+                throw new Exception(Constants.ERROR_POST_URL_IS_EMPTY);
+
+
             ///get location by country name
             views.Country_Name = _locationService.getCountryName(views.Ip);
 
@@ -80,6 +85,7 @@ namespace DataPipeline.DataCollection.Services
             //if the formatted date is null it will take the current date
             if (string.IsNullOrEmpty(views.Formatted_Date))
                 views.Formatted_Date = date.ToString("yyyy-MM-dd");
+
             _collection.InsertOne(views);
 
 

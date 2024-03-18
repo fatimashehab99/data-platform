@@ -27,11 +27,7 @@ namespace DataPipeline.DataAnalysis.Services
             ///get pageView collection 
             _collection = mongoDatabase.GetCollection<MongoDbPageView>(DatabaseSettings.Value.CollectionName);
         }
-        /// <summary>
-        /// get total pageviews
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
+
         public int getTotalPageViews(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
@@ -50,11 +46,7 @@ namespace DataPipeline.DataAnalysis.Services
             return totalPageViews;
 
         }
-        /// <summary>
-        /// get totalauthors
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
+
         public int getTotalAuthors(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
@@ -78,11 +70,7 @@ namespace DataPipeline.DataAnalysis.Services
             return totalAuthors;
 
         }
-        /// <summary>
-        /// This function is used to get total articles
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
+
         public int getTotalArticles(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
@@ -106,11 +94,7 @@ namespace DataPipeline.DataAnalysis.Services
             return totalArticles;
 
         }
-        /// <summary>
-        /// This function is used to get total users
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
+
         public int getTotalUsers(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages

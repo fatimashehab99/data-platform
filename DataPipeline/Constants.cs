@@ -21,6 +21,8 @@ namespace DataPipeline
         public const string ERROR_AUTHOR_IS_EMPTY = "Author is empty";
         public const string ERROR_OPERATING_IS_EMPTY = "Operating is empty";
         public const string ERROR_COLLECTION_IS_EMPTY = "Collection is empty";
+        public const string ERROR_POST_URL_IS_EMPTY = "Post url  is empty";
+
 
 
         public const string ERROR_INVALID_IP = "Invalid Ip";
@@ -33,7 +35,10 @@ namespace DataPipeline
         //MongoDB constants
 
         public static string USER_ID = "UserId";
+        public static string POST_TAG = "PostTags";
         public static string POST_AUTHOR = "PostAuthor";
+        public static string POST_URL = "PostUrl";
+        public static string POST_IMAGE = "PostImage";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
         public static string Category = "PostCategory";
@@ -53,6 +58,11 @@ namespace DataPipeline
         public static string GREATER = "$gt";
         public static string ID = "_id";
         public static string FIRST = "$first";
+        public static string UN_WIND = "$unwind";
+        public static string TAG_INDEX = "tag_index";
+        public static string TAGS_COUNT = "tags_count";
+        public static string OR = "$or";
+        public static string IN = "$in";
 
     }
 }
