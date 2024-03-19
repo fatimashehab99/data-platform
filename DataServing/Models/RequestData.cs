@@ -11,7 +11,7 @@
         public string PostTitle { get; set; }
         public string PostId { get; set; }
         public string PostCategory { get; set; }
-        public string[] PostImage { get; set; }
+        public string PostImage { get; set; }
         public string? PostUrl { get; set; }
         public DateTime PostPublishDate { get; set; }
         public string[]? PostTags { get; set; }
