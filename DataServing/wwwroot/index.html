@@ -100,8 +100,12 @@
             <li v-for="(item, index) in trendingItems" :key="item.id">
                 <div>
                     <h4>{{item.postTitle}}</h4>
-                    <a :href="item.link1">{{ item.postUrl }}</a>
-                    <a :href="item.link2">{{ item.postImage }}</a>
+                    <div>
+                        <a :href="item.postUrl"> Read More </a>
+                    </div>
+                    <div>
+                        <a :href="item.postImage">image</a>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -112,15 +116,20 @@
             <li v-for="(item, index) in recommendedItems" :key="item.id">
                 <div>
                     <h4>{{item.postTitle}}</h4>
-                    <a :href="item.link1">{{ item.postUrl }}</a>
-                    <a :href="item.link2">{{ item.postImage }}</a>
+                    <div>
+                        <a :href="item.postUrl"> Read More</a>
+                    </div>
+                    <div>
+                        <a :href="item.postImage">image</a>
+                    </div>
                 </div>
             </li>
         </ul>
     </div>
     <script>
+
         fetchTrendingArticlesData("102.129.65.0");//toDo update ip
-        fetchRecommendedArticlesData("313aa122-0666-46cd-8468-68e514beecvt")//toDo update user id
+        fetchRecommendedArticlesData("user_1710837416623_4680")//toDo update user id
     </script>
 
 

@@ -36,8 +36,10 @@ namespace DataPipeline.DataAnalysis.Services
             DateTime pastDate = (DateTime.Now).AddDays(-3);// Subtract 3 days from the current date
             string date = pastDate.ToString("yyyy-MM-dd");// Format the date as "yyyy-MM-dd"
 
-            //get country name
-            string countryName = _locationService.getCountryName(Ip);
+            //get location
+            Dictionary<string, string> location = _locationService.getCountryInfo(Ip);
+
+            string countryName = location["CountryName"];
 
             //filtering stage 
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
@@ -102,13 +104,15 @@ namespace DataPipeline.DataAnalysis.Services
                 topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, userId);
                 topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, userId);
                 topTags = _userProfileDataService.getTopTagsForSpecificUser(search, userId, 10);
+                //get location
+                Dictionary<string, string> location = _locationService.getCountryInfo(Ip);
 
                 //create user data
                 UserData user = new UserData()
                 {
                     UserId = userId,
                     Domain = search.Domain,
-                    CountryName = _locationService.getCountryName(Ip),
+                    CountryName = location["CountryName"],
                     TopCategories = topCategories,
                     TopAuthors = topAuthors,
                     TopTags = topTags

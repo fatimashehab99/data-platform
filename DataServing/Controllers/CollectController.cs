@@ -79,13 +79,15 @@ namespace DataServing.Controllers
             Dictionary<string, int> topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, data.UserId);
             Dictionary<string, int> topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, data.UserId);
             Dictionary<string, int> topTags = _userProfileDataService.getTopTagsForSpecificUser(search, data.UserId, 10);
+            Dictionary<string, string> location = _locationService.getCountryInfo(views.Ip);
+
             //create user data
             UserData userData = new UserData()
             {
                 UserId = data.UserId,
                 Domain = data.Domain,
                 TopCategories = topCategories,
-                CountryName = _locationService.getCountryName(views.Ip),
+                CountryName = location["CountryName"],
                 TopAuthors = topAuthors,
                 TopTags = topTags
             };

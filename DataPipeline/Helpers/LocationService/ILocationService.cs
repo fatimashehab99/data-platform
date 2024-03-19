@@ -13,6 +13,6 @@ namespace DataPipeline.Helpers.LocationService
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public string getCountryName(string Ip);
+        public Dictionary<string, string> getCountryInfo(string ip);
     }
 }

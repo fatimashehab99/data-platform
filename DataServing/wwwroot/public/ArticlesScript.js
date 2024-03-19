@@ -1,5 +1,5 @@
 ﻿//constants
-const domain = 'x.com'; //toDo update domain
+const domain = 'www.almayadeen.net'; //toDo update domain
 //fetch trending articles data
 function fetchTrendingArticlesData(ip) {
     new Vue({
