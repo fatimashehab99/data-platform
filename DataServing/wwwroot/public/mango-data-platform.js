@@ -78,6 +78,7 @@
             posturl: metaData.url,
             postimage: metaData.thumbnail,
             posttags: metaData.keywords.split(","),
+            postpublishdate:metaData.published_time
         };
 
         // URL of the API endpoint

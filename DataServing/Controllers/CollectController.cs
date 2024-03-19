@@ -61,7 +61,7 @@ namespace DataServing.Controllers
                 PostTags = data.PostTags,
                 PostPublishDate = data.PostPublishDate,
                 PostImage = data.PostImage,
-                PostUrl = data.PostUrl,
+                PostUrl = data.PostUrl
             };
 
             views.UserId = data.UserId;
