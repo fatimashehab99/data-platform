@@ -32,10 +32,10 @@ namespace DataPipeline.DataAnalysis.Services
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument(Constants.DOMAIN, criteria.Domain));
 
             //get the count of pageviews
-            var countStage = new BsonDocument("$count", Constants.TOTAL_PAGE_VIEWS);
+            var countStage = new BsonDocument(Constants.COUNT, Constants.TOTAL_PAGE_VIEWS);
             //initialize the pipeline
             var pipeline = new[] { matchStage, countStage };
             //execute the pipeline
@@ -51,22 +51,26 @@ namespace DataPipeline.DataAnalysis.Services
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+             {
+               { Constants.DOMAIN, criteria.Domain },
+                { Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) }
+                     });
             //now we need to groupby authors
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {"_id",BsonNull.Value},
-                {"authors",new BsonDocument("$addToSet","$"+Constants.POST_AUTHOR)}
+                {Constants.ID,BsonNull.Value},
+                {Constants.AUTHORS,new BsonDocument(Constants.ADD_TO_SET,"$"+Constants.POST_AUTHOR)}
             });
             //now get the count of the authors
-            var projectStage = new BsonDocument("$project",
-                new BsonDocument("TotalAuthors",
-                new BsonDocument("$size", "$authors")));
+            var projectStage = new BsonDocument(Constants.PROJECT,
+                new BsonDocument(Constants.TOTAL_AUTHORS,
+                new BsonDocument(Constants.SIZE, "$" + Constants.AUTHORS)));
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, projectStage };
             var pipelineResults = _collection.Aggregate<BsonDocument>(pipeline);
             var result = pipelineResults.FirstOrDefault();
-            int totalAuthors = result != null ? result["TotalAuthors"].AsInt32 : 0;
+            int totalAuthors = result != null ? result[Constants.TOTAL_AUTHORS].AsInt32 : 0;
             return totalAuthors;
 
         }
@@ -75,22 +79,22 @@ namespace DataPipeline.DataAnalysis.Services
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument(Constants.DOMAIN, criteria.Domain));
             //now we need to group by post title
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {"_id",BsonNull.Value},
-                {"articles",new BsonDocument("$addToSet","$"+Constants.POST_TITLE)}
+                {Constants.ID,BsonNull.Value},
+                {Constants.ARTICLES,new BsonDocument(Constants.ADD_TO_SET,"$"+Constants.POST_TITLE)}
             });
             //now get the count of the authors
-            var projectStage = new BsonDocument("$project",
-                new BsonDocument("TotalArticles",
-                new BsonDocument("$size", "$articles")));
+            var projectStage = new BsonDocument(Constants.PROJECT,
+                new BsonDocument(Constants.TOTAL_ARTICLES,
+                new BsonDocument(Constants.SIZE, "$" + Constants.ARTICLES)));
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, projectStage };
             var pipelineResults = _collection.Aggregate<BsonDocument>(pipeline);
             var result = pipelineResults.FirstOrDefault();
-            int totalArticles = result != null ? result["TotalArticles"].AsInt32 : 0;
+            int totalArticles = result != null ? result[Constants.TOTAL_ARTICLES].AsInt32 : 0;
             return totalArticles;
 
         }
@@ -99,22 +103,22 @@ namespace DataPipeline.DataAnalysis.Services
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
-            var matchStage = new BsonDocument("$match", new BsonDocument(Constants.DOMAIN, criteria.Domain));
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument(Constants.DOMAIN, criteria.Domain));
             //now we need to group by post title
-            var groupStage = new BsonDocument("$group", new BsonDocument
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {"_id",BsonNull.Value},
-                {"users",new BsonDocument("$addToSet","$"+Constants.USERID)}
+                {Constants.ID,BsonNull.Value},
+                {Constants.USERS,new BsonDocument(Constants.ADD_TO_SET,"$"+Constants.USERID)}
             });
             //now get the count of the authors
-            var projectStage = new BsonDocument("$project",
-                new BsonDocument("TotalUsers",
-                new BsonDocument("$size", "$users")));
+            var projectStage = new BsonDocument(Constants.PROJECT,
+                new BsonDocument(Constants.TOTAL_USERS,
+                new BsonDocument(Constants.SIZE, "$" + Constants.USERS)));
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, projectStage };
             var pipelineResults = _collection.Aggregate<BsonDocument>(pipeline);
             var result = pipelineResults.FirstOrDefault();
-            int totalUsers = result != null ? result["TotalUsers"].AsInt32 : 0;
+            int totalUsers = result != null ? result[Constants.TOTAL_USERS].AsInt32 : 0;
             return totalUsers;
 
         }

@@ -153,10 +153,8 @@ namespace DataPipelineTest
         public void checkIfWeCanGetCountryNameFromLocation()
         {
             MongoDbPageView page = GeneratePageView();
-
-            page.Country_Name = _locationService.getCountryName(page.Ip);
-
-
+            Dictionary<string, string> location = _locationService.getCountryInfo(page.Ip);
+            page.Country_Name = location["CountryName"];
             Assert.That("Lebanon", Is.EqualTo(page.Country_Name));
 
         }

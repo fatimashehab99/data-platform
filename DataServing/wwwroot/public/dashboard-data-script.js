@@ -1,6 +1,6 @@
 
 //constants
-const domain = 'x.com'; //to change later
+const domain = 'www.almayadeen.net'; //to change later
 
 //Dashboard Statistics 
 function fetchDashboardStatisticsData() {
@@ -11,7 +11,7 @@ function fetchDashboardStatisticsData() {
     authorElement = document.getElementById("authors");
 
     ///fetching data
-    fetch( '/api/Analyze/dashboard?domain=' + domain) //to change later
+    fetch('/api/Analyze/dashboard?domain=' + domain) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

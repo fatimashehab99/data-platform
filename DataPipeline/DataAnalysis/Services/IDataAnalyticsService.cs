@@ -9,39 +9,25 @@ namespace DataPipeline.DataAnalysis.Services
     public interface IDataAnalyticsService
     {
         /// <summary>
-        /// get postview count filtered by publisher name during specific date
-        /// (group by date)
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="SubId"></param>
-        /// <param name="pid"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="error"></param>
-        /// <returns></returns>
-        public dynamic AnalyzePost(SearchCriteria data, string SubId, string pid, DateTime start, DateTime end, out AnalyticsErrorEnum error);
-
-
-        /// <summary>
         /// this function is used to get distinct authors with their page views  
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria data);
+        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria data, int dataSize);
 
         /// <summary>
         /// This function is used to get pageviews count on specific date
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data,string date);
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data, string date, int dataSize);
 
         /// <summary>
         /// This function is used to get top category page views 
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria data);
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria data, int dataSize);
         /// <summary>
         /// This function is used to get dashboard statistics data
         /// </summary>
@@ -54,7 +40,7 @@ namespace DataPipeline.DataAnalysis.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data);
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data, int dataSize);
 
 
 

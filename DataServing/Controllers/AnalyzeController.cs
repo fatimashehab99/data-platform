@@ -27,7 +27,7 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByCategory(search);
+            var results = _dataAnalyticsService.AnalyzePageViewsByCategory(search, 10);
             return Ok(results);
         }
         /// <summary>
@@ -58,7 +58,7 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _dataAnalyticsService.AnalyseByAuthor(search);
+            var results = _dataAnalyticsService.AnalyseByAuthor(search, 10);
             return Ok(results);
         }
         /// <summary>
@@ -74,7 +74,7 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search, date);
+            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search, date, 10);
             return Ok(results);
         }
         /// <summary>
@@ -89,7 +89,7 @@ namespace DataServing.Controllers
             {
                 Domain = domain
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByCountryName(search);
+            var results = _dataAnalyticsService.AnalyzePageViewsByCountryName(search, 10);
             return Ok(results);
         }
     }

@@ -74,9 +74,10 @@ namespace DataPipeline.DataCollection.Services
             if (string.IsNullOrEmpty(views.PostUrl))
                 throw new Exception(Constants.ERROR_POST_URL_IS_EMPTY);
 
-
-            ///get location by country name
-            views.Country_Name = _locationService.getCountryName(views.Ip);
+            //add country name and code
+            Dictionary<string, string> location = _locationService.getCountryInfo(views.Ip);
+            views.Country_Name = location["CountryName"];
+            views.Country_Code = location["CountryCode"];
 
             //--Set Date on Current Get-->
             DateTime date = DateTime.Now.ToLocalTime();

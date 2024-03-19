@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using DataPipeline.DataAnalysis.Models;
 
 namespace DataPipeline.DataCollection.Models
 {
@@ -59,10 +60,13 @@ namespace DataPipeline.DataCollection.Models
 
         [Required]
         public string PostTitle { get; set; } = null!;
+        [BsonElement("PostClasses")]
+        public List<PostClass> PostClasses { get; set; }
+
 
 
         public string[]? PostTags { get; set; }
-        public string[] PostImage { get; set; }
+        public string PostImage { get; set; }
         [BsonElement("PostUrl")]
         public string? PostUrl { get; set; }
 

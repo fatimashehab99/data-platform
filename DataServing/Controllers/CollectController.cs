@@ -6,6 +6,7 @@ using DataPipeline.Helpers.LocationService;
 using DataServing.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Wangkanai.Detection.Services;
 
 namespace DataServing.Controllers
@@ -36,10 +37,10 @@ namespace DataServing.Controllers
         [HttpPost]
         public ActionResult<MongoDbPageView> Track([FromBody] RequestData data)
         {
-
             //read ip
             var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-
+            //deserialize post classes to save the data into mongo db
+            var classes = JsonConvert.DeserializeObject<List<PostClass>>(data.PostClasses);
 
             // map request data to MongoDb pageview (data conversion/data modeling)
             MongoDbPageView views = new()
@@ -62,6 +63,8 @@ namespace DataServing.Controllers
                 PostPublishDate = data.PostPublishDate,
                 PostImage = data.PostImage,
                 PostUrl = data.PostUrl,
+                PostClasses = classes
+
             };
 
             views.UserId = data.UserId;
@@ -79,13 +82,15 @@ namespace DataServing.Controllers
             Dictionary<string, int> topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, data.UserId);
             Dictionary<string, int> topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, data.UserId);
             Dictionary<string, int> topTags = _userProfileDataService.getTopTagsForSpecificUser(search, data.UserId, 10);
+            Dictionary<string, string> location = _locationService.getCountryInfo(views.Ip);
+
             //create user data
             UserData userData = new UserData()
             {
                 UserId = data.UserId,
                 Domain = data.Domain,
                 TopCategories = topCategories,
-                CountryName = _locationService.getCountryName(views.Ip),
+                CountryName = location["CountryName"],
                 TopAuthors = topAuthors,
                 TopTags = topTags
             };

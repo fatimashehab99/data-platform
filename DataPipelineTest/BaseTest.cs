@@ -129,7 +129,7 @@ namespace DataPipelineTest
             page.Device = "iphone";
             page.Platform = "operating";
             page.PostUrl = "testUrl.com";
-            page.PostImage = ["image"];
+            page.PostImage = "image";
             page.PostTags = ["tag1", "tag2", "tag3"];
             //--Set Date on Current Get-->
             page.Date = DateTime.Now.ToLocalTime();

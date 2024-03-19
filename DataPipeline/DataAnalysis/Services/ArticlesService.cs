@@ -36,8 +36,10 @@ namespace DataPipeline.DataAnalysis.Services
             DateTime pastDate = (DateTime.Now).AddDays(-3);// Subtract 3 days from the current date
             string date = pastDate.ToString("yyyy-MM-dd");// Format the date as "yyyy-MM-dd"
 
-            //get country name
-            string countryName = _locationService.getCountryName(Ip);
+            //get location
+            Dictionary<string, string> location = _locationService.getCountryInfo(Ip);
+
+            string countryName = location["CountryName"];
 
             //filtering stage 
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
@@ -45,15 +47,15 @@ namespace DataPipeline.DataAnalysis.Services
                 {Constants.DOMAIN,criteria.Domain },
                 {Constants.COUNTRY_NAME,countryName},
                 { Constants.FORMATTED_DATE, new BsonDocument(Constants.GREATER, date) },
-                { Constants.POST_TITLE, new BsonDocument(Constants.NULL, BsonNull.Value) }
+                { Constants.POST_TITLE, new BsonDocument(Constants.NOT, BsonNull.Value) }
             });
 
             //grouping by stage (post id)
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
-                {"_id","$"+Constants.POST_ID },//group by post id
-                {Constants.POST_TITLE,new  BsonDocument("$first","$"+Constants.POST_TITLE)},
-                {Constants.POST_URL,new  BsonDocument("$first","$"+Constants.POST_URL)},
-                {Constants.POST_IMAGE,new  BsonDocument("$first","$"+Constants.POST_IMAGE)},
+                {Constants.ID,"$"+Constants.POST_ID },//group by post id
+                {Constants.POST_TITLE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_TITLE)},
+                {Constants.POST_URL,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_URL)},
+                {Constants.POST_IMAGE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_IMAGE)},
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
             });
 
@@ -76,8 +78,7 @@ namespace DataPipeline.DataAnalysis.Services
                     PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
                     PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
                     PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
-                    PostImage = pResult[Constants.POST_IMAGE]
-                    .AsBsonArray.Select(bsonValue => bsonValue.ToString()).ToArray()//Get Image url
+                    PostImage = pResult[Constants.POST_IMAGE].AsString//Get Image url
                 });
             }
 
@@ -103,13 +104,15 @@ namespace DataPipeline.DataAnalysis.Services
                 topCategories = _userProfileDataService.getTopCategoriesForSpecificUser(search, userId);
                 topAuthors = _userProfileDataService.getTopAuthorsForSpecificUser(search, userId);
                 topTags = _userProfileDataService.getTopTagsForSpecificUser(search, userId, 10);
+                //get location
+                Dictionary<string, string> location = _locationService.getCountryInfo(Ip);
 
                 //create user data
                 UserData user = new UserData()
                 {
                     UserId = userId,
                     Domain = search.Domain,
-                    CountryName = _locationService.getCountryName(Ip),
+                    CountryName = location["CountryName"],
                     TopCategories = topCategories,
                     TopAuthors = topAuthors,
                     TopTags = topTags
@@ -152,10 +155,10 @@ namespace DataPipeline.DataAnalysis.Services
 
             //grouping by stage (post id)
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
-                {"_id","$"+Constants.POST_ID },//group by post id
-                {Constants.POST_TITLE,new  BsonDocument("$first","$"+Constants.POST_TITLE)},
-                {Constants.POST_URL,new  BsonDocument("$first","$"+Constants.POST_URL)},
-                {Constants.POST_IMAGE,new  BsonDocument("$first","$"+Constants.POST_IMAGE)},
+                {Constants.ID,"$"+Constants.POST_ID },//group by post id
+                {Constants.POST_TITLE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_TITLE)},
+                {Constants.POST_URL,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_URL)},
+                {Constants.POST_IMAGE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_IMAGE)},
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
             });
 
@@ -163,7 +166,6 @@ namespace DataPipeline.DataAnalysis.Services
             //add limit stage
             var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
 
-            //toDo solve null issue
             //initialize the pipeline 
             var pipeline = new[] { domainMatchStage, matchStage, groupStage, limitStage };
             //execute the pipeline
@@ -177,8 +179,7 @@ namespace DataPipeline.DataAnalysis.Services
                 {
                     PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article's title from the _id field
                     PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
-                    PostImage = pResult[Constants.POST_IMAGE]
-                    .AsBsonArray.Select(bsonValue => bsonValue.ToString()).ToArray()//Get Image url
+                    PostImage = pResult[Constants.POST_IMAGE].AsString//Get Image url
                 });
             }
             return results;

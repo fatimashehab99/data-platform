@@ -31,7 +31,7 @@ namespace DataPipeline.DataAnalysis.Services
         {
             { Constants.DOMAIN, criteria.Domain },
              {Constants.USERID,UserId },
-            {Constants.POST_TAG, new BsonDocument(Constants.NULL, BsonNull.Value) }
+            {Constants.POST_TAG, new BsonDocument(Constants.NOT, BsonNull.Value) }
         });
 
             //split tags array 
@@ -72,7 +72,7 @@ namespace DataPipeline.DataAnalysis.Services
         {
             { Constants.DOMAIN, criteria.Domain },
              {Constants.USERID,UserId },
-            {Constants.Category, new BsonDocument(Constants.NULL, BsonNull.Value) }
+            {Constants.Category, new BsonDocument(Constants.NOT, BsonNull.Value) }
         });
             //grouping by category
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
@@ -104,7 +104,7 @@ namespace DataPipeline.DataAnalysis.Services
         {
             { Constants.DOMAIN, criteria.Domain },
              {Constants.USERID,UserId },
-            {Constants.POST_AUTHOR, new BsonDocument(Constants.NULL, BsonNull.Value) }
+            {Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) }
         });
 
             //grouping by author

@@ -46,23 +46,39 @@ namespace DataPipeline
         public static string POST_TITLE = "PostTitle";
         public static string FORMATTED_DATE = "Formatted_Date";
         public static string COUNTRY_NAME = "Country_Name";
-        public static string TOTAL_PAGE_VIEWS = "TotalPageviews";
-        public static string ARTICLES = "articles";
         public static string POST_ID = "PostId";
+        public static string ID = "_id";
+
+
+        public static string TAG_INDEX = "tag_index";
+        public static string TAGS_COUNT = "tags_count";
+        public static string AUTHORS = "authors";
+        public static string ARTICLES = "articles";
+        public static string USERS = "users";
+        public static string TOTAL_PAGE_VIEWS = "TotalPageviews";
+        public static string TOTAL_AUTHORS = "TotalAuthors";
+        public static string TOTAL_ARTICLES = "TotalArticles";
+        public static string TOTAL_USERS = "TotalUsers";
+
+
+        //agg functions
+        public static string IN = "$in";
+        public static string OR = "$or";
+        public static string FIRST = "$first";
+        public static string UN_WIND = "$unwind";
         public static string MATCH = "$match";
         public static string GROUP = "$group";
+        public static string COUNT = "$count";
         public static string SUM = "$sum";
         public static string SORT = "$sort";
         public static string LIMIT = "$limit";
-        public static string NULL = "$ne";
+        public static string NOT = "$ne";
         public static string GREATER = "$gt";
-        public static string ID = "_id";
-        public static string FIRST = "$first";
-        public static string UN_WIND = "$unwind";
-        public static string TAG_INDEX = "tag_index";
-        public static string TAGS_COUNT = "tags_count";
-        public static string OR = "$or";
-        public static string IN = "$in";
+        public static string SIZE = "$size";
+        public static string PROJECT = "$project";
+        public static string ADD_TO_SET = "$addToSet";
+
+
 
     }
 }

@@ -35,12 +35,12 @@ namespace DataPipeline.Helpers.LocationService
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public string getCountryName(string ip)
+        public Dictionary<string, string> getCountryInfo(string ip)
         {
             if (!IsValidIP(ip) || ip == "::1")
                 throw new Exception(Constants.ERROR_INVALID_IP);
+            var countryInfo = new Dictionary<string, string>();
 
-            string countryName;
             //Location-->
             var binDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var path = Path.Combine(binDirectory, "Helpers/LocationService", "GeoLite2-Country.mmdb");
@@ -48,9 +48,10 @@ namespace DataPipeline.Helpers.LocationService
             using (var reader = new DatabaseReader(path))
             {
                 var response = reader.Country(ip);
-                countryName = response.Country.Name.ToString();
+                countryInfo["CountryName"] = response.Country.Name;
+                countryInfo["CountryCode"] = response.Country.IsoCode;
             }
-            return countryName;
+            return countryInfo;
         }
     }
 }
