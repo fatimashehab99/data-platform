@@ -6,6 +6,7 @@ using DataPipeline.Helpers.LocationService;
 using DataServing.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Wangkanai.Detection.Services;
 
 namespace DataServing.Controllers
@@ -36,10 +37,10 @@ namespace DataServing.Controllers
         [HttpPost]
         public ActionResult<MongoDbPageView> Track([FromBody] RequestData data)
         {
-
             //read ip
             var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-
+            //deserialize post classes to save the data into mongo db
+            var classes = JsonConvert.DeserializeObject<List<PostClass>>(data.PostClasses);
 
             // map request data to MongoDb pageview (data conversion/data modeling)
             MongoDbPageView views = new()
@@ -61,7 +62,9 @@ namespace DataServing.Controllers
                 PostTags = data.PostTags,
                 PostPublishDate = data.PostPublishDate,
                 PostImage = data.PostImage,
-                PostUrl = data.PostUrl
+                PostUrl = data.PostUrl,
+                PostClasses = classes
+
             };
 
             views.UserId = data.UserId;

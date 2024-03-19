@@ -63,13 +63,17 @@
         }
         var scriptContent = scriptElement.textContent.trim();
         var metaData = JSON.parse(scriptContent);
+        var postClasses = [];
+        metaData.classes.forEach(function (item) {
+            postClasses.push({ "mapping": item.mapping, "value": item.value });
+        });
 
         // Fill the mydata object with metadata
         var mydata = {
-            ip: "102.129.65.0",
+            ip: "109.75.64.0",//toDo change ip 
             postid: metaData.postid,
             postcategory: (metaData.classes.find(function (cls) {
-                return cls.mapping === "posttype";
+                return cls.mapping === "category";
             }) || {}).value || "",
             postauthor: metaData.author,
             posttitle: metaData.title,
@@ -78,7 +82,8 @@
             posturl: metaData.url,
             postimage: metaData.thumbnail,
             posttags: metaData.keywords.split(","),
-            postpublishdate:metaData.published_time
+            postpublishdate: metaData.published_time,
+            postclasses: JSON.stringify(postClasses)
         };
 
         // URL of the API endpoint
