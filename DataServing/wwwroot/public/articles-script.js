@@ -1,7 +1,5 @@
-﻿//constants
-const domain = 'www.almayadeen.net'; //toDo update domain
-//fetch trending articles data
-function fetchTrendingArticlesData(ip) {
+﻿//fetch trending articles data
+function fetchTrendingArticlesData() {
     new Vue({
         el: '#trending',
         data: {

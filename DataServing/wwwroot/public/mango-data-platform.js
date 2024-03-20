@@ -67,7 +67,9 @@
         metaData.classes.forEach(function (item) {
             postClasses.push({ "mapping": item.mapping, "value": item.value });
         });
-
+        if (metaData.type === "page") {
+            return;
+        }
         // Fill the mydata object with metadata
         var mydata = {
             ip: "109.75.64.0",//toDo change ip 
@@ -87,7 +89,8 @@
         };
 
         // URL of the API endpoint
-        var apiUrl = 'https://localhost:7043/api/collect';
+        //var apiUrl = 'https://tracking-api.almayadeen.net/api/collect';
+        var apiUrl = "https://localhost:7043/api/collect";
 
         // Send the mydata object to the API endpoint
         mangoDataPlatform.sendData(apiUrl, mydata);

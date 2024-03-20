@@ -3,7 +3,7 @@
     public class RequestData
     {
 
-        public string IP { get; set; }
+        public string? IP { get; set; }
 
 
         //Post Data
