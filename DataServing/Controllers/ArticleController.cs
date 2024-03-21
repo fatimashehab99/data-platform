@@ -26,7 +26,7 @@ namespace DataServing.Controllers
         public IActionResult getTrendingArticles([FromQuery(Name = "domain")] string domain)
 
         {
-            string ip = "102.129.65.0";
+            string ip = "102.129.65.0"; //toDo fix ip
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain

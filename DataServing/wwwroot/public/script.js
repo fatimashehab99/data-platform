@@ -27,123 +27,151 @@ function getTenDaysAgoDate() {
     var tenDaysAgoFormatted = tenDaysAgo.toISOString().slice(0, 10);
     return tenDaysAgoFormatted;
 
-}///function to create date chart
-function createDateChart(ctx2, date, pageviews) {
-    new Chart(ctx2, {
-        type: 'line',
-        data: {
-            labels: date,
-            datasets: [{
-                label: 'PageViews',
-                data: pageviews,
-                borderColor: 'red',
-                borderWidth: 1,
-                backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                pointStyle: 'circle',
-                pointRadius: 5,
-                pointHoverRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Date',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'PageViews',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                }
-            }
+}
+//function to format large numbers 
+function formatNumbers(number) {
+    if (number >= 1000000000) {
+        number = (number / 1000000000).toFixed(2);
+        if (Number.isInteger(Number(number))) {
+            number = Number(number).toLocaleString() + 'B';
+        } else {
+            number = number.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'B';
         }
-    });
+    } else if (number >= 1000000) {
+        number = (number / 1000000).toFixed(2);
+        if (Number.isInteger(Number(number))) {
+            number = Number(number).toLocaleString() + 'M';
+        } else {
+            number = number.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'M';
+        }
+    } else if (number >= 1000) {
+        number = (number / 1000).toFixed(2);
+        if (Number.isInteger(Number(number))) {
+            number = Number(number).toLocaleString() + 'K';
+        } else {
+            number = number.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'K';
+        }
+    }
+    return number;
 }
 
-//function to create category chart 
-function createCategoryChart(ctx1, categories, pageviews) {
-    new Chart(ctx1, {
-        type: 'bar',
-        data: {
-            labels: categories,
-            datasets: [{
-                label: "PageViews",
-                data: pageviews,
-                backgroundColor: backGoundColors,
-                borderColor: backGoundColors,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Top Categories',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'PageViews',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
-
-//function to create author chart 
-function createAuthorChart(ctx3, authors, pageviews) {
-    //create the chart
-    new Chart(ctx3, {
-        type: 'pie',
-        data: {
-            labels: authors,
-            datasets: [{
-                label: 'pageviews',
-                data: pageviews,
-                backgroundColor: backGoundColors
-            }]
-        },
-        options: {
-            plugins: {
-                legend: { position: 'left' },
-                title: {
-                    display: true,
-                    text: "Top Authors",
-                    font: {
-                        weight: 'bold'
-                    }
-                }
+    ///function to create date chart
+    function createDateChart(ctx2, date, pageviews) {
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: date,
+                datasets: [{
+                    label: 'PageViews',
+                    data: pageviews,
+                    borderColor: 'red',
+                    borderWidth: 1,
+                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                    pointStyle: 'circle',
+                    pointRadius: 5,
+                    pointHoverRadius: 5
+                }]
             },
-            aspectRatio: 1, // Aspect ratio of the chart (width/height)
-            maintainAspectRatio: false // Whether to maintain aspect ratio when resizing
-        }
-    });
-}
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Date',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'PageViews',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    //function to create category chart 
+    function createCategoryChart(ctx1, categories, pageviews) {
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: "PageViews",
+                    data: pageviews,
+                    backgroundColor: backGoundColors,
+                    borderColor: backGoundColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Top Categories',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'PageViews',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    //function to create author chart 
+    function createAuthorChart(ctx3, authors, pageviews) {
+        //create the chart
+        new Chart(ctx3, {
+            type: 'pie',
+            data: {
+                labels: authors,
+                datasets: [{
+                    label: 'pageviews',
+                    data: pageviews,
+                    backgroundColor: backGoundColors
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'left' },
+                    title: {
+                        display: true,
+                        text: "Top Authors",
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                aspectRatio: 1, // Aspect ratio of the chart (width/height)
+                maintainAspectRatio: false // Whether to maintain aspect ratio when resizing
+            }
+        });
+    }
     //function to create country  chart
- function createCountryChart(ctx4, countries, pageviews) {
+    function createCountryChart(ctx4, countries, pageviews) {
         new Chart(ctx4, {
             type: 'bar',
             data: {
@@ -184,4 +212,4 @@ function createAuthorChart(ctx3, authors, pageviews) {
             }
         });
     }
-    
+

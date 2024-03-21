@@ -20,11 +20,10 @@ function fetchDashboardStatisticsData() {
         })
         .then(jsonResponse => {
             // Process the JSON data
-            pageviewElement.textContent = jsonResponse.pageViews;
-            userElement.textContent = jsonResponse.users;
-            articleElement.textContent = jsonResponse.articles;
-            authorElement.textContent = jsonResponse.authors;
-
+            pageviewElement.textContent = formatNumbers(jsonResponse.pageViews);
+            userElement.textContent = formatNumbers(jsonResponse.users);
+            articleElement.textContent = formatNumbers(jsonResponse.articles);
+            authorElement.textContent = formatNumbers(jsonResponse.authors);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

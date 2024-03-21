@@ -11,6 +11,7 @@
     <script src="public/articles-script.js"></script>
     <script src="public/user-data.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="public/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
     <!--<script>
@@ -129,6 +130,8 @@
         </ul>
     </div>
     <script>
+        var numbers = [1000, 20000, 5400, 7804000]
+        console.log(numbers.map(formatNumbers));
         //get userId
         var userId = getUserId();
         fetchTrendingArticlesData();
