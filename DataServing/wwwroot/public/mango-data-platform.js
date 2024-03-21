@@ -76,7 +76,7 @@
             postid: metaData.postid,
             postcategory: (metaData.classes.find(function (cls) {
                 return cls.mapping === "category";
-            }) || {}).value || "",
+            }) || {}).value || "", //get postCategory from classes meta data
             postauthor: metaData.author,
             posttitle: metaData.title,
             domain: new URL(metaData.url).hostname,
@@ -88,7 +88,7 @@
             postclasses: JSON.stringify(postClasses),
             posttype: (metaData.classes.find(function (cls) {
                 return cls.mapping === "posttype";
-            }) || {}).value || "",
+            }) || {}).value || "", //get postType from classes meta data
         };
 
         // URL of the API endpoint

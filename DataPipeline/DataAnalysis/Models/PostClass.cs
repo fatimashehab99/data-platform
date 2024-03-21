@@ -8,7 +8,7 @@ namespace DataPipeline.DataAnalysis.Models
 {
     public class PostClass
     {
-        public string mapping;
-        public string value;
+        public string mapping { get; set; }
+        public string value { get; set; }
     }
 }
