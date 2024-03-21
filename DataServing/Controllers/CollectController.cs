@@ -63,7 +63,8 @@ namespace DataServing.Controllers
                 PostPublishDate = data.PostPublishDate,
                 PostImage = data.PostImage,
                 PostUrl = data.PostUrl,
-                PostClasses = classes
+                PostClasses = classes,
+                PostType = data.PostType
 
             };
 

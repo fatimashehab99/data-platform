@@ -62,6 +62,7 @@ namespace DataPipeline.DataCollection.Models
         public string PostTitle { get; set; } = null!;
         [BsonElement("PostClasses")]
         public List<PostClass> PostClasses { get; set; }
+        public string PostType { get; set; } 
 
 
 

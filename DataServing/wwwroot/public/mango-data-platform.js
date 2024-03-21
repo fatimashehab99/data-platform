@@ -85,7 +85,10 @@
             postimage: metaData.thumbnail,
             posttags: metaData.keywords.split(","),
             postpublishdate: metaData.published_time,
-            postclasses: JSON.stringify(postClasses)
+            postclasses: JSON.stringify(postClasses),
+            posttype: (metaData.classes.find(function (cls) {
+                return cls.mapping === "posttype";
+            }) || {}).value || "",
         };
 
         // URL of the API endpoint
