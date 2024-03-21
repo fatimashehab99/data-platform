@@ -24,14 +24,14 @@ namespace DataPipeline.DataCollection.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
-        public string Formatted_Date { get; set; }
+        public string FormattedDate { get; set; }
 
         [Required]
         public string Ip { get; set; } = null!;
 
         [Required]
-        public string Country_Code { get; set; } = null!;
-        public string Country_Name { get; set; } = null!;
+        public string CountryCode { get; set; } = null!;
+        public string CountryName { get; set; } = null!;
 
 
         [Required]

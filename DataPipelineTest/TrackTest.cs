@@ -154,8 +154,8 @@ namespace DataPipelineTest
         {
             MongoDbPageView page = GeneratePageView();
             Dictionary<string, string> location = _locationService.getCountryInfo(page.Ip);
-            page.Country_Name = location["CountryName"];
-            Assert.That("Lebanon", Is.EqualTo(page.Country_Name));
+            page.CountryName = location["CountryName"];
+            Assert.That("Lebanon", Is.EqualTo(page.CountryName));
 
         }
 

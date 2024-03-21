@@ -76,16 +76,16 @@ namespace DataPipeline.DataCollection.Services
 
             //add country name and code
             Dictionary<string, string> location = _locationService.getCountryInfo(views.Ip);
-            views.Country_Name = location["CountryName"];
-            views.Country_Code = location["CountryCode"];
+            views.CountryName = location["CountryName"];
+            views.CountryCode = location["CountryCode"];
 
             //--Set Date on Current Get-->
             DateTime date = DateTime.Now.ToLocalTime();
             views.Date = date;
 
             //if the formatted date is null it will take the current date
-            if (string.IsNullOrEmpty(views.Formatted_Date))
-                views.Formatted_Date = date.ToString("yyyy-MM-dd");
+            if (string.IsNullOrEmpty(views.FormattedDate))
+                views.FormattedDate = date.ToString("yyyy-MM-dd");
 
             _collection.InsertOne(views);
 

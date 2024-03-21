@@ -7,7 +7,7 @@ function fetchTrendingArticlesData() {
         },
         mounted() {
             // Fetch data from API
-            fetch(`/api/Article/trending?domain=${domain}&ip=${ip}`) //to change later
+            fetch(`/api/Article/trending?domain=${domain}`) //to change later
                 .then(response => response.json())
                 .then(data => {
                     this.trendingItems = data;
@@ -28,7 +28,7 @@ function fetchRecommendedArticlesData(userId) {
         },
         mounted() {
             // Fetch data from API
-            fetch(`/api/Article/recommended?domain=${domain}&userId=${userId}&Ip=109.75.64.0`) //to change later
+            fetch(`/api/Article/recommended?domain=${domain}&userId=${userId}`) //to change later
                 .then(response => response.json())
                 .then(data => {
                     this.recommendedItems = data;

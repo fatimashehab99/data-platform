@@ -1,5 +1,6 @@
 ﻿//get domain
-const domain = window.location.hostname;
+//const domain = window.location.hostname; //toDo change the domain later
+const domain = "www.almayadeen.net";
 
 //get user Id
 function getUserId() {

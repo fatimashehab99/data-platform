@@ -83,9 +83,9 @@ namespace DataPipelineTest
                 pageView5.Domain = pageView6.Domain = domain;
 
             //update date
-            pageView1.Formatted_Date = pageView2.Formatted_Date = pageView3.Formatted_Date = "2024-03-09";
-            pageView4.Formatted_Date = pageView5.Formatted_Date = "2024-03-07";
-            pageView6.Formatted_Date = "2024-03-06";
+            pageView1.FormattedDate = pageView2.FormattedDate = pageView3.FormattedDate = "2024-03-09";
+            pageView4.FormattedDate = pageView5.FormattedDate = "2024-03-07";
+            pageView6.FormattedDate = "2024-03-06";
 
             //Save data to mongodb
             _trackService.LogPageview(pageView1);
