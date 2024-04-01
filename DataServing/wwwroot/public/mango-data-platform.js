@@ -67,28 +67,49 @@
         metaData.classes.forEach(function (item) {
             postClasses.push({ "mapping": item.mapping, "value": item.value });
         });
+
+        //data will not be collected if type is page
         if (metaData.type === "page") {
             return;
         }
+        //data will not be collected if the post image is empty
+        if (metaData.thumbnail == null || metaData.thumbnail === "") {
+            return;
+        }
+        //collect post tags incase it has no data it will return null and not empty array
+        var postTags = metaData.keywords.trim() !== "" ? metaData.keywords.split(",") : null;
+
+        // Get post type
+        var postType = (metaData.classes.find(function (cls) {
+            return cls.mapping === "posttype";
+        }) || {}).value || ""; // Get postType from classes meta data
+
+        // Get post category
+        var postCategory = (metaData.classes.find(function (cls) {
+            return cls.mapping === "category";
+        }) || {}).value || ""; // Get postCategory from classes meta data
+
+        // If postCategory is empty, set it to postType
+        if (postCategory === "") {
+            postCategory = postType;
+        }
+        
+
         // Fill the mydata object with metadata
         var mydata = {
             ip: "109.75.64.0",//toDo change ip 
             postid: metaData.postid,
-            postcategory: (metaData.classes.find(function (cls) {
-                return cls.mapping === "category";
-            }) || {}).value || "", //get postCategory from classes meta data
+            postcategory: postCategory,
             postauthor: metaData.author,
             posttitle: metaData.title,
             domain: new URL(metaData.url).hostname,
             userId: mangoDataPlatform.getUserId(), // Get or generate user ID from cookie
             posturl: metaData.url,
             postimage: metaData.thumbnail,
-            posttags: metaData.keywords.split(","),
+            posttags: postTags,
             postpublishdate: metaData.published_time,
             postclasses: JSON.stringify(postClasses),
-            posttype: (metaData.classes.find(function (cls) {
-                return cls.mapping === "posttype";
-            }) || {}).value || "", //get postType from classes meta data
+            posttype: postType
         };
 
         // URL of the API endpoint
