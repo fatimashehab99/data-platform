@@ -1,9 +1,9 @@
 
 //constants
-const domain = 'www.almayadeen.net'; //to change later
 
 //Dashboard Statistics 
-function fetchDashboardStatisticsData() {
+function fetchDashboardStatisticsData(domain) {
+    console.log(domain)
     //get elements
     pageviewElement = document.getElementById("pageviews");
     userElement = document.getElementById("users");
@@ -30,7 +30,7 @@ function fetchDashboardStatisticsData() {
         });
 }
 //Date Chart 
-function fetchDatePageViewsData() {
+function fetchDatePageViewsData(domain) {
 
     //get element
     const dateElement = document.getElementById('DateChart').getContext('2d');
@@ -61,7 +61,7 @@ function fetchDatePageViewsData() {
 }
 
 //Category Chart
-function fetchCategoryPageViewsData() {
+function fetchCategoryPageViewsData(domain) {
     const categoryElement = document.getElementById('CategoryChart').getContext('2d');
 
     fetch('/api/Analyze/categories?domain=' + domain) //to change later
@@ -90,7 +90,7 @@ function fetchCategoryPageViewsData() {
         });
 }
 //Author Chart
-function fetchAuthorPageViewsData() {
+function fetchAuthorPageViewsData(domain) {
     //get element
     const authorElement = document.getElementById('AuthorChart').getContext('2d');
     //fetching data
@@ -118,7 +118,7 @@ function fetchAuthorPageViewsData() {
         });
 }
 //Country Chart
-function fetchCountryPageViewsData() {
+function fetchCountryPageViewsData(domain) {
     //get element
     const countryElement = document.getElementById('CountryNameChart');
     //fetching data

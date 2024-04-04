@@ -9,21 +9,45 @@
     <script src="public/script.js"></script>
     <script src="public/dashboard-data-script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="public/filter.js"></script>
+
 </head>
 <body>
     <div class="container">
-        <div class="text-center d-flex justify-content-between align-items-center mt-5">
-            <div>
-                <h2 class="mt mb-0">Data Platform Dashboard</h2>
+
+        <div id="filter">
+            <!-- Corrected the ID to match the Vue instance -->
+            <div class="text-center d-flex justify-content-between align-items-center mt-5">
+                <div>
+                    <h2 class="mt mb-0" style="font-size: 24px;">Data Platform Dashboard</h2>
+                </div>
             </div>
-            <div>
-                <select id="DateSelect" class="custom-select" style="width: auto;">
-                    <option value="1day">Today</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                </select>
-            </div>
+                <div class="form-container me-4" style="width: 60%;">
+                    <form id="customForm" class="d-flex flex-wrap" @submit.prevent="handleSubmit">
+                        <div class="form-group">
+                            <select v-model="selectedDate" class="custom-select">
+                                <option value="1day">Today</option>
+                                <option value="7days">7 Days</option>
+                                <option value="14days">14 Days</option>
+                                <option value="30days">30 Days</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select v-model="selectedDomain" class="custom-select">
+                                <option value="www.almayadeen.net">Al Mayadeen</option>
+                                <option value="mangoPulse.com">Mango Pulse</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <input v-model="selectedCategory" type="text" class="text-field" placeholder="Category" style=" padding: 12px;">
+                        </div>
+                        <div class="form-group" style="">
+                            <button type="submit" class="submit-btn" >Filter</button>
+                        </div>
+                    </form>
+                </div>
+            
         </div>
         <div class="row justify-content-center mt-5">
             <div class="col-md-3">
@@ -75,12 +99,21 @@
         </div>
     </div>
     <script>
+        //var domain = 'www.almayadeen.net'; //to change later
+
         //fetching data and designing the charts
-        fetchDashboardStatisticsData()
-        fetchDatePageViewsData();
-        fetchCategoryPageViewsData();
-        fetchAuthorPageViewsData();
-        fetchCountryPageViewsData();
+        function executeDashboards(domain = "www.almayadeen.net") {
+            fetchDashboardStatisticsData(domain)
+            fetchDatePageViewsData(domain);
+            fetchCategoryPageViewsData(domain);
+            fetchAuthorPageViewsData(domain);
+            fetchCountryPageViewsData(domain);
+        }
+
+        //execute dashboard function
+        executeDashboards()
+        //execute the filter
+        filter()
     </script>
 
 </body>
