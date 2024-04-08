@@ -127,18 +127,18 @@
                 </div>
             </div>
         </div>
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6 mt-5">
-            <div class="analytics-section">
-                <canvas id="PostTypeChart"></canvas>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6 mt-5">
+                <div class="analytics-section">
+                    <canvas id="PostTypeChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6 mt-5">
+                <div class="analytics-section">
+                    <canvas id="tagsWordCloud"></canvas>
+                </div>
             </div>
         </div>
-        <div class="col-md-6 mt-5">
-            <div class="analytics-section">
-                <canvas id="tagsWordCloud"></canvas>
-            </div>
-        </div>
-    </div>
     </div>
     <script>
         //var domain = 'www.almayadeen.net'; //to change later
@@ -150,7 +150,7 @@
             fetchCategoryPageViewsData(domain);
             fetchAuthorPageViewsData(domain);
             fetchCountryPageViewsData(domain);
-            fetchPostTypePageViewsdata(domain, "2024-03-30","2024-04-26");
+            fetchPostTypePageViewsdata(domain, "2024-03-30", "2024-04-26");
         }
 
         //execute dashboard function

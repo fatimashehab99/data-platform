@@ -6,6 +6,8 @@ using DataPipeline.Helpers.LocationService;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using FluentAssertions;
+
 
 namespace DataPipelineTest
 {
@@ -124,6 +126,7 @@ namespace DataPipelineTest
             page.PostUrl = "testUrl.com";
             page.PostImage = "image";
             page.PostTags = ["tag1", "tag2", "tag3"];
+            page.PostType = "news";
             //--Set Date on Current Get-->
             page.Date = DateTime.Now.ToLocalTime();
             return page;

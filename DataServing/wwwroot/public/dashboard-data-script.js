@@ -163,7 +163,7 @@ function fetchPostTypePageViewsdata(domain, dateFrom, dateTo) {
             // Check if data is an array
             if (Array.isArray(data)) {
                 // Use the data to create the chart
-                createPostTypeChart(posttypeElement,data);
+                createPostTypeChart(posttypeElement, data);
             } else {
                 throw new Error('Response data is not an array');
             }

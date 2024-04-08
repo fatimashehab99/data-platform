@@ -1,4 +1,5 @@
 using DataPipeline.DataAnalysis.Models;
+using FluentAssertions;
 
 namespace DataPipelineTest
 {
@@ -381,9 +382,72 @@ namespace DataPipelineTest
                 Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
             }
 
-
         }
 
+        /// <summary>
+        /// This function is used to check teh results of the get posttype API
+        /// </summary>
+        [Test]
+        public void AnalyzePageViewsByPostType()
+        {
 
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //generate pageviews
+            var pageView1 = GeneratePageView();
+            var pageView2 = GeneratePageView();
+            var pageView3 = GeneratePageView();
+            var pageView4 = GeneratePageView();
+            var pageView5 = GeneratePageView();
+
+            //update domain
+            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
+
+            //update date
+            pageView1.FormattedDate = pageView2.FormattedDate = pageView3.FormattedDate = "2024-04-05";
+            pageView4.FormattedDate = "2024-04-20";
+            pageView5.FormattedDate = "2024-03-01";
+
+            //update postType
+            pageView1.PostType = "news";
+            pageView5.PostType = "videos";
+            pageView4.PostType = "Infographs";
+            pageView3.PostType = pageView2.PostType = "Articles";
+
+            //update post id
+            pageView1.PostId = "1";
+            pageView1.PostId = "2";
+            pageView1.PostId = "3";
+            pageView1.PostId = "4";
+            pageView1.PostId = "5";
+
+            //save data to mongo db
+            _trackService.LogPageview(pageView1);
+            _trackService.LogPageview(pageView2);
+            _trackService.LogPageview(pageView3);
+            _trackService.LogPageview(pageView4);
+            _trackService.LogPageview(pageView5);
+
+
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-10",
+                Size = 10
+            };
+
+            var results = _analyticsService.AnalyzePageViewsByPostType(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].PostType.Should().Be("news");
+            results[0].PageViews.Should().Be(1);
+            results[0].Posts.Should().Be(1);
+
+            results[0].PostType.Should().Be("Articles");
+            results[0].PageViews.Should().Be(2);
+            results[0].Posts.Should().Be(2);
+        }
     }
 }
