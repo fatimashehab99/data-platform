@@ -41,6 +41,14 @@ namespace DataPipeline.DataAnalysis.Services
         /// <param name="data"></param>
         /// <returns></returns>
         public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data, int dataSize);
+        /// <summary>
+        /// This function is used to get top post type with total page views and posts
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="dataSize"></param>
+        /// <returns></returns>
+        public List<PostTypePageViews> AnalyzePageViewsByPostType(SearchCriteria data);
+        
 
 
 

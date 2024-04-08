@@ -3,16 +3,9 @@ using DataPipeline.DataAnalysis.Services;
 using DataPipeline.DataCollection.Models;
 using DataPipeline.DataCollection.Services;
 using DataPipeline.Helpers.LocationService;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataPipelineTest
 {

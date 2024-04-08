@@ -97,7 +97,7 @@
 
         // Fill the mydata object with metadata
         var mydata = {
-            ip: "109.75.64.0",//toDo change ip 
+            ip: "102.129.65.0",//toDo change ip 
             postid: metaData.postid,
             postcategory: postCategory,
             postauthor: metaData.author,
@@ -123,3 +123,4 @@
 
 // Call the main function to start the process
 mangoDataPlatform.main();
+

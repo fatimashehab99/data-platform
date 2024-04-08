@@ -92,5 +92,25 @@ namespace DataServing.Controllers
             var results = _dataAnalyticsService.AnalyzePageViewsByCountryName(search, 10);
             return Ok(results);
         }
+        /// <summary>
+        /// This API is used to get pageviews and total post with respect to posttypes
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        [HttpGet("posttypes")]
+        public IActionResult AnalyzePageViewsByPostType([FromQuery(Name = "domain")] string domain,
+                                                        [FromQuery(Name = "date_from")] string dateFrom,
+                                                        [FromQuery(Name = "date_to")] string dateTo)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                Size=10
+            };
+            var results = _dataAnalyticsService.AnalyzePageViewsByPostType(search);
+            return Ok(results);
+        }
     }
 }

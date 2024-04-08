@@ -55,161 +55,201 @@ function formatNumbers(number) {
     return number;
 }
 
-    ///function to create date chart
-    function createDateChart(ctx2, date, pageviews) {
-        new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: date,
-                datasets: [{
-                    label: 'PageViews',
-                    data: pageviews,
-                    borderColor: 'red',
-                    borderWidth: 1,
-                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                    pointStyle: 'circle',
-                    pointRadius: 5,
-                    pointHoverRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Date',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'PageViews',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    //function to create category chart 
-    function createCategoryChart(ctx1, categories, pageviews) {
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: categories,
-                datasets: [{
-                    label: "PageViews",
-                    data: pageviews,
-                    backgroundColor: backGoundColors,
-                    borderColor: backGoundColors,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Top Categories',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'PageViews',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    //function to create author chart 
-    function createAuthorChart(ctx3, authors, pageviews) {
-        //create the chart
-        new Chart(ctx3, {
-            type: 'pie',
-            data: {
-                labels: authors,
-                datasets: [{
-                    label: 'pageviews',
-                    data: pageviews,
-                    backgroundColor: backGoundColors
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: { position: 'left' },
+///function to create date chart
+function createDateChart(ctx2, date, pageviews) {
+    new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: date,
+            datasets: [{
+                label: 'PageViews',
+                data: pageviews,
+                borderColor: 'red',
+                borderWidth: 1,
+                backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointHoverRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
                     title: {
                         display: true,
-                        text: "Top Authors",
+                        text: 'Date',
                         font: {
                             weight: 'bold'
                         }
                     }
                 },
-                aspectRatio: 1, // Aspect ratio of the chart (width/height)
-                maintainAspectRatio: false // Whether to maintain aspect ratio when resizing
-            }
-        });
-    }
-    //function to create country  chart
-    function createCountryChart(ctx4, countries, pageviews) {
-        new Chart(ctx4, {
-            type: 'bar',
-            data: {
-                labels: countries,
-                datasets: [{
-                    axis: 'y',
-                    label: 'PageViews',
-                    data: pageviews,
-                    fill: false,
-                    backgroundColor: backGoundColors,
-                    borderColor: backGoundColors,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'PageViews',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                },
-                plugins: {
+                y: {
+                    beginAtZero: true,
                     title: {
                         display: true,
-                        text: "Top Countries",
+                        text: 'PageViews',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+//function to create category chart 
+function createCategoryChart(ctx1, categories, pageviews) {
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: categories,
+            datasets: [{
+                label: "PageViews",
+                data: pageviews,
+                backgroundColor: backGoundColors,
+                borderColor: backGoundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Top Categories',
                         font: {
                             weight: 'bold'
                         }
                     }
                 },
-                indexAxis: 'y'
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'PageViews',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
             }
-        });
-    }
+        }
+    });
+}
+
+//function to create author chart 
+function createAuthorChart(ctx3, authors, pageviews) {
+    //create the chart
+    new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: authors,
+            datasets: [{
+                label: 'pageviews',
+                data: pageviews,
+                backgroundColor: backGoundColors
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { position: 'left' },
+                title: {
+                    display: true,
+                    text: "Top Authors",
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            },
+            aspectRatio: 1, // Aspect ratio of the chart (width/height)
+            maintainAspectRatio: false // Whether to maintain aspect ratio when resizing
+        }
+    });
+}
+//function to create postType scatter chart
+function createPostTypeChart(posttypeElement, postTypes) {
+    // Prepare data for the chart
+    const data = {
+        datasets: [
+            {
+                label: 'Total Page Views',
+                data: postTypes.map(item => ({ x: Math.random(), y: item.pageViews, r: 10 })), // Increase the 'r' value for larger circles
+                borderColor: 'red',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)'
+            },
+            {
+                label: 'Total Posts',
+                data: postTypes.map(item => ({ x: Math.random(), y: item.posts, r: 10 })), // Increase the 'r' value for larger circles
+                borderColor: 'blue',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+            }
+        ],
+        labels: postTypes.map(item => item.postType)
+    };
+    //create the chart
+    new Chart(posttypeElement, {
+        type: 'bubble', // Use 'bubble' chart type for scatter plot with variable circle sizes
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Total Page Views and Total Posts For Each Post Type'
+                }
+            }
+        },
+    });
+}
+//function to create country  chart
+function createCountryChart(ctx4, countries, pageviews) {
+    new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: countries,
+            datasets: [{
+                axis: 'y',
+                label: 'PageViews',
+                data: pageviews,
+                fill: false,
+                backgroundColor: backGoundColors,
+                borderColor: backGoundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'PageViews',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Top Countries",
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            },
+            indexAxis: 'y'
+        }
+    });
+}
+
+
 

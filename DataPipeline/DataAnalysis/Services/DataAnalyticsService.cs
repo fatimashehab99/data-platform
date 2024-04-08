@@ -191,5 +191,60 @@ namespace DataPipeline.DataAnalysis.Services
             return data;
 
         }
+
+        public List<PostTypePageViews> AnalyzePageViewsByPostType(SearchCriteria criteria)
+        {
+            // Define the aggregation pipeline stages
+            //we need to filter by date , domain and posttype
+            var matchStage = new BsonDocument("$match", new BsonDocument
+            {
+            { Constants.DOMAIN, criteria.Domain },
+            {
+               Constants.FORMATTED_DATE, new  BsonDocument
+               {
+                { Constants.GREATER, criteria.DateFrom },
+                { Constants.SMALLER, criteria.DateTo }
+                }
+                  }
+                    });
+            //we need to group by post type and get total pageviews and posts
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
+            {
+                {Constants.ID,"$" + Constants.POST_TYPE },//group by date
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) },//count the pageviews
+                {Constants.POSTS,new BsonDocument(Constants.ADD_TO_SET,"$"+Constants.POST_ID) } //get array of post to be able to get the toal posts
+
+            });
+
+            //we need to get the total posts count
+            var projectStage = new BsonDocument(Constants.PROJECT, new BsonDocument
+            {
+                {"_id",0 },
+                {Constants.POST_TYPE,"$"+Constants.ID },
+                {Constants.TOTAL_PAGE_VIEWS,1 },
+                {Constants.TOTAL_POSTS,new BsonDocument(Constants.SIZE,"$"+Constants.POSTS) }
+            });
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
+
+            //initialize the pipeline
+            var pipeline = new[] { matchStage, groupStage, projectStage, limitStage };
+            //execute the pipeline then store the results in list 
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            var results = new List<PostTypePageViews>();
+            //loop over the results to store them in DatePageView List
+            foreach (BsonDocument pipelineResult in pipelineResults)
+            {
+                results.Add(new PostTypePageViews
+                {
+                    PostType = pipelineResult[Constants.POST_TYPE].AsString,
+                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32,
+                    Posts = pipelineResult[Constants.TOTAL_POSTS].AsInt32
+                });
+            }
+            return results;
+
+
+
+        }
     }
 }
