@@ -9,45 +9,73 @@
     <script src="public/script.js"></script>
     <script src="public/dashboard-data-script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-    <script src="public/filter.js"></script>
 
 </head>
 <body>
-    <div class="container">
 
-        <div id="filter">
-            <!-- Corrected the ID to match the Vue instance -->
-            <div class="text-center d-flex justify-content-between align-items-center mt-5">
-                <div>
-                    <h2 class="mt mb-0" style="font-size: 24px;">Data Platform Dashboard</h2>
+    <div class="container">
+        <div>
+            <h2 class="mt-5 mb-0">Data Platform Dashboard</h2>
+        </div>
+
+        <div class="text-center d-flex justify-content-between align-items-center mt-5">
+
+            <div class="container mt-4">
+                <div id="filter">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select id="DateSelect" v-model="selectedDate" class="form-control">
+                                    <option value="1day">Today</option>
+                                    <option value="7days">7 Days</option>
+                                    <option value="14days">14 Days</option>
+                                    <option value="30days">30 Days</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select id="DomainSelect" v-model="selectedDomain" class="form-control">
+                                    <option value="www.almayadeen.net">Al Mayadeen</option>
+                                    <option value="www.mango-pulse.com">Mango Pulse</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="text" v-model="selectedCategory" placeholder="Category" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <button @click="filterData" class="btn btn-primary btn-block">Filter</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-                <div class="form-container me-4" style="width: 60%;">
-                    <form id="customForm" class="d-flex flex-wrap" @submit.prevent="handleSubmit">
-                        <div class="form-group">
-                            <select v-model="selectedDate" class="custom-select">
-                                <option value="1day">Today</option>
-                                <option value="7days">7 Days</option>
-                                <option value="14days">14 Days</option>
-                                <option value="30days">30 Days</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select v-model="selectedDomain" class="custom-select">
-                                <option value="www.almayadeen.net">Al Mayadeen</option>
-                                <option value="mangoPulse.com">Mango Pulse</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <input v-model="selectedCategory" type="text" class="text-field" placeholder="Category" style=" padding: 12px;">
-                        </div>
-                        <div class="form-group" style="">
-                            <button type="submit" class="submit-btn" >Filter</button>
-                        </div>
-                    </form>
-                </div>
-            
+
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <script>
+                new Vue({
+                    el: '#filter', // Corrected to match the HTML element's ID
+                    data: {
+                        selectedDate: '1day', // Set default value to the value of the first option
+                        selectedDomain: 'www.almayadeen.net', // Set default value to the value of the first option
+                        selectedCategory: ''
+                    },
+                    methods: {
+                        filterData() {
+                            console.log('Selected Date:', this.selectedDate);
+                            console.log('Selected Domain:', this.selectedDomain);
+                            console.log('Selected Category:', this.selectedCategory); // Corrected to match the data property name
+                        }
+                    }
+                });
+            </script>
+
         </div>
         <div class="row justify-content-center mt-5">
             <div class="col-md-3">
@@ -113,7 +141,7 @@
         //execute dashboard function
         executeDashboards()
         //execute the filter
-        filter()
+
     </script>
 
 </body>

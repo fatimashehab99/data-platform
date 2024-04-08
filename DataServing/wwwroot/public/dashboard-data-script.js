@@ -3,7 +3,6 @@
 
 //Dashboard Statistics 
 function fetchDashboardStatisticsData(domain) {
-    console.log(domain)
     //get elements
     pageviewElement = document.getElementById("pageviews");
     userElement = document.getElementById("users");
