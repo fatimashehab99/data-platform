@@ -445,9 +445,9 @@ namespace DataPipelineTest
             results[0].PageViews.Should().Be(1);
             results[0].Posts.Should().Be(1);
 
-            results[0].PostType.Should().Be("Articles");
-            results[0].PageViews.Should().Be(2);
-            results[0].Posts.Should().Be(2);
+            results[1].PostType.Should().Be("Articles");
+            results[1].PageViews.Should().Be(2);
+            results[1].Posts.Should().Be(2);
         }
     }
 }
