@@ -16,7 +16,7 @@ namespace DataServing.Controllers
             _dataAnalyticsService = dataAnalyticsService;
         }
         /// <summary>
-        ///This API is used to get top categories pageviews 
+        ///This API is used to get categories pageviews analysis
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
@@ -48,7 +48,7 @@ namespace DataServing.Controllers
 
         }
         /// <summary>
-        /// This api is used to get authors with pageviews
+        /// This api is used to get authors pageviews analysis
         /// </summary>
         /// <returns></returns>
         [HttpGet("authors")]
@@ -62,7 +62,7 @@ namespace DataServing.Controllers
             return Ok(results);
         }
         /// <summary>
-        /// This API is used to get pageviews by date
+        /// This API is used to get date pageviews analysis
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
@@ -78,7 +78,7 @@ namespace DataServing.Controllers
             return Ok(results);
         }
         /// <summary>
-        /// This API is used to get pageviews by countries
+        /// This API is usedto get countries pageviews analysis
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
@@ -93,7 +93,7 @@ namespace DataServing.Controllers
             return Ok(results);
         }
         /// <summary>
-        /// This API is used to get pageviews and total post with respect to posttypes
+        /// This API is used to get posttypes pageviews analysis
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
@@ -110,6 +110,27 @@ namespace DataServing.Controllers
                 Size=10
             };
             var results = _dataAnalyticsService.AnalyzePageViewsByPostType(search);
+            return Ok(results);
+        }
+        /// <summary>
+        /// This API is used to get tags pageviews analysis
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        [HttpGet("tags")]
+        public IActionResult AnalyzePageViewsByTags([FromQuery(Name = "domain")] string domain,
+                                                        [FromQuery(Name ="posttype")] string? posttype,
+                                                        [FromQuery(Name = "date_from")] string dateFrom,
+                                                        [FromQuery(Name = "date_to")] string dateTo)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                PostType=posttype
+            };
+            var results = _dataAnalyticsService.AnalyzePageViewsByTag(search);
             return Ok(results);
         }
     }
