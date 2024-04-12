@@ -1,4 +1,5 @@
 using DataPipeline.DataAnalysis.Models;
+using DataPipeline.DataCollection.Models;
 using FluentAssertions;
 
 namespace DataPipelineTest
@@ -448,6 +449,69 @@ namespace DataPipelineTest
             results[1].PostType.Should().Be("Articles");
             results[1].PageViews.Should().Be(2);
             results[1].Posts.Should().Be(2);
+        }
+        /// <summary>
+        /// This function is used to check the results of the get tags pageviews API
+        /// </summary>
+        [Test]
+        public void AnalyzePageViewsByTags()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
+
+            //update domain
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[4].FormattedDate = "2024-03-01";
+
+            //update post type
+            pageviews[0].PostType = pageviews[1].PostType = pageviews[2].PostType = pageviews[4].PostType = "news";
+            pageviews[3].PostType = "sport";
+
+            //update tags
+            pageviews[0].PostTags = ["Lebanon","Palestine","South"];
+            pageviews[1].PostTags = ["Lebanon","war"];
+            pageviews[2].PostTags = ["Lebanon","Palestine"];
+            pageviews[3].PostTags = ["Lebanon"];
+            pageviews[4].PostTags = ["war"];
+
+            //save data to mongo db
+            savePageViews(pageviews);
+
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 50,
+                PostType="news"
+            };
+
+            //get results
+            var results=_analyticsService.AnalyzePageViewsByTag(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(4);
+
+            results[0].tags.Should().Be("Lebanon");
+            results[0].pageviews.Should().Be(3);
+
+            results[1].tags.Should().Be("Palestine");
+            results[1].pageviews.Should().Be(2);
+
+            results[2].tags.Should().Be("South");
+            results[2].pageviews.Should().Be(1);
+
+            results[3].tags.Should().Be("war");
+            results[3].pageviews.Should().Be(1);
+
+
         }
     }
 }

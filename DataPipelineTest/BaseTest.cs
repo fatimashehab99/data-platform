@@ -7,6 +7,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using FluentAssertions;
+using FluentAssertions.Specialized;
+using System.Drawing;
 
 
 namespace DataPipelineTest
@@ -131,6 +133,33 @@ namespace DataPipelineTest
             page.Date = DateTime.Now.ToLocalTime();
             return page;
         }
+        /// <summary>
+        /// This function is used to generate list of page views
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public List<MongoDbPageView> GeneratePageViews(int size)
+        {
+            List<MongoDbPageView> pageviews = new List<MongoDbPageView>();
+            for (int i = 0; i < size; i++)
+            {
+                pageviews.Add(GeneratePageView());
+            }
+            return pageviews;
+        }
+        /// <summary>
+        /// This function is used to save a list of page views
+        /// </summary>
+        /// <param name="pageviews"></param>
+        public void savePageViews(List<MongoDbPageView> pageviews)
+        {
+            for (int i = 0; i < pageviews.Count; i++)
+            {
+                _trackService.LogPageview(pageviews[i]);
+            }
+
+        }
+
 
 
 
