@@ -56,7 +56,7 @@ function formatNumbers(number) {
 }
 
 ///function to create date chart
-function createDateChart(ctx2, date, pageviews) {
+function createDateChart(ctx2, date, pageviews,publishedArticles) {
     new Chart(ctx2, {
         type: 'line',
         data: {
@@ -69,7 +69,18 @@ function createDateChart(ctx2, date, pageviews) {
                 backgroundColor: 'rgba(255, 0, 0, 0.5)',
                 pointStyle: 'circle',
                 pointRadius: 5,
-                pointHoverRadius: 5
+                pointHoverRadius: 5,
+                yAxisID: 'y1' // Assigning this dataset to the y1 axis
+            }, {
+                label: 'Published Articles',
+                data: publishedArticles,
+                borderColor: 'blue',
+                borderWidth: 1,
+                backgroundColor: 'rgba(0, 0, 255, 0.5)',
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointHoverRadius: 5,
+                yAxisID: 'y2' // Assigning this dataset to the y2 axis
             }]
         },
         options: {
@@ -85,16 +96,32 @@ function createDateChart(ctx2, date, pageviews) {
                         }
                     }
                 },
-                y: {
+                y1: {
                     beginAtZero: true,
+                    position: 'left',
                     title: {
                         display: true,
-                        text: 'PageViews',
+                        text: 'Page Views',
                         font: {
                             weight: 'bold'
                         }
                     }
+                },
+                y2: {
+                    beginAtZero: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Published Articles',
+                        font: {
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
                 }
+
             }
         }
     });

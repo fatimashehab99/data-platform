@@ -446,9 +446,6 @@ namespace DataPipelineTest
             results[2].PageViews.Should().Be(1);
             results[2].Posts.Should().Be(1);
 
-
-
-
         }
         /// <summary>
         /// This function is used to check the results of the get tags pageviews API

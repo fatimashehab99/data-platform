@@ -51,13 +51,13 @@ function fetchDashboardStatisticsData(domain) {
         });
 }
 //Date Chart 
-function fetchDatePageViewsData(domain) {
+function fetchDatePageViewsData(domain,posttype) {
 
     //get element
     const dateElement = document.getElementById('DateChart').getContext('2d');
 
     //fetching data
-    fetch('/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate) //to change later
+    fetch('/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate+"&posttype="+posttype) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -68,13 +68,15 @@ function fetchDatePageViewsData(domain) {
             // Process the JSON data
             const date = [];
             const pageviews = [];
+            const publishedArticles = [];
 
             jsonResponse.forEach(item => {
                 date.push(item.date);
                 pageviews.push(item.pageViews);
+                publishedArticles.push(item.publishedArticles);
             });
             //create the chart
-            createDateChart(dateElement, date, pageviews);
+            createDateChart(dateElement, date, pageviews, publishedArticles);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

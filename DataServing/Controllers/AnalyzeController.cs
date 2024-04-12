@@ -68,13 +68,17 @@ namespace DataServing.Controllers
         /// <returns></returns>
         [HttpGet("date")]
         public IActionResult AnalyzePageViewsByDate([FromQuery(Name = "domain")] string domain,
-                                                    [FromQuery(Name = "date")] string date)
+                                                    [FromQuery(Name = "date")] string date,
+                                                    [FromQuery(Name = "posttype")] string? posttype)
         {
             SearchCriteria search = new SearchCriteria()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = date,
+                Size = 10,
+                PostType= posttype
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search, date, 10);
+            var results = _dataAnalyticsService.AnalyzePageViewsByDate(search);
             return Ok(results);
         }
         /// <summary>
@@ -107,7 +111,7 @@ namespace DataServing.Controllers
                 Domain = domain,
                 DateFrom = dateFrom,
                 DateTo = dateTo,
-                Size=10
+                Size = 10
             };
             var results = _dataAnalyticsService.AnalyzePageViewsByPostType(search);
             return Ok(results);
@@ -119,7 +123,7 @@ namespace DataServing.Controllers
         /// <returns></returns>
         [HttpGet("tags")]
         public IActionResult AnalyzePageViewsByTags([FromQuery(Name = "domain")] string domain,
-                                                        [FromQuery(Name ="posttype")] string? posttype,
+                                                        [FromQuery(Name = "posttype")] string? posttype,
                                                         [FromQuery(Name = "date_from")] string dateFrom,
                                                         [FromQuery(Name = "date_to")] string dateTo)
         {
@@ -128,8 +132,8 @@ namespace DataServing.Controllers
                 Domain = domain,
                 DateFrom = dateFrom,
                 DateTo = dateTo,
-                PostType=posttype,
-                Size=50
+                PostType = posttype,
+                Size = 50
             };
             var results = _dataAnalyticsService.AnalyzePageViewsByTag(search);
             return Ok(results);

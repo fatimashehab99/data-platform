@@ -131,40 +131,42 @@
             </div>
         </div>
         <div class="row justify-content-center mt-5">
-            <div class="col-md-6 mt-5">
+            <div class="col-md-8 mt-5">
                 <div class="analytics-section">
                     <canvas id="PostTypeChart"></canvas>
                 </div>
             </div>
-            <div class="col-md-6 mt-5">
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 mt-5">
                 <div class="analytics-section">
+                    <div id="tagsWordCloud"></div>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center mt-5">
-            <div id="tagsWordCloud"></div>
-        </div>
-    </div>
-    <script>
-        //var domain = 'www.almayadeen.net'; //to change later
 
-        //fetching data and designing the charts
-        function executeDashboards(domain = "www.almayadeen.net") {
-            fetchDashboardStatisticsData(domain)
-            fetchDatePageViewsData(domain);
-            fetchCategoryPageViewsData(domain);
-            fetchAuthorPageViewsData(domain);
-            fetchCountryPageViewsData(domain);
-            fetchPostTypePageViewsdata(domain, "2024-03-30", "2024-04-26");
-            fetchTagPageViewsdata(domain, "2024-03-30", "2024-04-26", "");
 
-        }
 
-        //execute dashboard function
-        executeDashboards()
-        //execute the filter
+        <script>
+            //var domain = 'www.almayadeen.net'; //to change later
 
-    </script>
+            //fetching data and designing the charts
+            function executeDashboards(domain = "www.almayadeen.net") {
+                fetchDashboardStatisticsData(domain)
+                fetchDatePageViewsData(domain,"");
+                fetchCategoryPageViewsData(domain);
+                fetchAuthorPageViewsData(domain);
+                fetchCountryPageViewsData(domain);
+                fetchPostTypePageViewsdata(domain, "2024-03-30", "2024-04-26");
+                fetchTagPageViewsdata(domain, "2024-03-30", "2024-04-26", "");
+
+            }
+
+            //execute dashboard function
+            executeDashboards()
+            //execute the filter
+
+        </script>
 
 </body>
 </html>

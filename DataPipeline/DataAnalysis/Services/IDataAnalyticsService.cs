@@ -20,7 +20,7 @@ namespace DataPipeline.DataAnalysis.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data, string date, int dataSize);
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data);
 
         /// <summary>
         /// This function is used to analyze top category name pageviews 
