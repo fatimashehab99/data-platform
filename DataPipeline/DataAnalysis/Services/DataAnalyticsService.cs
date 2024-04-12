@@ -284,8 +284,11 @@ namespace DataPipeline.DataAnalysis.Services
 
             //we need to sort the tags by desc pageviews
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
+
             //initialize the pipeline
-            var pipeline = new[] { matchStage, unwindStage, groupStage, orderByStage };
+            var pipeline = new[] { matchStage, unwindStage, groupStage, orderByStage ,limitStage};
             //execute the pipeline then store the results in list 
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
             var results = new List<TagPageView>();

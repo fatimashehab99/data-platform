@@ -1,5 +1,27 @@
 
-//constants
+//Tags word cloud
+function fetchTagPageViewsdata(domain, dateFrom, dateTo, postType) {
+    //fetching data
+    fetch("api/Analyze/tags?domain=" + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&postType=" + postType) //to change later
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Parse the JSON response
+            return response.json();
+        })
+        .then(data => {
+            // Check if data is an array
+            if (Array.isArray(data)) {
+                // Use the data to create the chart
+                createTagsChart(data);
+            } else {
+                throw new Error('Response data is not an array');
+            }
+        }).catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
 
 //Dashboard Statistics 
 function fetchDashboardStatisticsData(domain) {

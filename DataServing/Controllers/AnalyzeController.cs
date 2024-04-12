@@ -128,7 +128,8 @@ namespace DataServing.Controllers
                 Domain = domain,
                 DateFrom = dateFrom,
                 DateTo = dateTo,
-                PostType=posttype
+                PostType=posttype,
+                Size=50
             };
             var results = _dataAnalyticsService.AnalyzePageViewsByTag(search);
             return Ok(results);

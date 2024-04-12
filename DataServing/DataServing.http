@@ -46,5 +46,5 @@ Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/tags?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
+GET {{DataServing_HostAddress}}/api/Analyze/tags?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=„ﬁ«·« 
 Accept:application/json

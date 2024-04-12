@@ -9,6 +9,9 @@
     <script src="public/script.js"></script>
     <script src="public/dashboard-data-script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/wc.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 </head>
 <body>
@@ -135,9 +138,11 @@
             </div>
             <div class="col-md-6 mt-5">
                 <div class="analytics-section">
-                    <canvas id="tagsWordCloud"></canvas>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div id="tagsWordCloud"></div>
         </div>
     </div>
     <script>
@@ -151,6 +156,8 @@
             fetchAuthorPageViewsData(domain);
             fetchCountryPageViewsData(domain);
             fetchPostTypePageViewsdata(domain, "2024-03-30", "2024-04-26");
+            fetchTagPageViewsdata(domain, "2024-03-30", "2024-04-26", "");
+
         }
 
         //execute dashboard function

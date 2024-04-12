@@ -140,6 +140,38 @@ function createCategoryChart(ctx1, categories, pageviews) {
         }
     });
 }
+//function to create tags word cloud
+function createTagsChart(tags) {
+    console.log(tags.length)
+    am5.ready(function () {
+        // Create root element
+        var root = am5.Root.new("tagsWordCloud");
+        // Set themes
+        root.setThemes([
+            am5themes_Animated.new(root)
+        ]);
+
+        // Add series
+        var series = root.container.children.push(am5wc.WordCloud.new(root, {
+            categoryField: "tags",
+            valueField: "pageviews",
+            maxFontSize: am5.percent(15)
+        }));
+        // Configure labels
+        series.labels.template.setAll({
+            fontFamily: "Courier New"
+        });
+        setInterval(function () {
+            am5.array.each(series.dataItems, function (dataItem) {
+                var value = Math.random() * 65;
+                value = value - Math.random() * value;
+                dataItem.set("value", value);
+                dataItem.set("valueWorking", value);
+            })
+        }, 5000)
+        series.data.setAll(tags);
+    }); // end am5.ready()
+}
 
 //function to create author chart 
 function createAuthorChart(ctx3, authors, pageviews) {
