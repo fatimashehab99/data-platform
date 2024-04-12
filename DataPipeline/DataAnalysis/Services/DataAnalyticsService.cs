@@ -224,10 +224,15 @@ namespace DataPipeline.DataAnalysis.Services
                 {Constants.TOTAL_PAGE_VIEWS,1 },
                 {Constants.TOTAL_POSTS,new BsonDocument(Constants.SIZE,"$"+Constants.POSTS) }
             });
+
+            //order stage
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+
+            //limit stage
             var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
 
             //initialize the pipeline
-            var pipeline = new[] { matchStage, groupStage, projectStage, limitStage };
+            var pipeline = new[] { matchStage, groupStage, projectStage, orderByStage,limitStage };
             //execute the pipeline then store the results in list 
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
             var results = new List<PostTypePageViews>();

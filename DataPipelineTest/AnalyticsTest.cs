@@ -393,62 +393,62 @@ namespace DataPipelineTest
         {
 
             var domain = "test.com" + Guid.NewGuid().ToString();
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
 
             //update date
-            pageView1.FormattedDate = pageView2.FormattedDate = pageView3.FormattedDate = "2024-04-05";
-            pageView4.FormattedDate = "2024-04-20";
-            pageView5.FormattedDate = "2024-03-01";
-
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[4].FormattedDate = "2024-03-01";
             //update postType
-            pageView1.PostType = "news";
-            pageView5.PostType = "videos";
-            pageView4.PostType = "Infographs";
-            pageView3.PostType = pageView2.PostType = "Articles";
+            pageviews[0].PostType = "news";
+            pageviews[1].PostType = "articles";
+            pageviews[4].PostType = "infographs";
+            pageviews[2].PostType = pageviews[3].PostType = "videos";
 
             //update post id
-            pageView1.PostId = "1";
-            pageView1.PostId = "2";
-            pageView1.PostId = "3";
-            pageView1.PostId = "4";
-            pageView1.PostId = "5";
+            for (int i = 0; i < pageviews.Count; i++)
+            {
+                pageviews[i].PostId = i.ToString();
+            }
+
 
             //save data to mongo db
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
+            savePageViews(pageviews);
 
 
             SearchCriteria search = new()
             {
                 Domain = domain,
                 DateFrom = "2024-04-01",
-                DateTo = "2024-04-10",
+                DateTo = "2024-04-25",
                 Size = 10
             };
 
             var results = _analyticsService.AnalyzePageViewsByPostType(search);
             // Assert
             results.Should().NotBeNull();
-            results.Should().HaveCount(2);
+            results.Should().HaveCount(3);
 
-            results[0].PostType.Should().Be("news");
-            results[0].PageViews.Should().Be(1);
-            results[0].Posts.Should().Be(1);
+            results[0].PostType.Should().Be("videos");
+            results[0].PageViews.Should().Be(2);
+            results[0].Posts.Should().Be(2);
 
-            results[1].PostType.Should().Be("Articles");
-            results[1].PageViews.Should().Be(2);
-            results[1].Posts.Should().Be(2);
+            results[1].PostType.Should().Be("news");
+            results[1].PageViews.Should().Be(1);
+            results[1].Posts.Should().Be(1);
+
+            results[2].PostType.Should().Be("articles");
+            results[2].PageViews.Should().Be(1);
+            results[2].Posts.Should().Be(1);
+
+
+
+
         }
         /// <summary>
         /// This function is used to check the results of the get tags pageviews API
@@ -475,9 +475,9 @@ namespace DataPipelineTest
             pageviews[3].PostType = "sport";
 
             //update tags
-            pageviews[0].PostTags = ["Lebanon","Palestine","South"];
-            pageviews[1].PostTags = ["Lebanon","war"];
-            pageviews[2].PostTags = ["Lebanon","Palestine"];
+            pageviews[0].PostTags = ["Lebanon", "Palestine", "South"];
+            pageviews[1].PostTags = ["Lebanon", "war"];
+            pageviews[2].PostTags = ["Lebanon", "Palestine"];
             pageviews[3].PostTags = ["Lebanon"];
             pageviews[4].PostTags = ["war"];
 
@@ -490,11 +490,11 @@ namespace DataPipelineTest
                 DateFrom = "2024-04-01",
                 DateTo = "2024-04-25",
                 Size = 50,
-                PostType="news"
+                PostType = "news"
             };
 
             //get results
-            var results=_analyticsService.AnalyzePageViewsByTag(search);
+            var results = _analyticsService.AnalyzePageViewsByTag(search);
             // Assert
             results.Should().NotBeNull();
             results.Should().HaveCount(4);
