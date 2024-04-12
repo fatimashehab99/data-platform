@@ -68,62 +68,52 @@ namespace DataPipelineTest
         [Test]
         public void AnalyzePageViewsByDateTest()
         {
-            string date = "2024-03-05";
             var domain = "test.com" + Guid.NewGuid().ToString();
 
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
-            var pageView6 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
 
             //update domain
-            pageView1.Domain = pageView2.Domain =
-                pageView3.Domain = pageView4.Domain =
-                pageView5.Domain = pageView6.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
 
             //update date
-            pageView1.FormattedDate = pageView2.FormattedDate = pageView3.FormattedDate = "2024-03-09";
-            pageView4.FormattedDate = pageView5.FormattedDate = "2024-03-07";
-            pageView6.FormattedDate = "2024-03-06";
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-12";
+            pageviews[3].FormattedDate = "2024-04-11";
+            pageviews[4].FormattedDate = "2024-03-01";
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
-            _trackService.LogPageview(pageView6);
+            //update post type
+            pageviews[0].PostType = pageviews[1].PostType = pageviews[2].PostType = pageviews[4].PostType = "news";
+            pageviews[2].PostType = "sport";
 
-
-            //Read data from mongodb
-            SearchCriteria criteria = new()
+            //update post id
+            for (int i = 0; i < pageviews.Count; i++)
             {
-                Domain = domain,
-            };
-            //expected results
-            var expectedResults = new List<DatePageView>
-             {
-            new DatePageView { Date = "2024-03-09", PageViews = 3 },
-            new DatePageView { Date = "2024-03-07", PageViews = 2 },
-            new DatePageView { Date = "2024-03-06", PageViews = 1 },
-             };
-
-            var pageviews = _analyticsService.AnalyzePageViewsByDate(criteria, date, 10);
-
-            Assert.That(pageviews != null, Is.True);
-
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = pageviews.Find(c => c.Date == expected.Date);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
+                pageviews[i].PostId = i.ToString();
             }
 
+            //save data to mongo db
+            savePageViews(pageviews);
 
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-02",
+                Size = 10,
+                PostType = "news"
+            };
+
+            //get results
+            var results = _analyticsService.AnalyzePageViewsByDate(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].Date.Should().Be("2024-04-12");
+            results[0].PageViews.Should().Be(2);
+
+            results[1].Date.Should().Be("2024-04-11");
+            results[1].PageViews.Should().Be(1);
         }
         [Test]
         public void AnalyticsPostByAuthor()
