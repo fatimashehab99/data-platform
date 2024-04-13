@@ -65,13 +65,20 @@ namespace DataServing.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("authors")]
-        public IActionResult getAnalyticsPostByAuthor([FromQuery(Name = "domain")] string domain)
+        public IActionResult getAnalyticsPostByAuthor([FromQuery(Name = "domain")] string domain,
+                                                      [FromQuery(Name = "date_from")] string dateFrom,
+                                                      [FromQuery(Name = "date_to")] string dateTo,
+                                                      [FromQuery(Name = "posttype")] string? posttype)
         {
             SearchCriteria search = new SearchCriteria()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                PostType = posttype,
+                Size=10
             };
-            var results = _dataAnalyticsService.AnalyseByAuthor(search, 10);
+            var results = _dataAnalyticsService.AnalyseByAuthor(search);
             return Ok(results);
         }
         /// <summary>

@@ -13,7 +13,7 @@ namespace DataPipeline.DataAnalysis.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria data, int dataSize);
+        public List<AuthorPageView> AnalyzeAuthorPageViews(SearchCriteria data);
 
         /// <summary>
         /// This function is used to analyze top date name pageviews 

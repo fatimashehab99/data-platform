@@ -16,7 +16,7 @@ namespace DataPipelineTest
             var domain = "test.com" + Guid.NewGuid().ToString();
 
             //generate list of pageviews
-            List<MongoDbPageView> pageviews = GeneratePageViews(5);
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
             //update domain
             pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
@@ -115,59 +115,46 @@ namespace DataPipelineTest
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
 
-
-            var author1 = "fatima";
-            var author2 = "sara";
-            var author3 = "john";
-
-            //generate pageview
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
             //update domain
-            pageView1.Domain = pageView2.Domain =
-                pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[3].FormattedDate = "2024-04-25";
+            pageviews[2].FormattedDate = "2024-03-01";
 
             //update authors
-            pageView1.PostAuthor = pageView2.PostAuthor = author1;
-            pageView3.PostAuthor = author2;
-            pageView4.PostAuthor = pageView5.PostAuthor = author3;
+            pageviews[0].PostAuthor = pageviews[1].PostAuthor = pageviews[2].PostAuthor = "fatima";
+            pageviews[3].PostAuthor = "sara";
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
+            //generate pageviews
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
 
-            //expected results
-            var expectedResults = new List<AuthorPageView>
-             {
-            new AuthorPageView { Author = "fatima", PageViews = 2 },
-            new AuthorPageView { Author = "sara", PageViews = 1 },
-            new AuthorPageView { Author = "john", PageViews = 2 },
-             };
+            //get categories with total pageviews
+            var results = _analyticsService.AnalyzeAuthorPageViews(criteria);
 
-            var authors = _analyticsService.AnalyseByAuthor(criteria, 10);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
 
-            Assert.That(authors != null, Is.True);
+            results[0].Author.Should().Be("fatima");
+            results[0].PageViews.Should().Be(2);
 
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = authors.Find(c => c.Author == expected.Author);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
-            }
+            results[1].Author.Should().Be("sara");
+            results[1].PageViews.Should().Be(1);
         }
         /// <summary>
         /// This function is used to return the total articles

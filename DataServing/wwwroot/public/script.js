@@ -169,7 +169,6 @@ function createCategoryChart(ctx1, categories, pageviews) {
 }
 //function to create tags word cloud
 function createTagsChart(tags) {
-    console.log(tags.length)
     am5.ready(function () {
         // Create root element
         var root = am5.Root.new("tagsWordCloud");

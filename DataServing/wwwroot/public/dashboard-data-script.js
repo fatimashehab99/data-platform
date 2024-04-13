@@ -2,7 +2,7 @@
 //Tags word cloud
 function fetchTagPageViewsdata(domain, dateFrom, dateTo, postType) {
     //fetching data
-    fetch("api/Analyze/tags?domain=" + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&postType=" + postType) //to change later
+    fetch("api/Analyze/tags?domain=" + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + postType) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -87,7 +87,7 @@ function fetchDatePageViewsData(domain, posttype) {
 function fetchCategoryPageViewsData(domain, dateFrom, dateTo, postType) {
     const categoryElement = document.getElementById('CategoryChart').getContext('2d');
 
-    fetch('/api/Analyze/categories?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&postType=" + postType) //to change later
+    fetch('/api/Analyze/categories?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + postType) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -113,11 +113,11 @@ function fetchCategoryPageViewsData(domain, dateFrom, dateTo, postType) {
         });
 }
 //Author Chart
-function fetchAuthorPageViewsData(domain) {
+function fetchAuthorPageViewsData(domain,dateFrom,dateTo,postType) {
     //get element
     const authorElement = document.getElementById('AuthorChart').getContext('2d');
     //fetching data
-    fetch('/api/Analyze/authors?domain=' + domain) //to change later
+    fetch('/api/Analyze/authors?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + postType) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

@@ -31,15 +31,26 @@ namespace DataPipeline.DataAnalysis.Services
             _dashboardStatisticsService = dashboardStatisticsService;
         }
 
-        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria criteria, int dataSize)
+        public List<AuthorPageView> AnalyzeAuthorPageViews(SearchCriteria criteria)
         {
             // Define the aggregation pipeline stages
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
              {
                { Constants.DOMAIN, criteria.Domain },
-                { Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) }
-                     });
-
+                { Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) },
+                  {Constants.FORMATTED_DATE, new  BsonDocument{
+                    { Constants.GREATER, criteria.DateFrom },
+                    { Constants.SMALLER, criteria.DateTo }}
+                  }
+                   });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
                         {
                             { Constants.ID, "$" + Constants.POST_AUTHOR }, // Group by author
@@ -48,7 +59,7 @@ namespace DataPipeline.DataAnalysis.Services
             //order by total pageviews
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
             //limit 10 records
-            var limitStage = new BsonDocument(Constants.LIMIT, 10);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
 
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
 
