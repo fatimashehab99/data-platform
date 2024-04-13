@@ -27,7 +27,7 @@ namespace DataPipeline.DataAnalysis.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria data, int dataSize);
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria data);
         /// <summary>
         /// This function is used to get dashboard statistics data
         /// </summary>

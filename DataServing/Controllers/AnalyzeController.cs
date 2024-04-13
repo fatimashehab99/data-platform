@@ -21,13 +21,20 @@ namespace DataServing.Controllers
         /// <param name="domain"></param>
         /// <returns></returns>
         [HttpGet("categories")]
-        public IActionResult GetTopCategories([FromQuery(Name = "domain")] string domain)
+        public IActionResult GetTopCategories([FromQuery(Name = "domain")] string domain,
+                                                        [FromQuery(Name = "date_from")] string dateFrom,
+                                                        [FromQuery(Name = "date_to")] string dateTo,
+                                                        [FromQuery(Name = "posttype")] string? posttype)
         {
             SearchCriteria search = new SearchCriteria()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                PostType = posttype,
+                Size = 10
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByCategory(search, 10);
+            var results = _dataAnalyticsService.AnalyzePageViewsByCategory(search);
             return Ok(results);
         }
         /// <summary>
@@ -37,11 +44,17 @@ namespace DataServing.Controllers
         /// <returns></returns>
         [HttpGet("dashboard")]
 
-        public IActionResult GetDashboardData([FromQuery(Name = "domain")] string domain)
+        public IActionResult GetDashboardData([FromQuery(Name = "domain")] string domain,
+                                                        [FromQuery(Name = "date_from")] string dateFrom,
+                                                        [FromQuery(Name = "date_to")] string dateTo,
+                                                        [FromQuery(Name = "posttype")] string? posttype)
         {
             SearchCriteria search = new SearchCriteria()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                PostType = posttype
             };
             var results = _dataAnalyticsService.getDashboardStatisticsData(search);
             return Ok(results);
@@ -76,7 +89,7 @@ namespace DataServing.Controllers
                 Domain = domain,
                 DateFrom = date,
                 Size = 10,
-                PostType= posttype
+                PostType = posttype
             };
             var results = _dataAnalyticsService.AnalyzePageViewsByDate(search);
             return Ok(results);

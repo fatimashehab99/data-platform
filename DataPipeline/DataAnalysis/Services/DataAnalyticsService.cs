@@ -125,15 +125,27 @@ namespace DataPipeline.DataAnalysis.Services
 
         }
 
-        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria, int dataSize)
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  {Constants.Category,new BsonDocument(Constants.NOT, BsonNull.Value) }
+                  {Constants.Category,new BsonDocument(Constants.NOT, BsonNull.Value) },
+                  {Constants.FORMATTED_DATE, new  BsonDocument{
+                    { Constants.GREATER, criteria.DateFrom },
+                    { Constants.SMALLER, criteria.DateTo }}
+                  }
                    });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
             //now we need to get the count of pageviews for each category 
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
@@ -142,7 +154,7 @@ namespace DataPipeline.DataAnalysis.Services
 
             });
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
-            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline then store the results in list 

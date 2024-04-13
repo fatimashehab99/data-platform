@@ -51,13 +51,13 @@ function fetchDashboardStatisticsData(domain) {
         });
 }
 //Date Chart 
-function fetchDatePageViewsData(domain,posttype) {
+function fetchDatePageViewsData(domain, posttype) {
 
     //get element
     const dateElement = document.getElementById('DateChart').getContext('2d');
 
     //fetching data
-    fetch('/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate+"&posttype="+posttype) //to change later
+    fetch('/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate + "&posttype=" + posttype) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -84,10 +84,10 @@ function fetchDatePageViewsData(domain,posttype) {
 }
 
 //Category Chart
-function fetchCategoryPageViewsData(domain) {
+function fetchCategoryPageViewsData(domain, dateFrom, dateTo, postType) {
     const categoryElement = document.getElementById('CategoryChart').getContext('2d');
 
-    fetch('/api/Analyze/categories?domain=' + domain) //to change later
+    fetch('/api/Analyze/categories?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&postType=" + postType) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
