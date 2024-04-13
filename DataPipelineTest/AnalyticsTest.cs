@@ -15,51 +15,46 @@ namespace DataPipelineTest
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
 
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
 
             //update domain
-            pageView1.Domain = domain;
-            pageView2.Domain = domain;
-            pageView3.Domain = domain;
-            pageView4.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[3].FormattedDate = "2024-04-25";
+            pageviews[2].FormattedDate = "2024-03-01";
 
             //update categories
-            pageView1.PostCategory = pageView2.PostCategory = pageView4.PostCategory = "News";
-            pageView3.PostCategory = "Sport";
+            pageviews[0].PostCategory = pageviews[1].PostCategory = pageviews[2].PostCategory = "News";
+            pageviews[3].PostCategory = "Sport";
 
             //generate pageviews
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            //expected results
-            var expectedResults = new List<CategoryPageView>
-             {
-            new CategoryPageView { Category = "News", PageViews = 3 },
-            new CategoryPageView { Category = "Sport", PageViews = 1 },
-             };
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
 
             //get categories with total pageviews
-            var results = _analyticsService.AnalyzePageViewsByCategory(criteria, 10);
-            Assert.That(results != null, Is.True);
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = results.Find(c => c.Category == expected.Category);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
-            }
+            var results = _analyticsService.AnalyzePageViewsByCategory(criteria);
 
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].Category.Should().Be("News");
+            results[0].PageViews.Should().Be(2);
+
+            results[1].Category.Should().Be("Sport");
+            results[1].PageViews.Should().Be(1);
 
         }
         /// <summary>
