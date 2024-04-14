@@ -311,49 +311,43 @@ namespace DataPipelineTest
             var domain = "test.com" + Guid.NewGuid().ToString();
 
             //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
 
             //update ips 
-            pageView1.Ip = pageView2.Ip = "102.129.65.0";
-            pageView3.Ip = pageView4.Ip = pageView5.Ip = "109.172.22.0";
+            pageviews[0].Ip = pageviews[1].Ip = "102.129.65.0";
+            pageviews[2].Ip = pageviews[3].Ip = pageviews[4].Ip = "109.172.22.0";
+
+            //update date
+            pageviews[4].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[0].FormattedDate = "2024-03-01";
 
             //save data to mongo db
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
+            savePageViews(pageviews);
 
             //Read data from mongodb
-            SearchCriteria criteria = new()
+            SearchCriteria search = new()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 10
             };
-            //expected results
-            var expectedResults = new List<CountryNamePageView>
-             {
-            new CountryNamePageView { CountryName = "Congo Republic", PageViews = 2 },
-            new CountryNamePageView { CountryName = "Lebanon", PageViews = 3 },
-             };
+            var results = _analyticsService.AnalyzePageViewsByCountryName(search);
 
-            var locations = _analyticsService.AnalyzePageViewsByCountryName(criteria, 10);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
 
-            Assert.That(locations != null, Is.True);
+            results[0].CountryName.Should().Be("Lebanon");
+            results[0].PageViews.Should().Be(3);
 
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = locations.Find(c => c.CountryName == expected.CountryName);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
-            }
+            results[1].CountryName.Should().Be("Congo Republic");
+            results[1].PageViews.Should().Be(1);
 
         }
 
@@ -402,6 +396,7 @@ namespace DataPipelineTest
             };
 
             var results = _analyticsService.AnalyzePageViewsByPostType(search);
+
             // Assert
             results.Should().NotBeNull();
             results.Should().HaveCount(3);

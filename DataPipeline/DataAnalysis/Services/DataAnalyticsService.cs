@@ -183,14 +183,26 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
         }
-        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria, int dataSize)
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria)
         {
             // Define the aggregation pipeline stages
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
              {
-               { Constants.DOMAIN, criteria.Domain },
-                { Constants.COUNTRY_NAME, new BsonDocument(Constants.NOT, BsonNull.Value) }
-                     });
+                { Constants.DOMAIN, criteria.Domain },
+                { Constants.COUNTRY_NAME, new BsonDocument(Constants.NOT, BsonNull.Value) },
+                {Constants.FORMATTED_DATE, new  BsonDocument{
+                    { Constants.GREATER, criteria.DateFrom },
+                    { Constants.SMALLER, criteria.DateTo }}}
+                   });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
+
             //now we need to get the count of pageviews for each country name
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
@@ -199,7 +211,7 @@ namespace DataPipeline.DataAnalysis.Services
 
             });
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
-            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline then store the results in list 

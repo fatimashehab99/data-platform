@@ -113,7 +113,7 @@ function fetchCategoryPageViewsData(domain, dateFrom, dateTo, postType) {
         });
 }
 //Author Chart
-function fetchAuthorPageViewsData(domain,dateFrom,dateTo,postType) {
+function fetchAuthorPageViewsData(domain, dateFrom, dateTo, postType) {
     //get element
     const authorElement = document.getElementById('AuthorChart').getContext('2d');
     //fetching data
@@ -141,11 +141,11 @@ function fetchAuthorPageViewsData(domain,dateFrom,dateTo,postType) {
         });
 }
 //Country Chart
-function fetchCountryPageViewsData(domain) {
+function fetchCountryPageViewsData(domain, dateFrom, dateTo, posttype) {
     //get element
     const countryElement = document.getElementById('CountryNameChart');
     //fetching data
-    fetch('/api/Analyze/countries?domain=' + domain) //to change later
+    fetch('/api/Analyze/countries?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + posttype) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

@@ -76,9 +76,9 @@ namespace DataServing.Controllers
                 DateFrom = dateFrom,
                 DateTo = dateTo,
                 PostType = posttype,
-                Size=10
+                Size = 10
             };
-            var results = _dataAnalyticsService.AnalyseByAuthor(search);
+            var results = _dataAnalyticsService.AnalyzeAuthorPageViews(search);
             return Ok(results);
         }
         /// <summary>
@@ -107,13 +107,20 @@ namespace DataServing.Controllers
         /// <param name="domain"></param>
         /// <returns></returns>
         [HttpGet("countries")]
-        public IActionResult AnalyzePageViewsbyCountryName([FromQuery(Name = "domain")] string domain)
+        public IActionResult AnalyzePageViewsbyCountryName([FromQuery(Name = "domain")] string domain,
+                                                           [FromQuery(Name = "date_from")] string dateFrom,
+                                                           [FromQuery(Name = "date_to")] string dateTo,
+                                                           [FromQuery(Name = "posttype")] string? posttype)
         {
             SearchCriteria search = new SearchCriteria()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                PostType = posttype,
+                Size = 10
             };
-            var results = _dataAnalyticsService.AnalyzePageViewsByCountryName(search, 10);
+            var results = _dataAnalyticsService.AnalyzePageViewsByCountryName(search);
             return Ok(results);
         }
         /// <summary>

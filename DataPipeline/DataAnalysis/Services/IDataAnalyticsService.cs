@@ -40,7 +40,7 @@ namespace DataPipeline.DataAnalysis.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data, int dataSize);
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data);
         /// <summary>
         /// This function is used to get analyze top posttype pageviews
         /// </summary>

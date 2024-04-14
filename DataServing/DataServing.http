@@ -20,12 +20,12 @@ Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/date?domain=www.almayadeen.net&date=2024-04-02&posttype
+GET {{DataServing_HostAddress}}/api/Analyze/date?domain=www.almayadeen.net&date=2024-04-02&posttype=
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/countries?domain=x.com&date=2024-03-02
+GET {{DataServing_HostAddress}}/api/Analyze/countries?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
 Accept:application/json
 
 ###
