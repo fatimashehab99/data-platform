@@ -55,9 +55,9 @@ function fetchDatePageViewsData(domain, posttype) {
 
     //get element
     const dateElement = document.getElementById('DateChart').getContext('2d');
-
+    date = getDate(10)
     //fetching data
-    fetch('/api/Analyze/date?domain=' + domain + "&date=" + tenDaysAgoDate + "&posttype=" + posttype) //to change later
+    fetch('/api/Analyze/date?domain=' + domain + "&date=" + date + "&posttype=" + posttype) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -77,6 +77,7 @@ function fetchDatePageViewsData(domain, posttype) {
             });
             //create the chart
             createDateChart(dateElement, date, pageviews, publishedArticles);
+
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

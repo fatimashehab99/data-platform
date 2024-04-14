@@ -29,10 +29,10 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <select id="DateSelect" v-model="selectedDate" class="form-control">
-                                    <option value="1day">Today</option>
-                                    <option value="7days">7 Days</option>
-                                    <option value="14days">14 Days</option>
-                                    <option value="30days">30 Days</option>
+                                    <option value="0">Today</option>
+                                    <option value="7">7 Days</option>
+                                    <option value="14">14 Days</option>
+                                    <option value="30">30 Days</option>
                                 </select>
                             </div>
                         </div>
@@ -61,23 +61,7 @@
             </div>
 
             <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-            <script>
-                new Vue({
-                    el: '#filter', // Corrected to match the HTML element's ID
-                    data: {
-                        selectedDate: '1day', // Set default value to the value of the first option
-                        selectedDomain: 'www.almayadeen.net', // Set default value to the value of the first option
-                        selectedCategory: ''
-                    },
-                    methods: {
-                        filterData() {
-                            console.log('Selected Date:', this.selectedDate);
-                            console.log('Selected Domain:', this.selectedDomain);
-                            console.log('Selected Category:', this.selectedCategory); // Corrected to match the data property name
-                        }
-                    }
-                });
-            </script>
+            <script src="public/filter.js"></script>
 
         </div>
         <div class="row justify-content-center mt-5">
@@ -144,30 +128,17 @@
                 </div>
             </div>
         </div>
+    </div>
 
 
 
-        <script>
-            //var domain = 'www.almayadeen.net'; //to change later
+    <script>
 
-            //fetching data and designing the charts
-            function executeDashboards(domain = "www.almayadeen.net") {
-                //fetchDashboardStatisticsData(domain)
-                fetchDatePageViewsData(domain,"أخ");
-                fetchCategoryPageViewsData(domain, "2024-03-30", "2024-04-26", "");
-                fetchAuthorPageViewsData(domain, "2024-03-30", "2024-04-26", "");
-                fetchCountryPageViewsData(domain, "2024-03-30", "2024-04-26", "");
-                fetchPostTypePageViewsdata(domain, "2024-03-30", "2024-04-26");
-                fetchTagPageViewsdata(domain, "2024-03-30", "2024-04-26", "");
-                fetchDashboardStatisticsData(domain, "2024-03-30", "2024-04-26", "");
+        //execute dashboards function
+        executeDashboards()
+        //execute the filter
 
-            }
-
-            //execute dashboard function
-            executeDashboards()
-            //execute the filter
-
-        </script>
+    </script>
 
 </body>
 </html>

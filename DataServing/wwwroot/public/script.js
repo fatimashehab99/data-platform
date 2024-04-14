@@ -10,10 +10,9 @@
     'rgba(0, 255, 0, 0.2)',
     'rgba(0, 0, 255, 0.2)'
 ];
-//get date from 10 days
-var tenDaysAgoDate = getTenDaysAgoDate()
 
-function getTenDaysAgoDate() {
+
+function getDate(days) {
     // Get the current date
     var currentDate = new Date();
 
@@ -21,7 +20,7 @@ function getTenDaysAgoDate() {
     var currentDateFormatted = currentDate.toISOString().slice(0, 10);
     // Calculate the date 10 days ago
     var tenDaysAgo = new Date(currentDate);
-    tenDaysAgo.setDate(currentDate.getDate() - 10);
+    tenDaysAgo.setDate(currentDate.getDate() - days);
 
     // Get the date 10 days ago in the same format
     var tenDaysAgoFormatted = tenDaysAgo.toISOString().slice(0, 10);
@@ -57,7 +56,7 @@ function formatNumbers(number) {
 
 ///function to create date chart
 function createDateChart(ctx2, date, pageviews,publishedArticles) {
-    new Chart(ctx2, {
+   new Chart(ctx2, {
         type: 'line',
         data: {
             labels: date,

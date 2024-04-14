@@ -10,12 +10,12 @@ Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/dashboard?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=知版
+GET {{DataServing_HostAddress}}/api/Analyze/dashboard?domain=www.almayadeen.net&date_from=2024-04-14&date_to=2024-04-14&posttype=知版
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/authors?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
+GET {{DataServing_HostAddress}}/api/Analyze/authors?domain=www.almayadeen.net&date_from=2024-04-14&date_to=2024-04-15&posttype=
 Accept:application/json
 
 ###

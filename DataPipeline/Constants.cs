@@ -76,7 +76,7 @@ namespace DataPipeline
         public static string SORT = "$sort";
         public static string LIMIT = "$limit";
         public static string NOT = "$ne";
-        public static string GREATER = "$gt";
+        public static string GREATER = "$gte";
         public static string SIZE = "$size";
         public static string PROJECT = "$project";
         public static string ADD_TO_SET = "$addToSet";
