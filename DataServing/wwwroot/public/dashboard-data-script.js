@@ -24,7 +24,7 @@ function fetchTagPageViewsdata(domain, dateFrom, dateTo, postType) {
 }
 
 //Dashboard Statistics 
-function fetchDashboardStatisticsData(domain) {
+function fetchDashboardStatisticsData(domain, dateFrom, dateTo, posttype) {
     //get elements
     pageviewElement = document.getElementById("pageviews");
     userElement = document.getElementById("users");
@@ -32,7 +32,7 @@ function fetchDashboardStatisticsData(domain) {
     authorElement = document.getElementById("authors");
 
     ///fetching data
-    fetch('/api/Analyze/dashboard?domain=' + domain) //to change later
+    fetch('/api/Analyze/dashboard?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + posttype) //to change later
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
