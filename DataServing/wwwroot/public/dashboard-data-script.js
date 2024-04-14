@@ -22,7 +22,25 @@ function fetchTagPageViewsdata(domain, dateFrom, dateTo, postType) {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
-
+///articles table
+function fetchArticleTableData(domain, dateFrom, dateTo, posttype) {
+    new Vue({
+        el: '#article',
+        data: {
+            posts: []
+        },
+        mounted() {
+            fetch('api/Analyze/articles?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + posttype)
+                .then(response => response.json())
+                .then(data => {
+                    this.posts = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching recommended items:', error);
+                });
+        }
+    });
+}
 //Dashboard Statistics 
 function fetchDashboardStatisticsData(domain, dateFrom, dateTo, posttype) {
     //get elements
@@ -32,7 +50,7 @@ function fetchDashboardStatisticsData(domain, dateFrom, dateTo, posttype) {
     authorElement = document.getElementById("authors");
 
     ///fetching data
-    fetch('/api/Analyze/dashboard?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + posttype) //to change later
+    fetch('/api/Analyze/dashboard?domain=' + domain + "&date_from=" + dateFrom + "&date_to=" + dateTo + "&posttype=" + posttype)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

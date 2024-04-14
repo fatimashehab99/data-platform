@@ -24,5 +24,5 @@ function executeDashboards(domain = "www.almayadeen.net", dateFrom = getDate(0),
     fetchCountryPageViewsData(domain, dateFrom, getDate(0), posttype);
     fetchPostTypePageViewsdata(domain, dateFrom, getDate(0));
     fetchTagPageViewsdata(domain, dateFrom, getDate(0), posttype);
-
+    fetchArticleTableData(domain, dateFrom, getDate(0), posttype);
 }

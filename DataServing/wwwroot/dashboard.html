@@ -127,6 +127,38 @@
                     <div id="tagsWordCloud"></div>
                 </div>
             </div>
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-12 mt-5">
+                    <div class="analytics-section">
+                        <div id="article">
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Post Image</th>
+                                        <th scope="col">Post Title</th>
+                                        <th scope="col">Page Views</th>
+                                        <th scope="col">Author</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Published Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr v-for="(post, index) in posts" :key="index">
+                                            <td>
+                                                <img :src="post.postImage" alt="Post Image" style="max-width: 100px; max-height: 100px;">
+                                            </td>
+                                            <td>{{ post.postTitle }}</td>
+                                            <td>{{ post.pageViews }}</td>
+                                            <td>{{ post.postAuthor }}</td>
+                                            <td>{{ post.postCategory }}</td>
+                                            <td>{{ (post.publishedDate) }}</td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
