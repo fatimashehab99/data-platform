@@ -136,7 +136,7 @@ namespace DataPipeline.DataAnalysis.Services
             //loop over categories
             foreach (var category in topCategories)
             {
-                matchFilters.Add(new BsonDocument(Constants.Category, category.Key));
+                matchFilters.Add(new BsonDocument(Constants.CATEGORY, category.Key));
             }
             //loop over authors 
             foreach (var author in topAuthors)

@@ -84,6 +84,10 @@
             return cls.mapping === "posttype";
         }) || {}).value || ""; // Get postType from classes meta data
 
+
+        if (!posttype || posttype === 'الصفحات')
+            return;
+
         // Get post category
         var postCategory = (metaData.classes.find(function (cls) {
             return cls.mapping === "category";

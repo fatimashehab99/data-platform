@@ -143,7 +143,7 @@ namespace DataPipeline.DataAnalysis.Services
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  {Constants.Category,new BsonDocument(Constants.NOT, BsonNull.Value) },
+                  {Constants.CATEGORY,new BsonDocument(Constants.NOT, BsonNull.Value) },
                   {Constants.FORMATTED_DATE, new  BsonDocument{
                     { Constants.GREATER, criteria.DateFrom },
                     { Constants.SMALLER, criteria.DateTo }}
@@ -160,7 +160,7 @@ namespace DataPipeline.DataAnalysis.Services
             //now we need to get the count of pageviews for each category 
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {Constants.ID,"$" + Constants.Category },//group by date
+                {Constants.ID,"$" + Constants.CATEGORY },//group by date
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }//count the pageviews
 
             });
@@ -362,6 +362,69 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
 
+        }
+        public List<ArticlePageView> GetTopPageViewsArticles(SearchCriteria criteria)
+        {
+            // Define the aggregation pipeline stages
+            //we need to filter by date , domain and posttype
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+            {
+              { Constants.DOMAIN, criteria.Domain },
+              { Constants.FORMATTED_DATE, new BsonDocument
+                {
+              { Constants.GREATER, criteria.DateFrom },
+              { Constants.SMALLER, criteria.DateTo }
+              }
+               }
+             });
+
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
+
+            //grouping by stage (post id)
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
+                {Constants.ID,"$"+Constants.POST_ID },//group by post id
+                {Constants.POST_TITLE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_TITLE)},
+                {Constants.POST_URL,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_URL)},
+                {Constants.POST_IMAGE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_IMAGE)},
+                {Constants.POST_AUTHOR,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_AUTHOR)},
+                {Constants.CATEGORY,new  BsonDocument(Constants.FIRST,"$"+Constants.CATEGORY)},
+                {Constants.PUBLISHED_DATE,new  BsonDocument(Constants.FIRST,"$"+Constants.PUBLISHED_DATE)},
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
+            });
+
+            //sorting stage 
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+
+            //limit stage
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
+            //initialize the pipeline 
+            var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
+            //execute the pipeline
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+
+            var results = new List<ArticlePageView>();
+
+            foreach (BsonDocument pResult in pipelineResults)
+            {
+                results.Add(new ArticlePageView
+                {
+                    PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
+                    PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
+                    PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
+                    PostImage = pResult[Constants.POST_IMAGE].AsString,//Get Image url
+                    PostAuthor = pResult[Constants.POST_AUTHOR].AsString,
+                    PostCategory = pResult[Constants.CATEGORY].AsString,
+                    PublishedDate = (pResult[Constants.PUBLISHED_DATE]).AsDateTime
+                });
+            }
+            return results;
         }
     }
 }

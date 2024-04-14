@@ -30,6 +30,11 @@ Accept:application/json
 
 ###
 
+GET {{DataServing_HostAddress}}/api/Analyze/articles?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
+Accept:application/json
+
+###
+
 GET {{DataServing_HostAddress}}/api/Article/trending?domain=example.com&ip=102.129.65.0
 Accept:application/json
 

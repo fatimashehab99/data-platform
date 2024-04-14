@@ -41,7 +41,7 @@ namespace DataPipeline
         public static string POST_IMAGE = "PostImage";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
-        public static string Category = "PostCategory";
+        public static string CATEGORY = "PostCategory";
         public static string USERID = "UserId";
         public static string POST_TITLE = "PostTitle";
         public static string FORMATTED_DATE = "FormattedDate";
@@ -50,6 +50,7 @@ namespace DataPipeline
         public static string POST_TYPE = "PostType";
         public static string ID = "_id";
         public static string POSTS = "posts";
+        public static string PUBLISHED_DATE = "PostPublishDate";
 
 
         public static string TAG_INDEX = "tag_index";

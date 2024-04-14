@@ -119,7 +119,7 @@ namespace DataPipelineTest
             page.UserId = "123";
             page.PostId = Guid.NewGuid().ToString();
             page.PostTitle = "Post Title Mango";
-            page.PostCategory = "Mango Category";
+            page.PostCategory = "Mango CATEGORY";
             page.Domain = "Sub Name";
             page.Domain = "102-123-123";
             page.Browser = "chrome";

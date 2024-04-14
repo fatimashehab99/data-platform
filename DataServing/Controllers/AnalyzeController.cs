@@ -165,5 +165,30 @@ namespace DataServing.Controllers
             var results = _dataAnalyticsService.AnalyzePageViewsByTag(search);
             return Ok(results);
         }
+        /// <summary>
+        /// This function is used to get top page views articles
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="dateFrom"></param>
+        /// <param name="dateTo"></param>
+        /// <param name="posttype"></param>
+        /// <returns></returns>
+        [HttpGet("articles")]
+        public IActionResult AnalyzeArticlesPageViews([FromQuery(Name = "domain")] string domain,
+                                                   [FromQuery(Name = "date_from")] string dateFrom,
+                                                   [FromQuery(Name = "date_to")] string dateTo,
+                                                   [FromQuery(Name = "posttype")] string? posttype)
+        {
+            SearchCriteria search = new SearchCriteria()
+            {
+                Domain = domain,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                PostType = posttype,
+                Size = 10
+            };
+            var results = _dataAnalyticsService.GetTopPageViewsArticles(search);
+            return Ok(results);
+        }
     }
 }

@@ -54,6 +54,12 @@ namespace DataPipeline.DataAnalysis.Services
         /// <param name="data"></param>
         /// <returns></returns>
         public List<TagPageView> AnalyzePageViewsByTag(SearchCriteria data);
+        /// <summary>
+        /// This function is used to get top pageviews articles
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<ArticlePageView> GetTopPageViewsArticles(SearchCriteria data);
 
 
 
