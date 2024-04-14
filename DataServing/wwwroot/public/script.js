@@ -11,7 +11,6 @@
     'rgba(0, 0, 255, 0.2)'
 ];
 
-
 function getDate(days) {
     // Get the current date
     var currentDate = new Date();
@@ -55,8 +54,8 @@ function formatNumbers(number) {
 }
 
 ///function to create date chart
-function createDateChart(ctx2, date, pageviews,publishedArticles) {
-   new Chart(ctx2, {
+function createDateChart(ctx2, date, pageviews, publishedArticles) {
+    return new Chart(ctx2, {
         type: 'line',
         data: {
             labels: date,
@@ -128,7 +127,7 @@ function createDateChart(ctx2, date, pageviews,publishedArticles) {
 
 //function to create category chart 
 function createCategoryChart(ctx1, categories, pageviews) {
-    new Chart(ctx1, {
+    return new Chart(ctx1, {
         type: 'bar',
         data: {
             labels: categories,
@@ -166,42 +165,52 @@ function createCategoryChart(ctx1, categories, pageviews) {
         }
     });
 }
-//function to create tags word cloud
-function createTagsChart(tags) {
-    am5.ready(function () {
-        // Create root element
-        var root = am5.Root.new("tagsWordCloud");
-        // Set themes
-        root.setThemes([
-            am5themes_Animated.new(root)
-        ]);
+let tagsRoot = null;
 
-        // Add series
-        var series = root.container.children.push(am5wc.WordCloud.new(root, {
-            categoryField: "tags",
-            valueField: "pageviews",
-            maxFontSize: am5.percent(15)
-        }));
-        // Configure labels
-        series.labels.template.setAll({
-            fontFamily: "Courier New"
+function createTagsChart(tags) {
+    // Check if the root element already exists
+    if (!tagsRoot) {
+        // Create root element if it doesn't exist
+        tagsRoot = am5.Root.new("tagsWordCloud");
+        // Set themes
+        tagsRoot.setThemes([
+            am5themes_Animated.new(tagsRoot)
+        ]);
+    } else {
+        // Clear existing series from the root if it's a filter operation
+        tagsRoot.container.children.clear();
+    }
+
+    // Add series
+    var series = tagsRoot.container.children.push(am5wc.WordCloud.new(tagsRoot, {
+        categoryField: "tags",
+        valueField: "pageviews",
+        maxFontSize: am5.percent(15)
+    }));
+
+    // Configure labels
+    series.labels.template.setAll({
+        fontFamily: "Courier New"
+    });
+
+    // Update data
+    series.data.setAll(tags);
+
+    // Update data values periodically
+    setInterval(function () {
+        am5.array.each(series.dataItems, function (dataItem) {
+            var value = Math.random() * 65;
+            value = value - Math.random() * value;
+            dataItem.set("value", value);
+            dataItem.set("valueWorking", value);
         });
-        setInterval(function () {
-            am5.array.each(series.dataItems, function (dataItem) {
-                var value = Math.random() * 65;
-                value = value - Math.random() * value;
-                dataItem.set("value", value);
-                dataItem.set("valueWorking", value);
-            })
-        }, 5000)
-        series.data.setAll(tags);
-    }); // end am5.ready()
+    }, 5000);
 }
 
 //function to create author chart 
 function createAuthorChart(ctx3, authors, pageviews) {
     //create the chart
-    new Chart(ctx3, {
+    return new Chart(ctx3, {
         type: 'pie',
         data: {
             labels: authors,
@@ -248,7 +257,7 @@ function createPostTypeChart(posttypeElement, postTypes) {
         labels: postTypes.map(item => item.postType)
     };
     //create the chart
-    new Chart(posttypeElement, {
+   return new Chart(posttypeElement, {
         type: 'bubble', // Use 'bubble' chart type for scatter plot with variable circle sizes
         data: data,
         options: {
@@ -267,7 +276,7 @@ function createPostTypeChart(posttypeElement, postTypes) {
 }
 //function to create country  chart
 function createCountryChart(ctx4, countries, pageviews) {
-    new Chart(ctx4, {
+    return new Chart(ctx4, {
         type: 'bar',
         data: {
             labels: countries,

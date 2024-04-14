@@ -75,9 +75,14 @@ function fetchDatePageViewsData(domain, posttype) {
                 pageviews.push(item.pageViews);
                 publishedArticles.push(item.publishedArticles);
             });
-            //create the chart
-            createDateChart(dateElement, date, pageviews, publishedArticles);
 
+            //check if the hcart exists before
+            if (dateElement.chart) {
+                (dateElement.chart).destroy()
+            }
+            //create the chart
+            const dateChart = createDateChart(dateElement, date, pageviews, publishedArticles);
+            dateElement.chart = dateChart
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -105,8 +110,13 @@ function fetchCategoryPageViewsData(domain, dateFrom, dateTo, postType) {
                 pageviews.push(item.pageViews);
             });
 
+            //check if the hcart exists before
+            if (categoryElement.chart) {
+                (categoryElement.chart).destroy()
+            }
             ///create the chart
-            createCategoryChart(categoryElement, categories, pageviews)
+            const categoryChart = createCategoryChart(categoryElement, categories, pageviews)
+            categoryElement.chart = categoryChart
 
         })
         .catch(error => {
@@ -134,8 +144,13 @@ function fetchAuthorPageViewsData(domain, dateFrom, dateTo, postType) {
                 authors.push(item.author);
                 pageviews.push(item.pageViews);
             });
+            if (authorElement.chart) {
+                authorElement.chart.destroy()
+            }
             //create the chart
-            createAuthorChart(authorElement, authors, pageviews)
+            const authorChart = createAuthorChart(authorElement, authors, pageviews)
+            authorElement.chart = authorChart
+
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -162,8 +177,15 @@ function fetchCountryPageViewsData(domain, dateFrom, dateTo, posttype) {
                 countries.push(item.countryName);
                 pageviews.push(item.pageViews);
             });
+
+            //check if chart exist before
+            if (countryElement.chart) {
+                countryElement.chart.destroy()
+            }
+
             //create the chart
-            createCountryChart(countryElement, countries, pageviews)
+            const countryChart = createCountryChart(countryElement, countries, pageviews)
+            countryElement.chart = countryChart
 
         })
         .catch(error => {
@@ -187,8 +209,15 @@ function fetchPostTypePageViewsdata(domain, dateFrom, dateTo) {
         .then(data => {
             // Check if data is an array
             if (Array.isArray(data)) {
+                //check if chart exist before
+                if (posttypeElement.chart) {
+                    posttypeElement.chart.destroy()
+                }
+                //create the chart
                 // Use the data to create the chart
-                createPostTypeChart(posttypeElement, data);
+                const posttypeChart = createPostTypeChart(posttypeElement, data);
+                posttypeElement.chart = posttypeChart
+
             } else {
                 throw new Error('Response data is not an array');
             }
