@@ -26,6 +26,18 @@ function getDate(days) {
     return tenDaysAgoFormatted;
 
 }
+//function to format dates
+function dateFormat(dateTime) {
+    // Create a new Date object from the provided string
+    const date = new Date(dateTime);
+    // Extract the year, month, and day components
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    // Format the date as "YYYY-MM-DD"
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+}
 //function to format large numbers 
 function formatNumbers(number) {
     if (number >= 1000000000) {
@@ -60,7 +72,7 @@ function createDateChart(ctx2, date, pageviews, publishedArticles) {
         data: {
             labels: date,
             datasets: [{
-                label: 'PageViews',
+                label: 'Page Views',
                 data: pageviews,
                 borderColor: 'red',
                 borderWidth: 1,
@@ -132,7 +144,7 @@ function createCategoryChart(ctx1, categories, pageviews) {
         data: {
             labels: categories,
             datasets: [{
-                label: "PageViews",
+                label: "Page Views",
                 data: pageviews,
                 backgroundColor: backGoundColors,
                 borderColor: backGoundColors,
@@ -155,7 +167,7 @@ function createCategoryChart(ctx1, categories, pageviews) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'PageViews',
+                        text: 'Page Views',
                         font: {
                             weight: 'bold'
                         }
@@ -215,7 +227,7 @@ function createAuthorChart(ctx3, authors, pageviews) {
         data: {
             labels: authors,
             datasets: [{
-                label: 'pageviews',
+                label: 'Page Views',
                 data: pageviews,
                 backgroundColor: backGoundColors
             }]
@@ -242,7 +254,7 @@ function createPostTypeChart(posttypeElement, postTypes) {
     const data = {
         datasets: [
             {
-                label: 'Total Page Views',
+                label: 'Page Views',
                 data: postTypes.map(item => ({ x: Math.random(), y: item.pageViews, r: 10 })), // Increase the 'r' value for larger circles
                 borderColor: 'red',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)'
@@ -268,7 +280,7 @@ function createPostTypeChart(posttypeElement, postTypes) {
                 },
                 title: {
                     display: true,
-                    text: 'Total Page Views and Total Posts For Each Post Type'
+                    text: 'Top Post Types'
                 }
             }
         },
@@ -282,7 +294,7 @@ function createCountryChart(ctx4, countries, pageviews) {
             labels: countries,
             datasets: [{
                 axis: 'y',
-                label: 'PageViews',
+                label: 'Page Views',
                 data: pageviews,
                 fill: false,
                 backgroundColor: backGoundColors,
@@ -296,7 +308,7 @@ function createCountryChart(ctx4, countries, pageviews) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'PageViews',
+                        text: 'Page Views',
                         font: {
                             weight: 'bold'
                         }

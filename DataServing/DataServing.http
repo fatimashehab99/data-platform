@@ -35,13 +35,13 @@ Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Article/trending?domain=example.com&ip=102.129.65.0
+GET {{DataServing_HostAddress}}/api/Article/trending?domain=www.almayadeen.net&ip=102.129.65.0
 Accept:application/json
 
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Article/recommended?domain=example.com&userId=3
+GET {{DataServing_HostAddress}}/api/Article/recommended?domain=www.almayadeen.net&userId=user_1710849645969_5765
 Accept:application/json
 
 ###

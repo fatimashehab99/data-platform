@@ -55,7 +55,6 @@
 
     // Main function to fetch metadata, fill mydata object, and send data to API
     main: function () {
-        // Parse the metadata script element and extract its content
         var scriptElement = document.getElementById('tawsiyat-metadata');
         if (!scriptElement) {
             console.error('Metadata script element not found');
@@ -67,37 +66,32 @@
         metaData.classes.forEach(function (item) {
             postClasses.push({ "mapping": item.mapping, "value": item.value });
         });
-
-        //data will not be collected if type is page
+        //validations
+        
         if (metaData.type === "page") {
-            return;
+            return;//data will not be collected if the type is page
         }
-        //data will not be collected if the post image is empty
+        
         if (metaData.thumbnail == null || metaData.thumbnail === "") {
-            return;
+            return;//data will not be collected if the post image is empty
         }
         //collect post tags incase it has no data it will return null and not empty array
         var postTags = metaData.keywords.trim() !== "" ? metaData.keywords.split(",") : null;
 
-        // Get post type
-        var postType = (metaData.classes.find(function (cls) {
-            return cls.mapping === "posttype";
+        var posttype = (metaData.classes.find(function (cls) {
+            return cls.mapping === "posttype";// Get post type
         }) || {}).value || ""; // Get postType from classes meta data
 
-
+        //to get data from articles only
         if (!posttype || posttype === 'الصفحات')
             return;
-
-        // Get post category
         var postCategory = (metaData.classes.find(function (cls) {
             return cls.mapping === "category";
         }) || {}).value || ""; // Get postCategory from classes meta data
 
-        // If postCategory is empty, set it to postType
         if (postCategory === "") {
-            postCategory = postType;
+            postCategory = posttype;// If postCategory is empty, set it to postType
         }
-        
 
         // Fill the mydata object with metadata
         var mydata = {
@@ -113,9 +107,9 @@
             posttags: postTags,
             postpublishdate: metaData.published_time,
             postclasses: JSON.stringify(postClasses),
-            posttype: postType
+            posttype: posttype
         };
-
+        
         // URL of the API endpoint
         //var apiUrl = 'https://tracking-api.almayadeen.net/api/collect';
         var apiUrl = "https://localhost:7043/api/collect";
@@ -124,7 +118,10 @@
         mangoDataPlatform.sendData(apiUrl, mydata);
     }
 };
-
 // Call the main function to start the process
 mangoDataPlatform.main();
+
+
+
+
 

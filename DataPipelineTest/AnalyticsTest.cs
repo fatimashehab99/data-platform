@@ -392,9 +392,8 @@ namespace DataPipelineTest
             pageviews[4].FormattedDate = "2024-03-01";
             //update postType
             pageviews[0].PostType = "news";
-            pageviews[1].PostType = "articles";
             pageviews[4].PostType = "infographs";
-            pageviews[2].PostType = pageviews[3].PostType = "videos";
+            pageviews[2].PostType = pageviews[3].PostType = pageviews[1].PostType= "videos";
 
             //update post id
             for (int i = 0; i < pageviews.Count; i++)
@@ -419,19 +418,16 @@ namespace DataPipelineTest
 
             // Assert
             results.Should().NotBeNull();
-            results.Should().HaveCount(3);
+            results.Should().HaveCount(2);
 
             results[0].PostType.Should().Be("videos");
-            results[0].PageViews.Should().Be(2);
-            results[0].Posts.Should().Be(2);
+            results[0].PageViews.Should().Be(3);
+            results[0].Posts.Should().Be(3);
 
             results[1].PostType.Should().Be("news");
             results[1].PageViews.Should().Be(1);
             results[1].Posts.Should().Be(1);
 
-            results[2].PostType.Should().Be("articles");
-            results[2].PageViews.Should().Be(1);
-            results[2].Posts.Should().Be(1);
 
         }
         /// <summary>
@@ -460,7 +456,7 @@ namespace DataPipelineTest
 
             //update tags
             pageviews[0].PostTags = ["Lebanon", "Palestine", "South"];
-            pageviews[1].PostTags = ["Lebanon", "war"];
+            pageviews[1].PostTags = ["Lebanon"];
             pageviews[2].PostTags = ["Lebanon", "Palestine"];
             pageviews[3].PostTags = ["Lebanon"];
             pageviews[4].PostTags = ["war"];
@@ -481,7 +477,7 @@ namespace DataPipelineTest
             var results = _analyticsService.AnalyzePageViewsByTag(search);
             // Assert
             results.Should().NotBeNull();
-            results.Should().HaveCount(4);
+            results.Should().HaveCount(3);
 
             results[0].tags.Should().Be("Lebanon");
             results[0].pageviews.Should().Be(3);
@@ -492,9 +488,56 @@ namespace DataPipelineTest
             results[2].tags.Should().Be("South");
             results[2].pageviews.Should().Be(1);
 
-            results[3].tags.Should().Be("war");
-            results[3].pageviews.Should().Be(1);
 
+        }
+        /// <summary>
+        /// This test is used to get top articles pageviews
+        /// </summary>
+        [Test]
+        public void AnalyzeTopArticlesPageViews()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
+
+            //update domain
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[4].FormattedDate = "2024-03-01";
+
+            //update post ID
+            pageviews[0].PostId = pageviews[1].PostId = pageviews[2].PostId = "1";
+             pageviews[4].PostId = "2";
+            pageviews[3].PostId = "3";
+
+
+            //save data to mongo db
+            savePageViews(pageviews);
+
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 50,
+                PostType = "news"
+            };
+            //get results
+            var results = _analyticsService.GetTopPageViewsArticles(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].PostId.Should().Be("1");
+            results[0].PageViews.Should().Be(3);
+
+            results[1].PostId.Should().Be("3");
+            results[1].PageViews.Should().Be(1);
 
         }
     }

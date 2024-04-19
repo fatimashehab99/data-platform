@@ -113,7 +113,7 @@ namespace DataPipeline.DataAnalysis.Services
                 {Constants.TOTAL_ARTICLES,new BsonDocument(Constants.SIZE,"$"+Constants.POSTS) }
             });
             ///now we need to order the results by date
-            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.ID, -1));
             //limit 10 records
             var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
             //initialize the pipeline
@@ -415,6 +415,7 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new ArticlePageView
                 {
+                    PostId = pResult[Constants.ID].AsString,
                     PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
                     PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
                     PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
