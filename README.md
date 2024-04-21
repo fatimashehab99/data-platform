@@ -33,7 +33,8 @@
 ___
 
 ## Overview
-Mango Analytics is a project that provides reporting and tracking APIs along with full visual display of data in charts. It is a tool that allows users to collect and analyze data, create reports, and visualize the results in a clear and interactive manner. The goal of Mango Analytics is to help users make informed decisions based on data-driven insights by presenting data in an easy-to-understand format.
+Data Platform Analytics System is a comprehensive data anlytics tool with three main parts. First, it gathers important data from metadata websites using carefully made scripts and stores it efficiently with MongoDB. Then, it uses ASP.NET to create strong pipelines for processing the data smoothly. After that, it lets users easily get the data they need for visualization through simple APIs. Finally, it creates eye-catching charts and graphs using HTML, CSS,JavaScript and Chart.js, making the data easy to understand. Overall, this system helps users collect, analyze, and display data in a straightforward and interactive manner, aiding them in making informed decisions.
+
 
 ## 1. Tracking API Usage 
 
