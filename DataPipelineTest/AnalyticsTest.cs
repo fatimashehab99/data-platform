@@ -401,10 +401,8 @@ namespace DataPipelineTest
                 pageviews[i].PostId = i.ToString();
             }
 
-
             //save data to mongo db
             savePageViews(pageviews);
-
 
             SearchCriteria search = new()
             {

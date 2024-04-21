@@ -1,4 +1,6 @@
 ﻿using DataPipeline.DataAnalysis.Models;
+using DataPipeline.DataCollection.Models;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.EntitySql;
@@ -40,63 +42,47 @@ namespace DataPipelineTest
             var domain2 = "test.com" + Guid.NewGuid().ToString();
 
 
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
-            var pageView6 = GeneratePageView();
-            var pageView7 = GeneratePageView();
-            var pageView8 = GeneratePageView();
-
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(8);
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain =
-                pageView5.Domain = pageView6.Domain = pageView7.Domain = domain;
-            pageView8.Domain = domain2;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain = pageviews[3].Domain =
+                pageviews[4].Domain = pageviews[5].Domain = pageviews[6].Domain = domain;
+            pageviews[7].Domain = domain2;
 
             //update user id
-            pageView1.UserId = pageView2.UserId = pageView3.UserId = pageView4.UserId =
-                pageView5.UserId = pageView6.UserId = "123";
-            pageView7.UserId = "2";
+            pageviews[0].UserId = pageviews[1].UserId = pageviews[2].UserId = pageviews[3].UserId =
+                pageviews[4].UserId = pageviews[5].UserId = "123";
+            pageviews[6].UserId = "2";
 
             //update categories
-            pageView1.PostCategory = pageView2.PostCategory = pageView3.PostCategory = "News";
-            pageView4.PostCategory = pageView5.PostCategory = "Sport";
-            pageView6.PostCategory = "Fashion";
-            pageView7.PostCategory = pageView8.PostCategory = "Technology";
+            pageviews[0].PostCategory = pageviews[1].PostCategory = pageviews[2].PostCategory = "News";
+            pageviews[3].PostCategory = pageviews[4].PostCategory = "Sport";
+            pageviews[5].PostCategory = "Fashion";
+            pageviews[6].PostCategory = pageviews[7].PostCategory = "Technology";
 
-            //generate pageviews
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
-            _trackService.LogPageview(pageView6);
-            _trackService.LogPageview(pageView7);
-            _trackService.LogPageview(pageView8);
+            //save data to mongo db
+            savePageViews(pageviews);
 
-            //expected results
-            var expectedResults = new Dictionary<string, int>
-            {
-                {"News",3 },
-                {"Sport",2 },
-                {"Fashion",1 }
-
-            };
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
             };
+            // Create an expected dictionary
+            var expectedResults = new Dictionary<string, int>
+                 {
+                       { "News", 3 },
+                       { "Sport", 2 },
+                       { "Fashion", 1 }
+                  };
 
             //get results
             var results = _userProfileDataService.getTopCategoriesForSpecificUser(criteria, "123");
-            //check results
-            CollectionAssert.AreEquivalent(expectedResults, results);
-            Assert.That(results != null, Is.True);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(3);
 
-
+            results.Should().BeEquivalentTo(expectedResults);
         }
         /// <summary>
         /// This function is used to test user's top authors function
@@ -107,43 +93,32 @@ namespace DataPipelineTest
             var domain = "test.com" + Guid.NewGuid().ToString();
             var domain2 = "test.com" + Guid.NewGuid().ToString();
 
-
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
-            var pageView6 = GeneratePageView();
-            var pageView7 = GeneratePageView();
-            var pageView8 = GeneratePageView();
-
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(8);
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain =
-                pageView5.Domain = pageView6.Domain = pageView7.Domain = domain;
-            pageView8.Domain = domain2;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain = pageviews[3].Domain =
+                pageviews[4].Domain = pageviews[5].Domain = pageviews[6].Domain = domain;
+            pageviews[7].Domain = domain2;
 
             //update user id
-            pageView1.UserId = pageView2.UserId = pageView3.UserId = pageView4.UserId =
-                pageView5.UserId = pageView6.UserId = "123";
-            pageView7.UserId = "2";
+            pageviews[0].UserId = pageviews[1].UserId = pageviews[2].UserId = pageviews[3].UserId =
+                pageviews[4].UserId = pageviews[5].UserId = "123";
+            pageviews[6].UserId = "2";
 
             //update categories
-            pageView1.PostAuthor = pageView2.PostAuthor = pageView3.PostAuthor = "fatima";
-            pageView4.PostAuthor = pageView5.PostAuthor = "hadi";
-            pageView6.PostAuthor = "mhmd";
-            pageView7.PostAuthor = pageView8.PostAuthor = "sara";
+            pageviews[0].PostAuthor = pageviews[1].PostAuthor = pageviews[2].PostAuthor = "fatima";
+            pageviews[3].PostAuthor = pageviews[4].PostAuthor = "hadi";
+            pageviews[5].PostAuthor = "mhmd";
+            pageviews[6].PostAuthor = pageviews[7].PostAuthor = "sara";
 
-            //generate pageviews
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
-            _trackService.LogPageview(pageView6);
-            _trackService.LogPageview(pageView7);
-            _trackService.LogPageview(pageView8);
+            //save data to mongo db
+            savePageViews(pageviews);
 
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain,
+            };
             //expected results
             var expectedResults = new Dictionary<string, int>
             {
@@ -152,17 +127,14 @@ namespace DataPipelineTest
                 {"mhmd",1 }
 
             };
-            //Read data from mongodb
-            SearchCriteria criteria = new()
-            {
-                Domain = domain,
-            };
 
             //get results
             var results = _userProfileDataService.getTopAuthorsForSpecificUser(criteria, "123");
-            //check results
-            CollectionAssert.AreEquivalent(expectedResults, results);
-            Assert.That(results != null, Is.True);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(3);
+
+            results.Should().BeEquivalentTo(expectedResults);
         }
         /// <summary>
         /// This functon is used to test getting top user's tags 
@@ -174,35 +146,31 @@ namespace DataPipelineTest
             var domain = "test.com" + Guid.NewGuid().ToString();
 
 
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
-
-
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain =
-                pageView5.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain = pageviews[3].Domain =
+                pageviews[4].Domain = domain;
 
             //update tags
-            pageView1.PostTags = ["tag 1", "tag 2", "tag 3"];
-            pageView2.PostTags = ["tag 1", "tag 2", "tag 3"];
-            pageView3.PostTags = ["tag 1", "tag 2", "tag 4"];
-            pageView4.PostTags = ["tag 1", "tag 5", "tag 6"];
-            pageView3.PostTags = ["tag 1", "tag 2", "tag 4"];
+            pageviews[0].PostTags = ["tag 1", "tag 2", "tag 3"];
+            pageviews[1].PostTags = ["tag 1", "tag 2", "tag 3"];
+            pageviews[2].PostTags = ["tag 1", "tag 2", "tag 4"];
+            pageviews[3].PostTags = ["tag 1", "tag 5", "tag 6"];
+            pageviews[4].PostTags = ["tag 1", "tag 2", "tag 4"];
 
             //update user id
-            pageView1.UserId = pageView2.UserId = pageView3.UserId = pageView4.UserId = "123";
-            pageView5.UserId = "1234";
+            pageviews[0].UserId = pageviews[1].UserId = pageviews[2].UserId = pageviews[3].UserId = "123";
+            pageviews[4].UserId = "1234";
 
-            //generate pageviews
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
+            //save data to mongo db
+            savePageViews(pageviews);
+
+            //Read data from mongodb
+            SearchCriteria criteria = new()
+            {
+                Domain = domain,
+            };
 
             //expected results
             var expectedResults = new Dictionary<string, int>
@@ -215,17 +183,13 @@ namespace DataPipelineTest
                 {"tag 6",1 }
 
             };
-            //Read data from mongodb
-            SearchCriteria criteria = new()
-            {
-                Domain = domain,
-            };
-
             //get results
             var results = _userProfileDataService.getTopTagsForSpecificUser(criteria, "123", 10);
-            //check results
-            CollectionAssert.AreEquivalent(expectedResults, results);
-            Assert.That(results != null, Is.True);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(6);
+
+            results.Should().BeEquivalentTo(expectedResults);
         }
     }
 }
