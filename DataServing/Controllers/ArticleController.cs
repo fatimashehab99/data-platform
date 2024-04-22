@@ -26,12 +26,13 @@ namespace DataServing.Controllers
         public IActionResult getTrendingArticles([FromQuery(Name = "domain")] string domain)
 
         {
-            string ip = "102.129.65.0"; //toDo fix ip
+            var Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            // string ip = "102.129.65.0";
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain
             };
-            var results = _articlesService.getTrendingArticles(search, ip, 4);
+            var results = _articlesService.getTrendingArticles(search, Ip, 4);
             return Ok(results);
 
         }
@@ -45,8 +46,8 @@ namespace DataServing.Controllers
         public IActionResult getRecommendedArticles([FromQuery(Name = "domain")] string domain,
                                                     [FromQuery(Name = "userId")] string userId)
         {
-            //toDo get ip
-            string Ip = "102.129.65.0";
+            var Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //  string Ip = "102.129.65.0";
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain
@@ -57,7 +58,7 @@ namespace DataServing.Controllers
             //incase user does not exists it will return trending articles 
             results = !userExist
              //incase the user has no recommended articles it will get the trending articles
-             ? _articlesService.getTrendingArticles(search, Ip, 4) // ToDo: Change IP
+             ? _articlesService.getTrendingArticles(search, Ip, 4)
              : _articlesService.getRecommendedArticles(search, userId, Ip, 4);
             return Ok(results);
         }
