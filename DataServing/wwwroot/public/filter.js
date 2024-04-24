@@ -3,7 +3,7 @@
 new Vue({
     el: '#filter', // Corrected to match the HTML element's ID
     data: {
-        selectedDate: '0', // Set default value to the value of the first option
+        selectedDate: '30', // Set default value to the value of the first option
         selectedDomain: 'www.almayadeen.net', // Set default value to the value of the first option
         selectedCategory: ''
     },
@@ -16,7 +16,7 @@ new Vue({
 });
 
 //fetching data and designing the charts
-function executeDashboards(domain = "www.almayadeen.net", dateFrom = getDate(0), posttype = "") {
+function executeDashboards(domain = "www.almayadeen.net", dateFrom = getDate(30), posttype = "") {
     fetchDashboardStatisticsData(domain, dateFrom, getDate(0), posttype)
     fetchDatePageViewsData(domain, posttype);
     fetchCategoryPageViewsData(domain, dateFrom, getDate(0), posttype);
