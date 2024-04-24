@@ -1,10 +1,10 @@
-# Mango Analytics
+# Data Platform Analytics
 
 ### Outline
 ### I. Introduction
-- Overview of Mango Analytics
+- Overview Data Platform Analytics
 
-### II. Tracking API Usage <br/>
+### II. Collect API Usage <br/>
 
  A. Integration of Track Script <br/>
  B. Parameters for tracking data <br/>
@@ -28,7 +28,7 @@
 
 ### IV. Conclusion
 
-- Summary of Mango Analytics
+- Summary of Data Platform Analytics
 
 ___
 
@@ -36,60 +36,152 @@ ___
 Data Platform Analytics System is a comprehensive data anlytics tool with three main parts. First, it gathers important data from metadata websites using carefully made scripts and stores it efficiently with MongoDB. Then, it uses ASP.NET to create strong pipelines for processing the data smoothly. After that, it lets users easily get the data they need for visualization through simple APIs. Finally, it creates eye-catching charts and graphs using HTML, CSS,JavaScript and Chart.js, making the data easy to understand. Overall, this system helps users collect, analyze, and display data in a straightforward and interactive manner, aiding them in making informed decisions.
 
 
-## 1. Tracking API Usage 
+## 1. Collect API Usage 
 
-To utilize the analytics functionality, it is necessary to integrate the Track Script into your website. This script will collect the necessary data to generate the dynamic analytics charts and provide a comprehensive representation of the website's traffic.
+To utilize the analytics functionality, it is necessary to integrate the mango-analytics-script  into your website. This script will collect the necessary data to generate the dynamic analytics charts and provide a comprehensive representation of the website's traffic.
 
-The Mango Analytics script takes parameters in the body named as the following:
-* PostId $~~~~~~~~~~~~~~~~~~~~~~~~~$*(This is responsible for handling the Post Id or Page Id)*
-* postCategory $~~~~~~~~~~~$              *(This is responsible for handling the Post category or Page category)*
-* Author $~~~~~~~~~~~~~~~~~~~~~~$                    *(This is responsible for handling the Author of the Post)*
-* postTitle $~~~~~~~~~~~~~~~~~~~~$                 *(This is responsible for handling the Post title or Page title)*
-* subscriptionName $~~~~~$          *(This is responsible for handling the Website Domain Name)*
-* subscriptionId $~~~~~~~~~~$            *(This is responsible for handling the Website Subscription unique Id)*
-* userId $~~~~~~~~~~~~~~~~~~~~~~$                    *(This is responsible for handling the distinct users accessing this Website)*
+The mango-analytics-script takes parameters in the body named as the following:
+* PostId $~~~~~~~~~~~~~~~~~~~~~~~~~$*(This is responsible for handling the Post Id Post's article)*
+* PostCategory $~~~~~~~~~~~$              *(This is responsible for handling the Post category Post's article)*
+* PostAuthor $~~~~~~~~~~~~~~~~~~~~~~$                    *(This is responsible for handling the Author of the Post's article)*
+* PostTitle $~~~~~~~~~~~~~~~~~~~~$                 *(This is responsible for handling the Post title of the Post's article)*
+* Domain $~~~~~$          *(This is responsible for handling the Website Domain Name)*
+* UserId $~~~~~~~~~~~~~~~~~~~~~~$                    *(This is responsible for handling the distinct users accessing this Website)*
+* PostUrl $~~~~~~~~~~~~~~~~~~~~~~$                    *(This is responsible for handling the url of the Post's article)*
+* PostImage $~~~~~~~~~~~$              *(This is responsible for handling the Post image Post's article)*
+* PostTags $~~~~~~~~~~~$              *(This is responsible for handling the Post tags Post's article)*
+* PostPublishedDate $~~~~~~~~~~~$              *(This is responsible for handling the Post published date Post's article)*
+* PostClasses $~~~~~~~~~~~$              *(This is responsible for handling the Post classes Post's article)*
+* PostType $~~~~~~~~~~~$              *(This is responsible for handling the Post type Post's article)*
  
 
->Those parameters will allow you to track specific information about your website's visitors.The following example shows the needed parameters.
-
-```bash
-
-var mydata = 
-{ 
-          postid:'129t214h38q2a34',
-          postcategory:'News',
-          author:'MohamadHassan',
-          posttitle:'Mango Analytics Impact',
-          subscriptionName:'MangoAnalytics',
-          subscriptionId='219ee194-0866-43cd-8318-18c514bfec0f',
-          userId:'313aa122-0666-46cd-8468-68e514beecvt'
-};
-
-
-```
+>Those parameters will allow you to track specific information about your website's visitors
 
 >To track your website traffic using Mango Analytics, you need to add the following Track script inside any page on your website:
 ```bash
 <script>
-               var mydata = 
-                   { 
-                     postid:PageId,
-                     postcategory:PageCategory,
-                     author:PageAuthor,
-                     posttitle:Title,
-                     subscriptionName:SubscriptionName,
-                     subscriptionId=subscriptionId,
-                     userId:userID
-                   };
-                var url = 'https://tracking-api.mangopulse.net/api/Track';
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data:JSON.stringify(mydata),
-                    contentType: 'application/json',
-                    success: function () {console.log('Tracking')},
-                    error: function (error) { console.log(error); }
-                });
+var mangoDataPlatform = {
+    // Function to retrieve a cookie value by name
+    getCookie: function (name) {
+        var cookieString = document.cookie;
+        var cookies = cookieString.split('; ');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].split('=');
+            if (cookie[0] === name) {
+                return decodeURIComponent(cookie[1]);
+            }
+        }
+        return null;
+    },
+
+    // Function to generate a unique user ID
+    generateUserId: function () {
+        return 'user_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+    },
+
+    // Function to set a cookie with a given name, value, and expiration date
+    setCookie: function (name, value, days) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expires.toUTCString() + ';path=/';
+    },
+
+    // Function to send a POST request with JSON data
+    sendData: function (url, data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Data sent successfully');
+                } else {
+                    console.error('Error sending data:', xhr.status);
+                }
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    },
+
+    // Function to get or generate user ID
+    getUserId: function () {
+        var userId = mangoDataPlatform.getCookie('user_id');
+        if (userId) {
+            return userId;
+        } else {
+            var newUserId = mangoDataPlatform.generateUserId();
+            mangoDataPlatform.setCookie('user_id', newUserId, 365);
+            return newUserId;
+        }
+    },
+
+    // Main function to fetch metadata, fill mydata object, and send data to API
+    main: function () {
+        var scriptElement = document.getElementById('tawsiyat-metadata');
+        if (!scriptElement) {
+            console.error('Metadata script element not found');
+            return;
+        }
+        var scriptContent = scriptElement.textContent.trim();
+        var metaData = JSON.parse(scriptContent);
+        var postClasses = [];
+        metaData.classes.forEach(function (item) {
+            postClasses.push({ "mapping": item.mapping, "value": item.value });
+        });
+        //validations
+        
+        if (metaData.type === "page") {
+            return;//data will not be collected if the type is page
+        }
+        
+        if (metaData.thumbnail == null || metaData.thumbnail === "") {
+            return;//data will not be collected if the post image is empty
+        }
+        //collect post tags incase it has no data it will return null and not empty array
+        var postTags = metaData.keywords.trim() !== "" ? metaData.keywords.split(",") : null;
+
+        var posttype = (metaData.classes.find(function (cls) {
+            return cls.mapping === "posttype";// Get post type
+        }) || {}).value || ""; // Get postType from classes meta data
+
+        //to get data from articles only
+        if (!posttype || posttype === 'الصفحات')
+            return;
+        var postCategory = (metaData.classes.find(function (cls) {
+            return cls.mapping === "category";
+        }) || {}).value || ""; // Get postCategory from classes meta data
+
+        if (postCategory === "") {
+            postCategory = posttype;// If postCategory is empty, set it to postType
+        }
+
+        // Fill the mydata object with metadata
+        var mydata = {
+            ip: "",//toDo change ip 
+            postid: metaData.postid,
+            postcategory: postCategory,
+            postauthor: metaData.author,
+            posttitle: metaData.title,
+            domain: new URL(metaData.url).hostname,
+            userId: mangoDataPlatform.getUserId(), // Get or generate user ID from cookie
+            posturl: metaData.url,
+            postimage: metaData.thumbnail,
+            posttags: postTags,
+            postpublishdate: metaData.published_time,
+            postclasses: JSON.stringify(postClasses),
+            posttype: posttype
+        };
+        
+        // URL of the API endpoint
+        var apiUrl = 'https://tracking-api.almayadeen.net/api/collect';
+        //var apiUrl = "https://localhost:7043/api/collect";
+
+        // Send the mydata object to the API endpoint
+        mangoDataPlatform.sendData(apiUrl, mydata);
+    }
+};
+// Call the main function to start the process
+mangoDataPlatform.main();
 </script>
 ```
 
