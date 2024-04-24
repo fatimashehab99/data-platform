@@ -130,11 +130,12 @@
         </ul>
     </div>
     <script>
+        var numbers = [1000, 20000, 5400, 7804000]
+        console.log(numbers.map(formatNumbers));
         //get userId
-        //toDo change domain
         var userId = getUserId();
         fetchTrendingArticlesData();
-        fetchRecommendedArticlesData(userId)
+        fetchRecommendedArticlesData("user_1710849645969_5765")//toDo fix userId
     </script>
 
 
