@@ -15,17 +15,12 @@
 ### III. Analytics Visualization <br/>
    
  A. On-demand data reports <br/>
- B. Dynamic representation of recorded data <br/>
- C. Visualizations: Charts and Tables <br/>
- D. Dynamic filtering options <br/>
- E. Page Views Smooth Analytical Chart <br/>
- F. Website's Authors Analytical Chart <br/>
- G. Websites Visitor's Analytical Location Chart <br/>
- H. Page Views Column Analytical Chart <br/>
- I. Dynamic Table with server-side features <br/>
- J. Filters applied to charts and table <br/>
-
-
+ B. Analyze Page Views By Categories <br/>
+ C. Analyze Page Views By Authors <br/>
+ D. Analyze Page Views By Countries <br/>
+ E. Analyze Page Views By Post Type <br/>
+ F. Analyze Page Views By Post Tags <br/>
+ 
 ### IV. Conclusion
 
 - Summary of Data Platform Analytics
