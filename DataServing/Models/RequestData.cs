@@ -3,7 +3,7 @@
     public class RequestData
     {
 
-        public string IP { get; set; }
+        public string? IP { get; set; }
 
 
         //Post Data
@@ -16,6 +16,7 @@
         public DateTime PostPublishDate { get; set; }
         public string[]? PostTags { get; set; }
         public string PostClasses { get; set; }
+        public string PostType { get; set; }
 
         public string Domain { get; set; }
         public string UserId { get; set; }

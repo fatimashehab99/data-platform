@@ -56,6 +56,9 @@ namespace DataPipeline.DataAnalysis.Services
                 {Constants.POST_TITLE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_TITLE)},
                 {Constants.POST_URL,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_URL)},
                 {Constants.POST_IMAGE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_IMAGE)},
+                {Constants.POST_AUTHOR,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_AUTHOR)},
+                {Constants.CATEGORY,new  BsonDocument(Constants.FIRST,"$"+Constants.CATEGORY)},
+                {Constants.PUBLISHED_DATE,new  BsonDocument(Constants.FIRST,"$"+Constants.PUBLISHED_DATE)},
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
             });
 
@@ -75,10 +78,14 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new ArticlePageView
                 {
+                    PostId = pResult[Constants.ID].AsString,
                     PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
                     PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
                     PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
-                    PostImage = pResult[Constants.POST_IMAGE].AsString//Get Image url
+                    PostImage = pResult[Constants.POST_IMAGE].AsString,//Get Image url
+                    PostAuthor = pResult[Constants.POST_AUTHOR].AsString,
+                    PostCategory = pResult[Constants.CATEGORY].AsString,
+                    PublishedDate = (pResult[Constants.PUBLISHED_DATE]).AsDateTime
                 });
             }
 
@@ -136,7 +143,7 @@ namespace DataPipeline.DataAnalysis.Services
             //loop over categories
             foreach (var category in topCategories)
             {
-                matchFilters.Add(new BsonDocument(Constants.Category, category.Key));
+                matchFilters.Add(new BsonDocument(Constants.CATEGORY, category.Key));
             }
             //loop over authors 
             foreach (var author in topAuthors)
@@ -159,6 +166,9 @@ namespace DataPipeline.DataAnalysis.Services
                 {Constants.POST_TITLE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_TITLE)},
                 {Constants.POST_URL,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_URL)},
                 {Constants.POST_IMAGE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_IMAGE)},
+                {Constants.POST_AUTHOR,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_AUTHOR)},
+                {Constants.CATEGORY,new  BsonDocument(Constants.FIRST,"$"+Constants.CATEGORY)},
+                {Constants.PUBLISHED_DATE,new  BsonDocument(Constants.FIRST,"$"+Constants.PUBLISHED_DATE)},
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
             });
 
@@ -177,9 +187,14 @@ namespace DataPipeline.DataAnalysis.Services
             {
                 results.Add(new ArticlePageView
                 {
-                    PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article's title from the _id field
+                    PostId = pResult[Constants.ID].AsString,
+                    PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
+                    PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
                     PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
-                    PostImage = pResult[Constants.POST_IMAGE].AsString//Get Image url
+                    PostImage = pResult[Constants.POST_IMAGE].AsString,//Get Image url
+                    PostAuthor = pResult[Constants.POST_AUTHOR].AsString,
+                    PostCategory = pResult[Constants.CATEGORY].AsString,
+                    PublishedDate = (pResult[Constants.PUBLISHED_DATE]).AsDateTime
                 });
             }
             return results;

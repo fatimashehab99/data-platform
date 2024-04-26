@@ -23,10 +23,10 @@ namespace DataServing.Controllers
         /// <param name="ip"></param>
         /// <returns></returns>
         [HttpGet("trending")]
-        public IActionResult getTrendingArticles([FromQuery(Name = "domain")] string domain,
-                                                    [FromQuery(Name = "ip")] string ip)
+        public IActionResult getTrendingArticles([FromQuery(Name = "domain")] string domain)
 
         {
+            string ip = "102.129.65.0"; //toDo fix ip
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain
@@ -43,9 +43,10 @@ namespace DataServing.Controllers
         /// <returns></returns>
         [HttpGet("recommended")]
         public IActionResult getRecommendedArticles([FromQuery(Name = "domain")] string domain,
-                                                    [FromQuery(Name = "userId")] string userId, [FromQuery(Name = "Ip")] string Ip)
+                                                    [FromQuery(Name = "userId")] string userId)
         {
             //toDo get ip
+            string Ip = "102.129.65.0";
             SearchCriteria search = new SearchCriteria()
             {
                 Domain = domain

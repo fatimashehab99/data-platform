@@ -9,21 +9,60 @@
     <script src="public/script.js"></script>
     <script src="public/dashboard-data-script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/wc.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
 </head>
 <body>
+
     <div class="container">
+        <div>
+            <h2 class="mt-5 mb-0">Data Platform Dashboard</h2>
+        </div>
+
         <div class="text-center d-flex justify-content-between align-items-center mt-5">
-            <div>
-                <h2 class="mt mb-0">Data Platform Dashboard</h2>
+
+            <div class="container mt-4">
+                <div id="filter">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select id="DateSelect" v-model="selectedDate" class="form-control">
+                                    <option value="0">Today</option>
+                                    <option value="7">7 Days</option>
+                                    <option value="14">14 Days</option>
+                                    <option value="30">30 Days</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select id="DomainSelect" v-model="selectedDomain" class="form-control">
+                                    <option value="www.almayadeen.net">Al Mayadeen</option>
+                                    <option value="www.mango-pulse.com">Mango Pulse</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="text" v-model="selectedCategory" placeholder="Category" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <button @click="filterData" class="btn btn-primary btn-block">Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <select id="DateSelect" class="custom-select" style="width: auto;">
-                    <option value="1day">Today</option>
-                    <option value="7days">7 Days</option>
-                    <option value="14days">14 Days</option>
-                    <option value="30days">30 Days</option>
-                </select>
-            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <script src="public/filter.js"></script>
+
         </div>
         <div class="row justify-content-center mt-5">
             <div class="col-md-3">
@@ -62,6 +101,8 @@
                     <canvas id="CategoryChart"></canvas>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center mt-5">
             <div class="col-md-6 mt-5">
                 <div class="analytics-section">
                     <canvas id="AuthorChart"></canvas>
@@ -73,15 +114,54 @@
                 </div>
             </div>
         </div>
-    </div>
-    <script>
-        //fetching data and designing the charts
-        fetchDashboardStatisticsData()
-        fetchDatePageViewsData();
-        fetchCategoryPageViewsData();
-        fetchAuthorPageViewsData();
-        fetchCountryPageViewsData();
-    </script>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 mt-5">
+                <div class="analytics-section">
+                    <canvas id="PostTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 mt-5">
+                <div class="analytics-section">
+                    <div id="tagsWordCloud"></div>
+                </div>
+            </div>
 
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-12 mt-5">
+                    <div class="analytics-section">
+                        <div id="article">
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Post Title</th>
+                                        <th scope="col">Author</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Page Views</th>
+                                        <th scope="col">Published Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="post in posts">
+                                        <td>{{ post.postTitle }}</td>
+                                        <td>{{ post.postAuthor }}</td>
+                                        <td>{{ post.postCategory }}</td>
+                                        <td>{{ post.pageViews }}</td>
+                                        <td>{{ dateFormat(post.publishedDate) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //execute dashboards function
+        executeDashboards()
+    </script>
 </body>
 </html>

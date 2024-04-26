@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\User\Documents\data-platform\DataServing\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2024-04-24T10:17:46.1813001Z;True|2024-03-20T13:20:33.9587510+02:00;True|2024-03-20T11:32:59.2131565+02:00;True|2024-03-20T11:22:09.4526354+02:00;True|2024-03-20T10:33:47.2376615+02:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="appsettings.json">
+      <publishTime>03/20/2024 11:03:42</publishTime>
+    </File>
+    <File Include="Properties/launchSettings.json">
+      <publishTime>03/20/2024 11:20:51</publishTime>
+    </File>
+    <File Include="wwwroot/public/mango-data-platform.js">
+      <publishTime>03/20/2024 10:49:12</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

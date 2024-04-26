@@ -55,7 +55,6 @@
 
     // Main function to fetch metadata, fill mydata object, and send data to API
     main: function () {
-        // Parse the metadata script element and extract its content
         var scriptElement = document.getElementById('tawsiyat-metadata');
         if (!scriptElement) {
             console.error('Metadata script element not found');
@@ -67,32 +66,62 @@
         metaData.classes.forEach(function (item) {
             postClasses.push({ "mapping": item.mapping, "value": item.value });
         });
+        //validations
+        
+        if (metaData.type === "page") {
+            return;//data will not be collected if the type is page
+        }
+        
+        if (metaData.thumbnail == null || metaData.thumbnail === "") {
+            return;//data will not be collected if the post image is empty
+        }
+        //collect post tags incase it has no data it will return null and not empty array
+        var postTags = metaData.keywords.trim() !== "" ? metaData.keywords.split(",") : null;
+
+        var posttype = (metaData.classes.find(function (cls) {
+            return cls.mapping === "posttype";// Get post type
+        }) || {}).value || ""; // Get postType from classes meta data
+
+        //to get data from articles only
+        if (!posttype || posttype === 'الصفحات')
+            return;
+        var postCategory = (metaData.classes.find(function (cls) {
+            return cls.mapping === "category";
+        }) || {}).value || ""; // Get postCategory from classes meta data
+
+        if (postCategory === "") {
+            postCategory = posttype;// If postCategory is empty, set it to postType
+        }
 
         // Fill the mydata object with metadata
         var mydata = {
-            ip: "109.75.64.0",//toDo change ip 
+            ip: "102.129.65.0",//toDo change ip 
             postid: metaData.postid,
-            postcategory: (metaData.classes.find(function (cls) {
-                return cls.mapping === "category";
-            }) || {}).value || "",
+            postcategory: postCategory,
             postauthor: metaData.author,
             posttitle: metaData.title,
             domain: new URL(metaData.url).hostname,
             userId: mangoDataPlatform.getUserId(), // Get or generate user ID from cookie
             posturl: metaData.url,
             postimage: metaData.thumbnail,
-            posttags: metaData.keywords.split(","),
+            posttags: postTags,
             postpublishdate: metaData.published_time,
-            postclasses: JSON.stringify(postClasses)
+            postclasses: JSON.stringify(postClasses),
+            posttype: posttype
         };
-
+        
         // URL of the API endpoint
-        var apiUrl = 'https://localhost:7043/api/collect';
+        //var apiUrl = 'https://tracking-api.almayadeen.net/api/collect';
+        var apiUrl = "https://localhost:7043/api/collect";
 
         // Send the mydata object to the API endpoint
         mangoDataPlatform.sendData(apiUrl, mydata);
     }
 };
-
 // Call the main function to start the process
 mangoDataPlatform.main();
+
+
+
+
+

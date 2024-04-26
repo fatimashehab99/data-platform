@@ -39,7 +39,8 @@ namespace DataServing.Controllers
         {
             //read ip
             var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            //deserialize post classes to save the data into mongo db
+
+            //deserialize post classes json to save the data into mongo db
             var classes = JsonConvert.DeserializeObject<List<PostClass>>(data.PostClasses);
 
             // map request data to MongoDb pageview (data conversion/data modeling)
@@ -63,7 +64,8 @@ namespace DataServing.Controllers
                 PostPublishDate = data.PostPublishDate,
                 PostImage = data.PostImage,
                 PostUrl = data.PostUrl,
-                PostClasses = classes
+                PostClasses = classes,
+                PostType = data.PostType
 
             };
 

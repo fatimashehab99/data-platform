@@ -14,9 +14,10 @@ namespace DataPipeline.DataAnalysis.Models
         public string? Author { get; set; }
         public string? Category { get; set; }
         public string? Domain { get; set; }
-        public string CountryName {  get; set; }
+        public string CountryName { get; set; }
         public int Size { get; set; }
-
+        public string? PostType { get; set; }
+       
         public string DateFrom { get; set; }
         public string DateTo { get; set; }
 

@@ -5,36 +5,51 @@ Accept: application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/categories?domain=x.com
+GET {{DataServing_HostAddress}}/api/Analyze/categories?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/dashboard?domain=x.com
+GET {{DataServing_HostAddress}}/api/Analyze/dashboard?domain=www.almayadeen.net&date_from=2024-04-14&date_to=2024-04-14&posttype=√Œ»«
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/authors?domain=x.com
+GET {{DataServing_HostAddress}}/api/Analyze/authors?domain=www.almayadeen.net&date_from=2024-04-14&date_to=2024-04-15&posttype=
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/date?domain=x.com&date=2024-03-02
+GET {{DataServing_HostAddress}}/api/Analyze/date?domain=www.almayadeen.net&date=2024-04-02&posttype=
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Analyze/countries?domain=x.com&date=2024-03-02
+GET {{DataServing_HostAddress}}/api/Analyze/countries?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
 Accept:application/json
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Article/trending?domain=example.com&ip=102.129.65.0
+GET {{DataServing_HostAddress}}/api/Analyze/articles?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=
+Accept:application/json
+
+###
+
+GET {{DataServing_HostAddress}}/api/Article/trending?domain=www.almayadeen.net&ip=102.129.65.0
 Accept:application/json
 
 
 ###
 
-GET {{DataServing_HostAddress}}/api/Article/recommended?domain=example.com&userId=3
+GET {{DataServing_HostAddress}}/api/Article/recommended?domain=www.almayadeen.net&userId=user_1710849645969_5765
+Accept:application/json
+
+###
+
+GET {{DataServing_HostAddress}}/api/Analyze/posttypes?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26
+Accept:application/json
+
+###
+
+GET {{DataServing_HostAddress}}/api/Analyze/tags?domain=www.almayadeen.net&date_from=2024-03-30&date_to=2024-04-26&posttype=„ﬁ«·« 
 Accept:application/json

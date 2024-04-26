@@ -9,25 +9,25 @@ namespace DataPipeline.DataAnalysis.Services
     public interface IDataAnalyticsService
     {
         /// <summary>
-        /// this function is used to get distinct authors with their page views  
+        /// this function is used to analyze authors country name pageviews  
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria data, int dataSize);
+        public List<AuthorPageView> AnalyzeAuthorPageViews(SearchCriteria data);
 
         /// <summary>
-        /// This function is used to get pageviews count on specific date
+        /// This function is used to analyze top date name pageviews 
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data, string date, int dataSize);
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria data);
 
         /// <summary>
-        /// This function is used to get top category page views 
+        /// This function is used to analyze top category name pageviews 
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria data, int dataSize);
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria data);
         /// <summary>
         /// This function is used to get dashboard statistics data
         /// </summary>
@@ -36,11 +36,31 @@ namespace DataPipeline.DataAnalysis.Services
         public DashboardStatistics getDashboardStatisticsData(SearchCriteria data);
 
         /// <summary>
-        /// This function is used to get top locations pageviews 
+        /// This function is used to analyze top country name pageviews 
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data, int dataSize);
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria data);
+        /// <summary>
+        /// This function is used to get analyze top posttype pageviews
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="dataSize"></param>
+        /// <returns></returns>
+        public List<PostTypePageViews> AnalyzePageViewsByPostType(SearchCriteria data);
+        /// <summary>
+        /// This function is used to analyze tags pageviews
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<TagPageView> AnalyzePageViewsByTag(SearchCriteria data);
+        /// <summary>
+        /// This function is used to get top pageviews articles
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<ArticlePageView> GetTopPageViewsArticles(SearchCriteria data);
+
 
 
 

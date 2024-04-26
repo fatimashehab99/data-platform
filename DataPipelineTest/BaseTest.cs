@@ -3,16 +3,13 @@ using DataPipeline.DataAnalysis.Services;
 using DataPipeline.DataCollection.Models;
 using DataPipeline.DataCollection.Services;
 using DataPipeline.Helpers.LocationService;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using FluentAssertions;
+using FluentAssertions.Specialized;
+using System.Drawing;
+
 
 namespace DataPipelineTest
 {
@@ -53,7 +50,7 @@ namespace DataPipelineTest
             {
                 con.ConnectionString = "mongodb://localhost:27017";
                 con.DatabaseName = "mangopulse-analytics";
-                con.CollectionName = "MangoAnalyticsDB";
+                con.CollectionName = "MangoAnalyticsDBTests";
             }
             );
             services.AddHttpContextAccessor();
@@ -122,7 +119,7 @@ namespace DataPipelineTest
             page.UserId = "123";
             page.PostId = Guid.NewGuid().ToString();
             page.PostTitle = "Post Title Mango";
-            page.PostCategory = "Mango Category";
+            page.PostCategory = "Mango CATEGORY";
             page.Domain = "Sub Name";
             page.Domain = "102-123-123";
             page.Browser = "chrome";
@@ -131,10 +128,38 @@ namespace DataPipelineTest
             page.PostUrl = "testUrl.com";
             page.PostImage = "image";
             page.PostTags = ["tag1", "tag2", "tag3"];
+            page.PostType = "news";
             //--Set Date on Current Get-->
             page.Date = DateTime.Now.ToLocalTime();
             return page;
         }
+        /// <summary>
+        /// This function is used to generate list of page views
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public List<MongoDbPageView> GeneratePageViews(int size)
+        {
+            List<MongoDbPageView> pageviews = new List<MongoDbPageView>();
+            for (int i = 0; i < size; i++)
+            {
+                pageviews.Add(GeneratePageView());
+            }
+            return pageviews;
+        }
+        /// <summary>
+        /// This function is used to save a list of page views
+        /// </summary>
+        /// <param name="pageviews"></param>
+        public void savePageViews(List<MongoDbPageView> pageviews)
+        {
+            for (int i = 0; i < pageviews.Count; i++)
+            {
+                _trackService.LogPageview(pageviews[i]);
+            }
+
+        }
+
 
 
 

@@ -1,4 +1,6 @@
 using DataPipeline.DataAnalysis.Models;
+using DataPipeline.DataCollection.Models;
+using FluentAssertions;
 
 namespace DataPipelineTest
 {
@@ -13,51 +15,46 @@ namespace DataPipelineTest
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
 
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
             //update domain
-            pageView1.Domain = domain;
-            pageView2.Domain = domain;
-            pageView3.Domain = domain;
-            pageView4.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[3].FormattedDate = "2024-04-25";
+            pageviews[2].FormattedDate = "2024-03-01";
 
             //update categories
-            pageView1.PostCategory = pageView2.PostCategory = pageView4.PostCategory = "News";
-            pageView3.PostCategory = "Sport";
+            pageviews[0].PostCategory = pageviews[1].PostCategory = pageviews[2].PostCategory = "News";
+            pageviews[3].PostCategory = "Sport";
 
             //generate pageviews
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            //expected results
-            var expectedResults = new List<CategoryPageView>
-             {
-            new CategoryPageView { Category = "News", PageViews = 3 },
-            new CategoryPageView { Category = "Sport", PageViews = 1 },
-             };
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
 
             //get categories with total pageviews
-            var results = _analyticsService.AnalyzePageViewsByCategory(criteria, 10);
-            Assert.That(results != null, Is.True);
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = results.Find(c => c.Category == expected.Category);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
-            }
+            var results = _analyticsService.AnalyzePageViewsByCategory(criteria);
 
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].Category.Should().Be("News");
+            results[0].PageViews.Should().Be(2);
+
+            results[1].Category.Should().Be("Sport");
+            results[1].PageViews.Should().Be(1);
 
         }
         /// <summary>
@@ -66,121 +63,98 @@ namespace DataPipelineTest
         [Test]
         public void AnalyzePageViewsByDateTest()
         {
-            string date = "2024-03-05";
             var domain = "test.com" + Guid.NewGuid().ToString();
 
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
-            var pageView6 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
 
             //update domain
-            pageView1.Domain = pageView2.Domain =
-                pageView3.Domain = pageView4.Domain =
-                pageView5.Domain = pageView6.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
 
             //update date
-            pageView1.Formatted_Date = pageView2.Formatted_Date = pageView3.Formatted_Date = "2024-03-09";
-            pageView4.Formatted_Date = pageView5.Formatted_Date = "2024-03-07";
-            pageView6.Formatted_Date = "2024-03-06";
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-12";
+            pageviews[3].FormattedDate = "2024-04-11";
+            pageviews[4].FormattedDate = "2024-03-01";
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
-            _trackService.LogPageview(pageView6);
+            //update post type
+            pageviews[0].PostType = pageviews[1].PostType = pageviews[2].PostType = pageviews[4].PostType = "news";
+            pageviews[2].PostType = "sport";
 
-
-            //Read data from mongodb
-            SearchCriteria criteria = new()
+            //update post id
+            for (int i = 0; i < pageviews.Count; i++)
             {
-                Domain = domain,
-            };
-            //expected results
-            var expectedResults = new List<DatePageView>
-             {
-            new DatePageView { Date = "2024-03-09", PageViews = 3 },
-            new DatePageView { Date = "2024-03-07", PageViews = 2 },
-            new DatePageView { Date = "2024-03-06", PageViews = 1 },
-             };
-
-            var pageviews = _analyticsService.AnalyzePageViewsByDate(criteria, date, 10);
-
-            Assert.That(pageviews != null, Is.True);
-
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = pageviews.Find(c => c.Date == expected.Date);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
+                pageviews[i].PostId = i.ToString();
             }
 
+            //save data to mongo db
+            savePageViews(pageviews);
 
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-02",
+                Size = 10,
+                PostType = "news"
+            };
+
+            //get results
+            var results = _analyticsService.AnalyzePageViewsByDate(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].Date.Should().Be("2024-04-12");
+            results[0].PageViews.Should().Be(2);
+
+            results[1].Date.Should().Be("2024-04-11");
+            results[1].PageViews.Should().Be(1);
         }
         [Test]
         public void AnalyticsPostByAuthor()
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
 
-
-            var author1 = "fatima";
-            var author2 = "sara";
-            var author3 = "john";
-
-            //generate pageview
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
             //update domain
-            pageView1.Domain = pageView2.Domain =
-                pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[3].FormattedDate = "2024-04-25";
+            pageviews[2].FormattedDate = "2024-03-01";
 
             //update authors
-            pageView1.PostAuthor = pageView2.PostAuthor = author1;
-            pageView3.PostAuthor = author2;
-            pageView4.PostAuthor = pageView5.PostAuthor = author3;
+            pageviews[0].PostAuthor = pageviews[1].PostAuthor = pageviews[2].PostAuthor = "fatima";
+            pageviews[3].PostAuthor = "sara";
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
+            //generate pageviews
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
                 Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
 
-            //expected results
-            var expectedResults = new List<AuthorPageView>
-             {
-            new AuthorPageView { Author = "fatima", PageViews = 2 },
-            new AuthorPageView { Author = "sara", PageViews = 1 },
-            new AuthorPageView { Author = "john", PageViews = 2 },
-             };
+            //get categories with total pageviews
+            var results = _analyticsService.AnalyzeAuthorPageViews(criteria);
 
-            var authors = _analyticsService.AnalyseByAuthor(criteria, 10);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
 
-            Assert.That(authors != null, Is.True);
+            results[0].Author.Should().Be("fatima");
+            results[0].PageViews.Should().Be(2);
 
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = authors.Find(c => c.Author == expected.Author);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
-            }
+            results[1].Author.Should().Be("sara");
+            results[1].PageViews.Should().Be(1);
         }
         /// <summary>
         /// This function is used to return the total articles
@@ -189,36 +163,43 @@ namespace DataPipelineTest
         public void getTotalArticles()
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
-            //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
 
-            //update post_title
-            pageView1.PostTitle = pageView2.PostTitle = "article1";
-            pageView3.PostTitle = "article2";
-            pageView4.PostTitle = "article3";
+            //generate pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
+
+            //update post id
+            for (int i = 0; i < pageviews.Count; i++)
+            {
+                pageviews[i].PostId = i.ToString();
+            }
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
 
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[2].FormattedDate = "2024-04-25";
+            pageviews[3].FormattedDate = "2024-03-01";
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
+            //generate pageviews
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
-            int totalArticles = _dashboardStatisticsService.getTotalArticles(criteria);
-            Assert.That(totalArticles == 3, Is.True);
+
+            int results = _dashboardStatisticsService.getTotalArticles(criteria);
+
+            Assert.That(results == 3, Is.True);
 
         }
+
         /// <summary>
         /// This function is used to return the total authors
         /// </summary>
@@ -226,34 +207,38 @@ namespace DataPipelineTest
         public void getTotalAuthors()
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
+
             //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
             //update post_title
-            pageView1.PostAuthor = pageView2.PostAuthor = "mark";
-            pageView3.PostAuthor = "john";
-            pageView4.PostAuthor = "sara";
+            pageviews[0].PostAuthor = pageviews[1].PostAuthor = "mark";
+            pageviews[2].PostAuthor = "john";
+            pageviews[3].PostAuthor = "sara";
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
 
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[2].FormattedDate = "2024-04-25";
+            pageviews[3].FormattedDate = "2024-03-01";
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
+            //generate pageviews
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
-            int totalAuthors = _dashboardStatisticsService.getTotalAuthors(criteria);
-            Assert.That(totalAuthors == 3, Is.True);
+
+            int results = _dashboardStatisticsService.getTotalAuthors(criteria);
+            Assert.That(results == 2, Is.True);
 
         }
         /// <summary>
@@ -263,30 +248,35 @@ namespace DataPipelineTest
         public void getTotalPageViews()
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
+
             //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[2].FormattedDate = "2024-04-25";
+            pageviews[3].FormattedDate = "2024-03-01";
 
 
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
+            //generate pageviews
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
-            int totalPageViews = _dashboardStatisticsService.getTotalPageViews(criteria);
-            Assert.That(totalPageViews == 4, Is.True);
+
+            int results = _dashboardStatisticsService.getTotalPageViews(criteria);
+            Assert.That(results == 3, Is.True);
 
         }
         /// <summary>
@@ -296,36 +286,40 @@ namespace DataPipelineTest
         public void getTotalUsers()
         {
             var domain = "test.com" + Guid.NewGuid().ToString();
+
             //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
+            List<MongoDbPageView> pageviews = GeneratePageViews(4);
 
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = domain;
 
-            //update userid
-            pageView1.UserId = "123";
-            pageView2.UserId = "1234";
-            pageView3.UserId = pageView4.UserId = "12345";
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = "2024-04-12";
+            pageviews[2].FormattedDate = "2024-04-25";
+            pageviews[3].FormattedDate = "2024-03-01";
+
+            //update user id
+            pageviews[0].UserId = pageviews[1].UserId = "123";
+            pageviews[2].UserId = "1234";
+            pageviews[3].UserId = "12345";
 
 
-
-            //Save data to mongodb
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
+            //generate pageviews
+            savePageViews(pageviews);
 
             //Read data from mongodb
             SearchCriteria criteria = new()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-05-01",
+                Size = 10
             };
-            int totalPageViews = _dashboardStatisticsService.getTotalUsers(criteria);
-            Assert.That(totalPageViews == 3, Is.True);
+
+            int results = _dashboardStatisticsService.getTotalUsers(criteria);
+            Assert.That(results == 2, Is.True);
 
         }
         /// <summary>
@@ -337,53 +331,212 @@ namespace DataPipelineTest
             var domain = "test.com" + Guid.NewGuid().ToString();
 
             //generate pageviews
-            var pageView1 = GeneratePageView();
-            var pageView2 = GeneratePageView();
-            var pageView3 = GeneratePageView();
-            var pageView4 = GeneratePageView();
-            var pageView5 = GeneratePageView();
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
 
             //update domain
-            pageView1.Domain = pageView2.Domain = pageView3.Domain = pageView4.Domain = pageView5.Domain = domain;
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
 
             //update ips 
-            pageView1.Ip = pageView2.Ip = "102.129.65.0";
-            pageView3.Ip = pageView4.Ip = pageView5.Ip = "109.172.22.0";
+            pageviews[0].Ip = pageviews[1].Ip = "102.129.65.0";
+            pageviews[2].Ip = pageviews[3].Ip = pageviews[4].Ip = "109.172.22.0";
+
+            //update date
+            pageviews[4].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[0].FormattedDate = "2024-03-01";
 
             //save data to mongo db
-            _trackService.LogPageview(pageView1);
-            _trackService.LogPageview(pageView2);
-            _trackService.LogPageview(pageView3);
-            _trackService.LogPageview(pageView4);
-            _trackService.LogPageview(pageView5);
+            savePageViews(pageviews);
 
             //Read data from mongodb
-            SearchCriteria criteria = new()
+            SearchCriteria search = new()
             {
-                Domain = domain
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 10
             };
-            //expected results
-            var expectedResults = new List<CountryNamePageView>
-             {
-            new CountryNamePageView { CountryName = "Congo Republic", PageViews = 2 },
-            new CountryNamePageView { CountryName = "Lebanon", PageViews = 3 },
-             };
+            var results = _analyticsService.AnalyzePageViewsByCountryName(search);
 
-            var locations = _analyticsService.AnalyzePageViewsByCountryName(criteria, 10);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
 
-            Assert.That(locations != null, Is.True);
+            results[0].CountryName.Should().Be("Lebanon");
+            results[0].PageViews.Should().Be(3);
 
-            //check results
-            foreach (var expected in expectedResults)
-            {
-                var actual = locations.Find(c => c.CountryName == expected.CountryName);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.PageViews, Is.EqualTo(expected.PageViews));
-            }
-
+            results[1].CountryName.Should().Be("Congo Republic");
+            results[1].PageViews.Should().Be(1);
 
         }
 
+        /// <summary>
+        /// This function is used to check teh results of the get posttype API
+        /// </summary>
+        [Test]
+        public void AnalyzePageViewsByPostType()
+        {
 
+            var domain = "test.com" + Guid.NewGuid().ToString();
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
+
+            //update domain
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[4].FormattedDate = "2024-03-01";
+            //update postType
+            pageviews[0].PostType = "news";
+            pageviews[4].PostType = "infographs";
+            pageviews[2].PostType = pageviews[3].PostType = pageviews[1].PostType= "videos";
+
+            //update post id
+            for (int i = 0; i < pageviews.Count; i++)
+            {
+                pageviews[i].PostId = i.ToString();
+            }
+
+            //save data to mongo db
+            savePageViews(pageviews);
+
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 10
+            };
+
+            var results = _analyticsService.AnalyzePageViewsByPostType(search);
+
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].PostType.Should().Be("videos");
+            results[0].PageViews.Should().Be(3);
+            results[0].Posts.Should().Be(3);
+
+            results[1].PostType.Should().Be("news");
+            results[1].PageViews.Should().Be(1);
+            results[1].Posts.Should().Be(1);
+
+
+        }
+        /// <summary>
+        /// This function is used to check the results of the get tags pageviews API
+        /// </summary>
+        [Test]
+        public void AnalyzePageViewsByTags()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
+
+            //update domain
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[4].FormattedDate = "2024-03-01";
+
+            //update post type
+            pageviews[0].PostType = pageviews[1].PostType = pageviews[2].PostType = pageviews[4].PostType = "news";
+            pageviews[3].PostType = "sport";
+
+            //update tags
+            pageviews[0].PostTags = ["Lebanon", "Palestine", "South"];
+            pageviews[1].PostTags = ["Lebanon"];
+            pageviews[2].PostTags = ["Lebanon", "Palestine"];
+            pageviews[3].PostTags = ["Lebanon"];
+            pageviews[4].PostTags = ["war"];
+
+            //save data to mongo db
+            savePageViews(pageviews);
+
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 50,
+                PostType = "news"
+            };
+
+            //get results
+            var results = _analyticsService.AnalyzePageViewsByTag(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(3);
+
+            results[0].tags.Should().Be("Lebanon");
+            results[0].pageviews.Should().Be(3);
+
+            results[1].tags.Should().Be("Palestine");
+            results[1].pageviews.Should().Be(2);
+
+            results[2].tags.Should().Be("South");
+            results[2].pageviews.Should().Be(1);
+
+
+        }
+        /// <summary>
+        /// This test is used to get top articles pageviews
+        /// </summary>
+        [Test]
+        public void AnalyzeTopArticlesPageViews()
+        {
+            var domain = "test.com" + Guid.NewGuid().ToString();
+
+            //generate list of pageviews
+            List<MongoDbPageView> pageviews = GeneratePageViews(5);
+
+            //update domain
+            pageviews[0].Domain = pageviews[1].Domain = pageviews[2].Domain =
+                pageviews[3].Domain = pageviews[4].Domain = domain;
+
+            //update date
+            pageviews[0].FormattedDate = pageviews[1].FormattedDate = pageviews[2].FormattedDate = "2024-04-05";
+            pageviews[3].FormattedDate = "2024-04-20";
+            pageviews[4].FormattedDate = "2024-03-01";
+
+            //update post ID
+            pageviews[0].PostId = pageviews[1].PostId = pageviews[2].PostId = "1";
+             pageviews[4].PostId = "2";
+            pageviews[3].PostId = "3";
+
+
+            //save data to mongo db
+            savePageViews(pageviews);
+
+            SearchCriteria search = new()
+            {
+                Domain = domain,
+                DateFrom = "2024-04-01",
+                DateTo = "2024-04-25",
+                Size = 50,
+                PostType = "news"
+            };
+            //get results
+            var results = _analyticsService.GetTopPageViewsArticles(search);
+            // Assert
+            results.Should().NotBeNull();
+            results.Should().HaveCount(2);
+
+            results[0].PostId.Should().Be("1");
+            results[0].PageViews.Should().Be(3);
+
+            results[1].PostId.Should().Be("3");
+            results[1].PageViews.Should().Be(1);
+
+        }
     }
 }

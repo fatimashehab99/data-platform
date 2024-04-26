@@ -72,12 +72,12 @@ namespace DataPipeline.DataAnalysis.Services
         {
             { Constants.DOMAIN, criteria.Domain },
              {Constants.USERID,UserId },
-            {Constants.Category, new BsonDocument(Constants.NOT, BsonNull.Value) }
+            {Constants.CATEGORY, new BsonDocument(Constants.NOT, BsonNull.Value) }
         });
             //grouping by category
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
         {
-            { "_id", "$"+Constants.Category }, // Group by author
+            { "_id", "$"+Constants.CATEGORY }, // Group by author
             { Constants.TOTAL_PAGE_VIEWS, new BsonDocument(Constants.SUM, 1) } // Sum the PageView values for each author
         });
             //order by stage

@@ -10,10 +10,8 @@
     'rgba(0, 255, 0, 0.2)',
     'rgba(0, 0, 255, 0.2)'
 ];
-//get date from 10 days
-var tenDaysAgoDate = getTenDaysAgoDate()
 
-function getTenDaysAgoDate() {
+function getDate(days) {
     // Get the current date
     var currentDate = new Date();
 
@@ -21,27 +19,78 @@ function getTenDaysAgoDate() {
     var currentDateFormatted = currentDate.toISOString().slice(0, 10);
     // Calculate the date 10 days ago
     var tenDaysAgo = new Date(currentDate);
-    tenDaysAgo.setDate(currentDate.getDate() - 10);
+    tenDaysAgo.setDate(currentDate.getDate() - days);
 
     // Get the date 10 days ago in the same format
     var tenDaysAgoFormatted = tenDaysAgo.toISOString().slice(0, 10);
     return tenDaysAgoFormatted;
 
-}///function to create date chart
-function createDateChart(ctx2, date, pageviews) {
-    new Chart(ctx2, {
+}
+//function to format dates
+function dateFormat(dateTime) {
+    // Create a new Date object from the provided string
+    const date = new Date(dateTime);
+    // Extract the year, month, and day components
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    // Format the date as "YYYY-MM-DD"
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+}
+//function to format large numbers 
+function formatNumbers(number) {
+    if (number >= 1000000000) {
+        number = (number / 1000000000).toFixed(2);
+        if (Number.isInteger(Number(number))) {
+            number = Number(number).toLocaleString() + 'B';
+        } else {
+            number = number.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'B';
+        }
+    } else if (number >= 1000000) {
+        number = (number / 1000000).toFixed(2);
+        if (Number.isInteger(Number(number))) {
+            number = Number(number).toLocaleString() + 'M';
+        } else {
+            number = number.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'M';
+        }
+    } else if (number >= 1000) {
+        number = (number / 1000).toFixed(2);
+        if (Number.isInteger(Number(number))) {
+            number = Number(number).toLocaleString() + 'K';
+        } else {
+            number = number.toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'K';
+        }
+    }
+    return number;
+}
+
+///function to create date chart
+function createDateChart(ctx2, date, pageviews, publishedArticles) {
+    return new Chart(ctx2, {
         type: 'line',
         data: {
             labels: date,
             datasets: [{
-                label: 'PageViews',
+                label: 'Page Views',
                 data: pageviews,
                 borderColor: 'red',
                 borderWidth: 1,
                 backgroundColor: 'rgba(255, 0, 0, 0.5)',
                 pointStyle: 'circle',
                 pointRadius: 5,
-                pointHoverRadius: 5
+                pointHoverRadius: 5,
+                yAxisID: 'y1' // Assigning this dataset to the y1 axis
+            }, {
+                label: 'Published Articles',
+                data: publishedArticles,
+                borderColor: 'blue',
+                borderWidth: 1,
+                backgroundColor: 'rgba(0, 0, 255, 0.5)',
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointHoverRadius: 5,
+                yAxisID: 'y2' // Assigning this dataset to the y2 axis
             }]
         },
         options: {
@@ -57,16 +106,32 @@ function createDateChart(ctx2, date, pageviews) {
                         }
                     }
                 },
-                y: {
+                y1: {
                     beginAtZero: true,
+                    position: 'left',
                     title: {
                         display: true,
-                        text: 'PageViews',
+                        text: 'Page Views',
                         font: {
                             weight: 'bold'
                         }
                     }
+                },
+                y2: {
+                    beginAtZero: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Published Articles',
+                        font: {
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
                 }
+
             }
         }
     });
@@ -74,12 +139,12 @@ function createDateChart(ctx2, date, pageviews) {
 
 //function to create category chart 
 function createCategoryChart(ctx1, categories, pageviews) {
-    new Chart(ctx1, {
+    return new Chart(ctx1, {
         type: 'bar',
         data: {
             labels: categories,
             datasets: [{
-                label: "PageViews",
+                label: "Page Views",
                 data: pageviews,
                 backgroundColor: backGoundColors,
                 borderColor: backGoundColors,
@@ -102,7 +167,7 @@ function createCategoryChart(ctx1, categories, pageviews) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'PageViews',
+                        text: 'Page Views',
                         font: {
                             weight: 'bold'
                         }
@@ -112,16 +177,57 @@ function createCategoryChart(ctx1, categories, pageviews) {
         }
     });
 }
+let tagsRoot = null;
+
+function createTagsChart(tags) {
+    // Check if the root element already exists
+    if (!tagsRoot) {
+        // Create root element if it doesn't exist
+        tagsRoot = am5.Root.new("tagsWordCloud");
+        // Set themes
+        tagsRoot.setThemes([
+            am5themes_Animated.new(tagsRoot)
+        ]);
+    } else {
+        // Clear existing series from the root if it's a filter operation
+        tagsRoot.container.children.clear();
+    }
+
+    // Add series
+    var series = tagsRoot.container.children.push(am5wc.WordCloud.new(tagsRoot, {
+        categoryField: "tags",
+        valueField: "pageviews",
+        maxFontSize: am5.percent(15)
+    }));
+
+    // Configure labels
+    series.labels.template.setAll({
+        fontFamily: "Courier New"
+    });
+
+    // Update data
+    series.data.setAll(tags);
+
+    // Update data values periodically
+    setInterval(function () {
+        am5.array.each(series.dataItems, function (dataItem) {
+            var value = Math.random() * 65;
+            value = value - Math.random() * value;
+            dataItem.set("value", value);
+            dataItem.set("valueWorking", value);
+        });
+    }, 5000);
+}
 
 //function to create author chart 
 function createAuthorChart(ctx3, authors, pageviews) {
     //create the chart
-    new Chart(ctx3, {
+    return new Chart(ctx3, {
         type: 'pie',
         data: {
             labels: authors,
             datasets: [{
-                label: 'pageviews',
+                label: 'Page Views',
                 data: pageviews,
                 backgroundColor: backGoundColors
             }]
@@ -142,46 +248,86 @@ function createAuthorChart(ctx3, authors, pageviews) {
         }
     });
 }
-    //function to create country  chart
- function createCountryChart(ctx4, countries, pageviews) {
-        new Chart(ctx4, {
-            type: 'bar',
-            data: {
-                labels: countries,
-                datasets: [{
-                    axis: 'y',
-                    label: 'PageViews',
-                    data: pageviews,
-                    fill: false,
-                    backgroundColor: backGoundColors,
-                    borderColor: backGoundColors,
-                    borderWidth: 1
-                }]
+//function to create postType scatter chart
+function createPostTypeChart(posttypeElement, postTypes) {
+    // Prepare data for the chart
+    const data = {
+        datasets: [
+            {
+                label: 'Page Views',
+                data: postTypes.map(item => ({ x: Math.random(), y: item.pageViews, r: 10 })), // Increase the 'r' value for larger circles
+                borderColor: 'red',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)'
             },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'PageViews',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    }
+            {
+                label: 'Total Posts',
+                data: postTypes.map(item => ({ x: Math.random(), y: item.posts, r: 10 })), // Increase the 'r' value for larger circles
+                borderColor: 'blue',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+            }
+        ],
+        labels: postTypes.map(item => item.postType)
+    };
+    //create the chart
+   return new Chart(posttypeElement, {
+        type: 'bubble', // Use 'bubble' chart type for scatter plot with variable circle sizes
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
                 },
-                plugins: {
+                title: {
+                    display: true,
+                    text: 'Top Post Types'
+                }
+            }
+        },
+    });
+}
+//function to create country  chart
+function createCountryChart(ctx4, countries, pageviews) {
+    return new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: countries,
+            datasets: [{
+                axis: 'y',
+                label: 'Page Views',
+                data: pageviews,
+                fill: false,
+                backgroundColor: backGoundColors,
+                borderColor: backGoundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
                     title: {
                         display: true,
-                        text: "Top Countries",
+                        text: 'Page Views',
                         font: {
                             weight: 'bold'
                         }
                     }
-                },
-                indexAxis: 'y'
-            }
-        });
-    }
-    
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Top Countries",
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            },
+            indexAxis: 'y'
+        }
+    });
+}
+
+
+

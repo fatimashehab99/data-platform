@@ -31,15 +31,26 @@ namespace DataPipeline.DataAnalysis.Services
             _dashboardStatisticsService = dashboardStatisticsService;
         }
 
-        public List<AuthorPageView> AnalyseByAuthor(SearchCriteria criteria, int dataSize)
+        public List<AuthorPageView> AnalyzeAuthorPageViews(SearchCriteria criteria)
         {
             // Define the aggregation pipeline stages
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
              {
                { Constants.DOMAIN, criteria.Domain },
-                { Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) }
-                     });
-
+                { Constants.POST_AUTHOR, new BsonDocument(Constants.NOT, BsonNull.Value) },
+                  {Constants.FORMATTED_DATE, new  BsonDocument{
+                    { Constants.GREATER, criteria.DateFrom },
+                    { Constants.SMALLER, criteria.DateTo }}
+                  }
+                   });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
                         {
                             { Constants.ID, "$" + Constants.POST_AUTHOR }, // Group by author
@@ -48,7 +59,7 @@ namespace DataPipeline.DataAnalysis.Services
             //order by total pageviews
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
             //limit 10 records
-            var limitStage = new BsonDocument(Constants.LIMIT, 10);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
 
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
 
@@ -67,28 +78,46 @@ namespace DataPipeline.DataAnalysis.Services
 
             return results;
         }
-        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria, string date, int dataSize)
+        public List<DatePageView> AnalyzePageViewsByDate(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  { Constants.FORMATTED_DATE, new BsonDocument(Constants.GREATER, date) }
+                  { Constants.FORMATTED_DATE, new BsonDocument(Constants.GREATER, criteria.DateFrom) },
+
                    });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
             //now we need to get the count of page views for each day
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
                 {Constants.ID,"$"+Constants.FORMATTED_DATE},//group by date
-                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }//count the pageviews
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) },//count the pageviews
+                {Constants.POSTS,new BsonDocument(Constants.ADD_TO_SET,"$"+Constants.POST_ID) }//get post ids array
 
             });
+
+            //now we need to select the needed data
+            var projectStage = new BsonDocument(Constants.PROJECT, new BsonDocument
+            {
+                {Constants.ID,1 },
+                {Constants.TOTAL_PAGE_VIEWS,1 },
+                {Constants.TOTAL_ARTICLES,new BsonDocument(Constants.SIZE,"$"+Constants.POSTS) }
+            });
             ///now we need to order the results by date
-            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.ID, -1));
             //limit 10 records
-            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
             //initialize the pipeline
-            var pipeline = new[] { matchStage, groupStage, limitStage, orderByStage };
+            var pipeline = new[] { matchStage, groupStage, projectStage, limitStage, orderByStage };
             //execute the pipeline then store the results in list 
             List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
             var results = new List<DatePageView>();
@@ -98,7 +127,8 @@ namespace DataPipeline.DataAnalysis.Services
                 results.Add(new DatePageView
                 {
                     Date = pipelineResult[Constants.ID].AsString,
-                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32
+                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32,
+                    PublishedArticles = pipelineResult[Constants.TOTAL_ARTICLES].AsInt32
 
                 });
             }
@@ -106,24 +136,36 @@ namespace DataPipeline.DataAnalysis.Services
 
         }
 
-        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria, int dataSize)
+        public List<CategoryPageView> AnalyzePageViewsByCategory(SearchCriteria criteria)
         {
             //Define the aggregation pipeline stages
             //first we need to filter data by domain
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
                 {
                   { Constants.DOMAIN, criteria.Domain },
-                  {Constants.Category,new BsonDocument(Constants.NOT, BsonNull.Value) }
+                  {Constants.CATEGORY,new BsonDocument(Constants.NOT, BsonNull.Value) },
+                  {Constants.FORMATTED_DATE, new  BsonDocument{
+                    { Constants.GREATER, criteria.DateFrom },
+                    { Constants.SMALLER, criteria.DateTo }}
+                  }
                    });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
             //now we need to get the count of pageviews for each category 
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
-                {Constants.ID,"$" + Constants.Category },//group by date
+                {Constants.ID,"$" + Constants.CATEGORY },//group by date
                 {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }//count the pageviews
 
             });
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
-            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline then store the results in list 
@@ -141,14 +183,26 @@ namespace DataPipeline.DataAnalysis.Services
             }
             return results;
         }
-        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria, int dataSize)
+        public List<CountryNamePageView> AnalyzePageViewsByCountryName(SearchCriteria criteria)
         {
             // Define the aggregation pipeline stages
             var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
              {
-               { Constants.DOMAIN, criteria.Domain },
-                { Constants.COUNTRY_NAME, new BsonDocument(Constants.NOT, BsonNull.Value) }
-                     });
+                { Constants.DOMAIN, criteria.Domain },
+                { Constants.COUNTRY_NAME, new BsonDocument(Constants.NOT, BsonNull.Value) },
+                {Constants.FORMATTED_DATE, new  BsonDocument{
+                    { Constants.GREATER, criteria.DateFrom },
+                    { Constants.SMALLER, criteria.DateTo }}}
+                   });
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
+
             //now we need to get the count of pageviews for each country name
             var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
             {
@@ -157,7 +211,7 @@ namespace DataPipeline.DataAnalysis.Services
 
             });
             var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
-            var limitStage = new BsonDocument(Constants.LIMIT, dataSize);
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
             //initialize the pipeline
             var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
             //execute the pipeline then store the results in list 
@@ -190,6 +244,188 @@ namespace DataPipeline.DataAnalysis.Services
             };
             return data;
 
+        }
+
+        public List<PostTypePageViews> AnalyzePageViewsByPostType(SearchCriteria criteria)
+        {
+            // Define the aggregation pipeline stages
+            //we need to filter by date and domain
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+            {
+            { Constants.DOMAIN, criteria.Domain },
+            {
+               Constants.FORMATTED_DATE, new  BsonDocument
+               {
+                { Constants.GREATER, criteria.DateFrom },
+                { Constants.SMALLER, criteria.DateTo }
+                }
+                  }
+                    });
+            //we need to group by post type and get total pageviews and posts
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
+            {
+                {Constants.ID,"$" + Constants.POST_TYPE },//group by date
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) },//count the pageviews
+                {Constants.POSTS,new BsonDocument(Constants.ADD_TO_SET,"$"+Constants.POST_ID) } //get array of post to be able to get the toal posts
+
+            });
+
+            //we need to get the total posts count
+            var projectStage = new BsonDocument(Constants.PROJECT, new BsonDocument
+            {
+                {"_id",0 },
+                {Constants.POST_TYPE,"$"+Constants.ID },
+                {Constants.TOTAL_PAGE_VIEWS,1 },
+                {Constants.TOTAL_POSTS,new BsonDocument(Constants.SIZE,"$"+Constants.POSTS) }
+            });
+
+            //order stage
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+
+            //limit stage
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
+
+            //initialize the pipeline
+            var pipeline = new[] { matchStage, groupStage, projectStage, orderByStage, limitStage };
+            //execute the pipeline then store the results in list 
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            var results = new List<PostTypePageViews>();
+            //loop over the results to store them in DatePageView List
+            foreach (BsonDocument pipelineResult in pipelineResults)
+            {
+                results.Add(new PostTypePageViews
+                {
+                    PostType = pipelineResult[Constants.POST_TYPE].AsString,
+                    PageViews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32,
+                    Posts = pipelineResult[Constants.TOTAL_POSTS].AsInt32
+                });
+            }
+            return results;
+        }
+        public List<TagPageView> AnalyzePageViewsByTag(SearchCriteria criteria)
+        {
+            // Define the aggregation pipeline stages
+            //we need to filter by date , domain and posttype
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+            {
+              { Constants.DOMAIN, criteria.Domain },
+              { Constants.FORMATTED_DATE, new BsonDocument
+                {
+              { Constants.GREATER, criteria.DateFrom },
+              { Constants.SMALLER, criteria.DateTo }
+              }
+               }
+             });
+
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
+
+            ///now we need to unwind the tags array to get a single tag
+            var unwindStage = new BsonDocument(Constants.UN_WIND, new BsonDocument
+            {
+                {"path","$"+Constants.POST_TAG },
+                {"preserveNullAndEmptyArrays",false }
+            }
+                );
+
+            //now we need to group by tags
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument
+            {
+                {Constants.ID,"$"+Constants.POST_TAG },
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
+            });
+
+            //we need to sort the tags by desc pageviews
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
+
+            //initialize the pipeline
+            var pipeline = new[] { matchStage, unwindStage, groupStage, orderByStage, limitStage };
+            //execute the pipeline then store the results in list 
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+            var results = new List<TagPageView>();
+            //loop over the results to store them in DatePageView List
+            foreach (BsonDocument pipelineResult in pipelineResults)
+            {
+                results.Add(new TagPageView
+                {
+                    tags = pipelineResult[Constants.ID].AsString,
+                    pageviews = pipelineResult[Constants.TOTAL_PAGE_VIEWS].AsInt32,
+                });
+            }
+            return results;
+
+        }
+        public List<ArticlePageView> GetTopPageViewsArticles(SearchCriteria criteria)
+        {
+            // Define the aggregation pipeline stages
+            //we need to filter by date , domain and posttype
+            var matchStage = new BsonDocument(Constants.MATCH, new BsonDocument
+            {
+              { Constants.DOMAIN, criteria.Domain },
+              { Constants.FORMATTED_DATE, new BsonDocument
+                {
+              { Constants.GREATER, criteria.DateFrom },
+              { Constants.SMALLER, criteria.DateTo }
+              }
+               }
+             });
+
+            ///filter by posttype
+            if (!string.IsNullOrEmpty(criteria.PostType))
+            {
+                matchStage[Constants.MATCH].AsBsonDocument.Add(Constants.POST_TYPE, new BsonDocument
+                {
+                 { Constants.REGEX, criteria.PostType }
+                 });
+            }
+
+            //grouping by stage (post id)
+            var groupStage = new BsonDocument(Constants.GROUP, new BsonDocument {
+                {Constants.ID,"$"+Constants.POST_ID },//group by post id
+                {Constants.POST_TITLE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_TITLE)},
+                {Constants.POST_URL,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_URL)},
+                {Constants.POST_IMAGE,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_IMAGE)},
+                {Constants.POST_AUTHOR,new  BsonDocument(Constants.FIRST,"$"+Constants.POST_AUTHOR)},
+                {Constants.CATEGORY,new  BsonDocument(Constants.FIRST,"$"+Constants.CATEGORY)},
+                {Constants.PUBLISHED_DATE,new  BsonDocument(Constants.FIRST,"$"+Constants.PUBLISHED_DATE)},
+                {Constants.TOTAL_PAGE_VIEWS,new BsonDocument(Constants.SUM,1) }
+            });
+
+            //sorting stage 
+            var orderByStage = new BsonDocument(Constants.SORT, new BsonDocument(Constants.TOTAL_PAGE_VIEWS, -1));
+
+            //limit stage
+            var limitStage = new BsonDocument(Constants.LIMIT, criteria.Size);
+            //initialize the pipeline 
+            var pipeline = new[] { matchStage, groupStage, orderByStage, limitStage };
+            //execute the pipeline
+            List<BsonDocument> pipelineResults = _collection.Aggregate<BsonDocument>(pipeline).ToList();
+
+            var results = new List<ArticlePageView>();
+
+            foreach (BsonDocument pResult in pipelineResults)
+            {
+                results.Add(new ArticlePageView
+                {
+                    PostId = pResult[Constants.ID].AsString,
+                    PostTitle = pResult[Constants.POST_TITLE].AsString, // Get the article title from the _id field
+                    PageViews = pResult[Constants.TOTAL_PAGE_VIEWS].AsInt32, // Get total page views
+                    PostUrl = pResult[Constants.POST_URL].AsString,//Get article's url
+                    PostImage = pResult[Constants.POST_IMAGE].AsString,//Get Image url
+                    PostAuthor = pResult[Constants.POST_AUTHOR].AsString,
+                    PostCategory = pResult[Constants.CATEGORY].AsString,
+                    PublishedDate = (pResult[Constants.PUBLISHED_DATE]).AsDateTime
+                });
+            }
+            return results;
         }
     }
 }

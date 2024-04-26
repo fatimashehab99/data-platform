@@ -41,13 +41,16 @@ namespace DataPipeline
         public static string POST_IMAGE = "PostImage";
         public static string DOMAIN = "Domain";
         public static string DATE = "Date";
-        public static string Category = "PostCategory";
+        public static string CATEGORY = "PostCategory";
         public static string USERID = "UserId";
         public static string POST_TITLE = "PostTitle";
-        public static string FORMATTED_DATE = "Formatted_Date";
-        public static string COUNTRY_NAME = "Country_Name";
+        public static string FORMATTED_DATE = "FormattedDate";
+        public static string COUNTRY_NAME = "CountryName";
         public static string POST_ID = "PostId";
+        public static string POST_TYPE = "PostType";
         public static string ID = "_id";
+        public static string POSTS = "posts";
+        public static string PUBLISHED_DATE = "PostPublishDate";
 
 
         public static string TAG_INDEX = "tag_index";
@@ -59,6 +62,7 @@ namespace DataPipeline
         public static string TOTAL_AUTHORS = "TotalAuthors";
         public static string TOTAL_ARTICLES = "TotalArticles";
         public static string TOTAL_USERS = "TotalUsers";
+        public static string TOTAL_POSTS = "TotalPosts";
 
 
         //agg functions
@@ -73,10 +77,12 @@ namespace DataPipeline
         public static string SORT = "$sort";
         public static string LIMIT = "$limit";
         public static string NOT = "$ne";
-        public static string GREATER = "$gt";
+        public static string GREATER = "$gte";
         public static string SIZE = "$size";
         public static string PROJECT = "$project";
         public static string ADD_TO_SET = "$addToSet";
+        public static string SMALLER = "$lte";
+        public static string REGEX = "$regex";
 
 
 

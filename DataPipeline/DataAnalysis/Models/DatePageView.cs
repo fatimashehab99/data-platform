@@ -10,5 +10,6 @@ namespace DataPipeline.DataAnalysis.Models
     {
         public string Date { get; set; }
         public int PageViews { get; set; }
+        public int PublishedArticles { get; set; }
     }
 }

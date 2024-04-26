@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace DataPipeline.DataAnalysis.Models
 {
-    public class PostClass
+    public class PostTypePageViews
     {
-        public string mapping { get; set; }
-        public string value { get; set; }
+        public int PageViews { get; set; }
+        public int Posts { get; set; }
+        public string PostType { get; set; }
     }
 }

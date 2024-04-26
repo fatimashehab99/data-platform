@@ -9,7 +9,9 @@
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="public/articles-script.js"></script>
+    <script src="public/user-data.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="public/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
     <!--<script>
@@ -87,7 +89,8 @@
           "html": "",
           "lite_url": ""
         }</script>
-    <script src="public/mango-data-platform.js"></script>
+    <!--  <script defer async src="https://data-platform.mangopulse.net/public/mango-data-platform.js?v=1"></script> -->
+    <script src="/public/mango-data-platform.js"></script>
 
 </head>
 <!--Reccomnedation demo that show Reccomendaed for Your articles and call  api/reccomend https://mdn.tv/7fwF اخترنا لك
@@ -127,9 +130,11 @@
         </ul>
     </div>
     <script>
-        
-        fetchTrendingArticlesData("102.129.65.0");//toDo update ip
-        fetchRecommendedArticlesData("user_1710837416623_4680")//toDo update user id
+
+        //get userId
+        var userId = getUserId();
+        fetchTrendingArticlesData();
+        fetchRecommendedArticlesData(userId)
     </script>
 
 
