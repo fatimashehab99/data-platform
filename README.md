@@ -186,11 +186,10 @@ mangoDataPlatform.main();
 At Data Platform Analytics we not only provide APIs for data reporting and tracking but also offer comprehensive data integration services. Our on-demand data reports are visually represented in charts and tables that are easy to use and understand. The Analytics page presents a dynamic representation of recorded data with various visualizations such as charts and tables, displaying the stored records in a comprehensive manner. To make the experience even more user-friendly, we have added dynamic filtering options to the page, allowing users to customize their view and focus on the data that is relevant to them
 
 ### A.
-
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/1)" style=" width:600px ; height:500px "  >
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/2)" style=" width:600px ; height:500px "  >
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/3)" style=" width:600px ; height:500px "  >
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/4)" style=" width:600px ; height:500px "  >
+![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/1.png))
+![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/2.png))
+![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/3.png))
+![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/4.png))
 ___
 
 ### B. Analyze Page Views By Categories
