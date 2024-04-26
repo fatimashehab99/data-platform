@@ -28,7 +28,7 @@
 ___
 
 ## 1. Overview
-Data Platform Analytics System is a comprehensive data anlytics tool with three main parts. First, it gathers important data from metadata websites using carefully made scripts and stores it efficiently with MongoDB. Then, it uses ASP.NET to create strong pipelines for processing the data smoothly. After that, it lets users easily get the data they need for visualization through simple APIs. Finally, it creates eye-catching charts and graphs using HTML, CSS,JavaScript and Chart.js, making the data easy to understand. Overall, this system helps users collect, analyze, and display data in a straightforward and interactive manner, aiding them in making informed decisions.
+Data Platform Analytics System is a comprehensive data anlytics tool with three main parts. First, it gathers important data from metadata websites using carefully made scripts and stores it efficiently with MongoDB. Then, it uses ASP.NET and Mongo DB to create strong pipelines for processing the data smoothly. After that, it lets users easily get the data they need for visualization through simple APIs. Finally, it creates eye-catching charts and graphs using HTML, CSS,JavaScript and Chart.js, making the data easy to understand. Overall, this system helps users collect, analyze, and display data in a straightforward and interactive manner, aiding them in making informed decisions.
 
 
 ## 2. Collect API Usage 
