@@ -2,7 +2,7 @@
 
 ### Outline
 ### I. Introduction
-- Overview Data Platform Analytics
+ Overview of Data Platform Analytics
 
 ### II. Collect API Usage <br/>
 
@@ -14,7 +14,7 @@
 
 ### III. Analytics Visualization <br/>
    
- A. On-demand data reports <br/>
+ A. Analyze Page Views By Date <br/>
  B. Analyze Page Views By Categories <br/>
  C. Analyze Page Views By Authors <br/>
  D. Analyze Page Views By Countries <br/>
@@ -190,47 +190,11 @@ At Data Platform Analytics we not only provide APIs for data reporting and track
 ![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/2.png))
 ![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/3.png))
 ![image](https://github.com/fatimashehab99/data-platform/blob/main/assets/4.png))
-___
 
-### B. Analyze Page Views By Categories
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/107859028/2d360b40-7068-4961-af73-15f0eaf3895b)
-" style=" width:600px ; height:500px "  >
 
-___
-
-### C. Analyze Page Views By Authors
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/107859028/f7d1f6a5-4243-42ba-a445-e7e031fb5504)
-" style=" width:600px ; height:500px "  >
-
-___
-
-### D.Analyze Page Views By Countries
-
-<img src="![image](https://github.com/fatimashehab99/data-platform/assets/107859028/f6889fd6-44a3-4456-aca4-cd7b509ac128)
-" style=" width:1100px ; height:450px "  >
-
-___
-
-### E. Recorded Data displayed in a dynamic Table that supports serverside (pagination, search,and sorting)
-<img src="https://user-images.githubusercontent.com/107344706/216351731-f18c0a2f-4bd8-4dfd-a830-5e3053abc3d7.png" style=" width:900px ; height:500px "  >
-
-___
-
-### F. Filters that are applied on all displayed charts and given table
-
-<img src="https://user-images.githubusercontent.com/107344706/220044746-ddc2ab69-18ab-4173-a8d2-4e6a70c34550.png" style=" width:900px ; height:450px "  >
-
-___
-
-### G. Map Visualization Chart
-<img src="https://user-images.githubusercontent.com/107344706/220044125-9a789ca2-5981-425b-9747-9d0e50291879.png" style=" width:1000px ; height:400px "  >
-
-___
-
->In conclusion, Mango Analytics is a comprehensive solution for data reporting and visualization, offering both powerful APIs and visually appealing chart displays. The project continues to evolve and improve, aiming to provide even more insights and value to its users. We hope you find Mango Analytics helpful and we welcome any feedback or suggestions. 
+>In conclusion, Data Platform Analytics is a comprehensive solution for data reporting and visualization, offering both powerful APIs and visually appealing chart displays. The project continues to evolve and improve, aiming to provide even more insights and value to its users. We hope you find Data Platform Analytics helpful and we welcome any feedback or suggestions. 
 
 ## Happy Tracking!
 
 ## Happy Analytics!
 
-<a href="https://imgflip.com/i/7a1bt3"><img src="https://i.imgflip.com/7a1bt3.jpg" title="made at imgflip.com"/></a><div><a href="https://imgflip.com/memegenerator">from Imgflip Meme Generator</a></div>
