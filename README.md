@@ -32,11 +32,11 @@
 
 ___
 
-## Overview
+## 1. Overview
 Data Platform Analytics System is a comprehensive data anlytics tool with three main parts. First, it gathers important data from metadata websites using carefully made scripts and stores it efficiently with MongoDB. Then, it uses ASP.NET to create strong pipelines for processing the data smoothly. After that, it lets users easily get the data they need for visualization through simple APIs. Finally, it creates eye-catching charts and graphs using HTML, CSS,JavaScript and Chart.js, making the data easy to understand. Overall, this system helps users collect, analyze, and display data in a straightforward and interactive manner, aiding them in making informed decisions.
 
 
-## 1. Collect API Usage 
+## 2. Collect API Usage 
 
 To utilize the analytics functionality, it is necessary to integrate the mango-analytics-script  into your website. This script will collect the necessary data to generate the dynamic analytics charts and provide a comprehensive representation of the website's traffic.
 
@@ -187,28 +187,31 @@ mangoDataPlatform.main();
 
 >Once the Track Script is added into your website's page, you will initiate traffic tracking and have access to the analyzed data in a visually appealing and organized manner via the dynamic Analytics Page.
 
-## 2. Analytics Page 
-At mango Analytics we not only provide APIs for data reporting and tracking but also offer comprehensive data integration services. Our on-demand data reports are visually represented in charts and tables that are easy to use and understand. The Analytics page presents a dynamic representation of recorded data with various visualizations such as charts and tables, displaying the stored records in a comprehensive manner. To make the experience even more user-friendly, we have added dynamic filtering options to the page, allowing users to customize their view and focus on the data that is relevant to them
+## 3. Analytics Page 
+At Data Platform Analytics we not only provide APIs for data reporting and tracking but also offer comprehensive data integration services. Our on-demand data reports are visually represented in charts and tables that are easy to use and understand. The Analytics page presents a dynamic representation of recorded data with various visualizations such as charts and tables, displaying the stored records in a comprehensive manner. To make the experience even more user-friendly, we have added dynamic filtering options to the page, allowing users to customize their view and focus on the data that is relevant to them
 
-### A. Page Views Smooth Analytical Chart
+### A.
 
 <img src="https://user-images.githubusercontent.com/107344706/220045152-4fb41aaf-bdd9-4445-b728-7562807be71f.png" style=" width:900px ; height:500px "  >
 
 ___
 
-### B. Website's Authors Analytical Chart
-<img src="https://user-images.githubusercontent.com/107344706/216351108-26b8ff68-f842-45e2-88f5-79f80342ed7c.png" style=" width:600px ; height:500px "  >
+### B. Analyze Page Views By Categories
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/107859028/2d360b40-7068-4961-af73-15f0eaf3895b)
+" style=" width:600px ; height:500px "  >
 
 ___
 
-### C. Websites Visitor's Analytical Location Chart
-<img src="https://user-images.githubusercontent.com/107344706/216351325-570e4cea-91f2-481e-ace8-366d8992a321.png" style=" width:600px ; height:500px "  >
+### C. Analyze Page Views By Authors
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/107859028/f7d1f6a5-4243-42ba-a445-e7e031fb5504)
+" style=" width:600px ; height:500px "  >
 
 ___
 
-### D. Page Views Column Analytical Chart
+### D.Analyze Page Views By Countries
 
-<img src="https://user-images.githubusercontent.com/107344706/220045479-fc39da73-5293-493f-a020-78aaf9d7ea87.png" style=" width:1100px ; height:450px "  >
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/107859028/f6889fd6-44a3-4456-aca4-cd7b509ac128)
+" style=" width:1100px ; height:450px "  >
 
 ___
 
