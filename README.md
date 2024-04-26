@@ -187,8 +187,10 @@ At Data Platform Analytics we not only provide APIs for data reporting and track
 
 ### A.
 
-<img src="https://user-images.githubusercontent.com/107344706/220045152-4fb41aaf-bdd9-4445-b728-7562807be71f.png" style=" width:900px ; height:500px "  >
-
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/1)" style=" width:600px ; height:500px "  >
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/2)" style=" width:600px ; height:500px "  >
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/3)" style=" width:600px ; height:500px "  >
+<img src="![image](https://github.com/fatimashehab99/data-platform/assets/4)" style=" width:600px ; height:500px "  >
 ___
 
 ### B. Analyze Page Views By Categories
